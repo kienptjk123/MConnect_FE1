@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Home() {
@@ -98,6 +99,9 @@ export default function Home() {
           Go to nextjs.org →
         </a>
       </footer>
+      <Button className="bg-red-500 text-white hover:bg-red-600">
+        Click here
+      </Button>
     </div>
   );
 }
