@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run build 
 
-# Step 2: Serve exported static files with nginx
+# Step 2: Serve exported static files with 
 FROM nginx:1.23-alpine
 
 # Clear default nginx content
