@@ -10,15 +10,16 @@ RUN npm install -f
 # Copy full source code
 COPY . .
 
-RUN npm run build 
+# Build and export static site
+RUN npm run build && npm run export
 
-# Step 2: Serve exported static files with 
+# Step 2: Serve exported static files with Nginx
 FROM nginx:1.23-alpine
 
 # Clear default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy exported site
+# Copy exported site from previous stage
 COPY --from=build /app/out /usr/share/nginx/html
 
 # Optional: Use custom nginx config
@@ -27,4 +28,5 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Expose web port
 EXPOSE 80
 
+# Run nginx in foreground
 CMD ["nginx", "-g", "daemon off;"]
