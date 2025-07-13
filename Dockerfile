@@ -10,7 +10,6 @@ RUN npm install -f
 # Copy full source code
 COPY . .
 
-# Build & export static files to /out
 RUN npm run build 
 
 # Step 2: Serve exported static files with nginx
