@@ -11,7 +11,7 @@ RUN npm install -f
 COPY . .
 
 # Build & export static files to /out
-RUN npm run build && npx next export
+RUN npm run build
 
 # Step 2: Serve exported static files with nginx
 FROM nginx:1.23-alpine
