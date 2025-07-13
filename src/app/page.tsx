@@ -8,7 +8,7 @@ import {
   CarouselNext1,
   CarouselPrevious1,
 } from "@/components/ui/carousel";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import React, { useRef, useEffect, useState } from "react";
@@ -33,6 +33,129 @@ export default function Homepage() {
       setPathLength(length);
     }
   }, []);
+
+  const fadeInUp = {
+    hidden: {
+      opacity: 0,
+      y: 60,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const fadeInLeft = {
+    hidden: {
+      opacity: 0,
+      x: -60,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const fadeInRight = {
+    hidden: {
+      opacity: 0,
+      x: 60,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.3,
+        delayChildren: 0.2,
+      },
+    },
+  } as const;
+
+  const buttonContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.6,
+      },
+    },
+  } as const;
+
+  const scaleIn = {
+    hidden: {
+      scale: 0,
+      opacity: 0,
+    },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const slideInLeft = {
+    hidden: {
+      opacity: 0,
+      x: -100,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const slideInRight = {
+    hidden: {
+      opacity: 0,
+      x: 100,
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  } as const;
+
+  const stepContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.3,
+      },
+    },
+  } as const;
 
   const carouselItems = [
     {
@@ -64,49 +187,102 @@ export default function Homepage() {
             fill
             priority
           />
-          <div className="absolute top-50 left-30 ">
-            <div className="text-white flex flex-col justify-center items-center text-center ">
-              <h1 className="text-5xl font-semibold leading-tight mb-6">
+
+          {/* Main content */}
+          <motion.div
+            className="absolute top-50 left-30"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+          >
+            <div className="text-white flex flex-col justify-center items-center text-center">
+              <motion.h1
+                className="text-5xl font-semibold leading-tight mb-6"
+                variants={fadeInUp}
+              >
                 Achieving Your Dreams
                 <br />
                 <span className="ml-6">Through Mconnect</span>
-              </h1>
-              <p className="text-xl text-gray-200 mb-8 leading-relaxed">
+              </motion.h1>
+
+              <motion.p
+                className="text-xl text-gray-200 mb-8 leading-relaxed"
+                variants={fadeInUp}
+              >
                 Join our mentorship platform to accelerate your career
                 development
-              </p>
+              </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-[#527EDE] hover:bg-blue-700 text-white px-12 py-6 rounded-full text-lg font-semibold">
-                  Find A Mentor
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-2 border-[#60A6EB] text-black hover:bg-white hover:bg-gray-300 px-8 py-6 rounded-full text-lg font-semibold"
-                >
-                  Become A Mentor
-                </Button>
-              </div>
+              <motion.div
+                className="flex flex-col sm:flex-row gap-4"
+                variants={buttonContainer}
+              >
+                <motion.div variants={fadeInUp}>
+                  <Button className="bg-[#527EDE] hover:bg-blue-700 text-white px-12 py-6 rounded-full text-lg font-semibold">
+                    Find A Mentor
+                  </Button>
+                </motion.div>
+                <motion.div variants={fadeInUp}>
+                  <Button
+                    variant="outline"
+                    className="border-2 border-[#60A6EB] text-black hover:bg-white hover:bg-gray-300 px-8 py-6 rounded-full text-lg font-semibold"
+                  >
+                    Become A Mentor
+                  </Button>
+                </motion.div>
+              </motion.div>
             </div>
-          </div>
-          <div className="absolute bottom-26 right-26 max-w-[14rem]">
-            <div className="text-white text-2xl font-semibold mb-2 flex items-center text-center ">
+          </motion.div>
+
+          {/* Why Mentorship Matters section */}
+          <motion.div
+            className="absolute bottom-26 right-26 max-w-[14rem]"
+            initial="hidden"
+            animate="visible"
+            variants={fadeInRight}
+            transition={{ delay: 0.8 }}
+          >
+            <div className="text-white text-2xl font-semibold mb-2 flex items-center text-center">
               <p>Why Mentorship Matters</p>
-              <ArrowRight className="h-8 w-8" />
+              <ChevronRight className="h-8 w-8" />
             </div>
-          </div>
-          <div className="absolute bottom-10 right-23 max-w-[23rem]">
+          </motion.div>
+
+          {/* Bottom section with avatars */}
+          <motion.div
+            className="absolute bottom-10 right-23 max-w-[23rem]"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            transition={{ delay: 1.0 }}
+          >
             <div className="flex items-start gap-2">
-              <div className="flex -space-x-6">
-                <div className="w-14 h-14 bg-blue-500 rounded-full border-2 border-white"></div>
-                <div className="w-14 h-14 bg-green-500 rounded-full border-2 border-white"></div>
-                <div className="w-14 h-14 bg-purple-500 rounded-full border-2 border-white"></div>
-              </div>
-              <p className="text-white text-lg font-extralight text-center ">
+              <motion.div className="flex -space-x-6" variants={fadeInLeft}>
+                <motion.div
+                  className="w-14 h-14 bg-blue-500 rounded-full border-2 border-white"
+                  variants={scaleIn}
+                  transition={{ delay: 1.2 }}
+                />
+                <motion.div
+                  className="w-14 h-14 bg-green-500 rounded-full border-2 border-white"
+                  variants={scaleIn}
+                  transition={{ delay: 1.4 }}
+                />
+                <motion.div
+                  className="w-14 h-14 bg-purple-500 rounded-full border-2 border-white"
+                  variants={scaleIn}
+                  transition={{ delay: 1.6 }}
+                />
+              </motion.div>
+              <motion.p
+                className="text-white text-lg font-extralight text-center"
+                variants={fadeInRight}
+                transition={{ delay: 1.3 }}
+              >
                 Real Guidance. Real Feedback. Real Growth
-              </p>
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
       {/* logo company section  */}
@@ -322,8 +498,13 @@ export default function Homepage() {
           />
         </motion.svg>
 
-        {/* Hình ảnh bên trái 1 */}
-        <div className="absolute top-10 left-10 w-[656px] h-[443px] z-20">
+        <motion.div
+          className="absolute top-10 left-10 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInLeft}
+        >
           <Image
             src="/images/sandbox1.png"
             alt="Hero image"
@@ -331,10 +512,16 @@ export default function Homepage() {
             fill
             priority
           />
-        </div>
+        </motion.div>
 
         {/* Hình ảnh bên phải 1 */}
-        <div className="absolute top-10 right-10 w-[656px] h-[443px] z-20">
+        <motion.div
+          className="absolute top-10 right-10 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInRight}
+        >
           <Image
             src="/images/sandboxlogo.png"
             alt="Hero image"
@@ -342,10 +529,17 @@ export default function Homepage() {
             fill
             priority
           />
-        </div>
+        </motion.div>
 
         {/* Hình ảnh bên trái 2 */}
-        <div className="absolute top-200 left-10 w-[656px] h-[443px] z-20">
+        <motion.div
+          className="absolute top-200 left-10 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInLeft}
+          transition={{ delay: 0.2 }}
+        >
           <Image
             src="/images/sandbox2.png"
             alt="Hero image"
@@ -353,47 +547,89 @@ export default function Homepage() {
             fill
             priority
           />
-        </div>
-        {/* Content bên phải 2 */}
-        <div className="absolute top-200 right-25 w-[656px] h-[443px] z-20">
-          <div className="flex justify-center mb-8 text-center">
+        </motion.div>
+
+        {/* Content bên phải 2 - STEP 1 */}
+        <motion.div
+          className="absolute top-200 right-25 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={staggerContainer}
+          transition={{ delay: 0.3 }}
+        >
+          <motion.div
+            className="flex justify-center mb-8 text-center"
+            variants={scaleIn}
+          >
             <div className="bg-[#527EDE] text-white px-8 py-3 rounded-full text-3xl font-bold shadow-lg">
               STEP 1
             </div>
-          </div>
+          </motion.div>
 
-          <h1 className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight">
+          <motion.h1
+            className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight"
+            variants={fadeInUp}
+          >
             Match With The Right Mentor
-          </h1>
+          </motion.h1>
 
-          <p className="text-lg  text-[#326EBD] text-center leading-relaxed max-w-xl mx-auto">
+          <motion.p
+            className="text-lg text-[#326EBD] text-center leading-relaxed max-w-xl mx-auto"
+            variants={fadeInUp}
+          >
             Start by exploring available mentors — from designers and developers
             to business strategists and content creators. Each mentor shares
             their profile, working style, project needs, and expectations. Find
             someone who aligns with your values, goals, and desired skills.
-          </p>
-        </div>
-        {/* content bên trái 3  */}
-        <div className="absolute top-370 left-40 w-[500px] h-[443px] z-20">
-          <div className="flex justify-center mb-8 text-center">
+          </motion.p>
+        </motion.div>
+
+        {/* Content bên trái 3 - STEP 2 */}
+        <motion.div
+          className="absolute top-370 left-40 w-[500px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={staggerContainer}
+          transition={{ delay: 0.4 }}
+        >
+          <motion.div
+            className="flex justify-center mb-8 text-center"
+            variants={scaleIn}
+          >
             <div className="bg-[#527EDE] text-white px-8 py-3 rounded-full text-3xl font-bold shadow-lg">
               STEP 2
             </div>
-          </div>
+          </motion.div>
 
-          <h1 className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight">
+          <motion.h1
+            className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight"
+            variants={fadeInUp}
+          >
             Sandbox & Trial Collaboration
-          </h1>
+          </motion.h1>
 
-          <p className="text-lg  text-[#326EBD] text-center leading-relaxed max-w-xl mx-auto">
-            Once you apply, you’ll enter a sandbox environment. Think of it as a
-            “first impression” phase — short, skill-based tasks created by
-            mentors to test how you think, solve problems, and communicate.It’s
-            not just about being the best — it’s about being the right fit.
-          </p>
-        </div>
+          <motion.p
+            className="text-lg text-[#326EBD] text-center leading-relaxed max-w-xl mx-auto"
+            variants={fadeInUp}
+          >
+            Once you apply, you'll enter a sandbox environment. Think of it as a
+            "first impression" phase — short, skill-based tasks created by
+            mentors to test how you think, solve problems, and communicate. It's
+            not just about being the best — it's about being the right fit.
+          </motion.p>
+        </motion.div>
+
         {/* Hình ảnh bên phải 3 */}
-        <div className="absolute top-370 right-20 w-[656px] h-[443px] z-20">
+        <motion.div
+          className="absolute top-370 right-20 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInRight}
+          transition={{ delay: 0.5 }}
+        >
           <Image
             src="/images/sandbox3.png"
             alt="Hero image"
@@ -401,9 +637,17 @@ export default function Homepage() {
             fill
             priority
           />
-        </div>
-        {/* hình ảnh bên trái 4 */}
-        <div className="absolute top-550 left-10 w-[656px] h-[443px] z-20">
+        </motion.div>
+
+        {/* Hình ảnh bên trái 4 */}
+        <motion.div
+          className="absolute top-550 left-10 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInLeft}
+          transition={{ delay: 0.6 }}
+        >
           <Image
             src="/images/sandbox4.png"
             alt="Hero image"
@@ -411,29 +655,54 @@ export default function Homepage() {
             fill
             priority
           />
-        </div>
-        {/* content bên phải 4 */}
-        <div className="absolute top-550 right-25 w-[656px] h-[443px] z-20">
-          <div className="flex justify-center mb-8 text-center">
+        </motion.div>
+
+        {/* Content bên phải 4 - STEP 3 */}
+        <motion.div
+          className="absolute top-550 right-25 w-[656px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={staggerContainer}
+          transition={{ delay: 0.7 }}
+        >
+          <motion.div
+            className="flex justify-center mb-8 text-center"
+            variants={scaleIn}
+          >
             <div className="bg-[#527EDE] text-white px-8 py-3 rounded-full text-3xl font-bold shadow-lg">
               STEP 3
             </div>
-          </div>
+          </motion.div>
 
-          <h1 className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight">
+          <motion.h1
+            className="text-5xl font-bold text-[#063FA8] mb-8 text-center leading-tight"
+            variants={fadeInUp}
+          >
             Build as a Team
-          </h1>
+          </motion.h1>
 
-          <p className="text-lg  text-[#326EBD] text-center leading-relaxed max-w-md mx-auto">
+          <motion.p
+            className="text-lg text-[#326EBD] text-center leading-relaxed max-w-md mx-auto"
+            variants={fadeInUp}
+          >
             Mentees who pass the sandbox phase will be selected to join a 5–6
-            person team.You'll be assigned roles, deadlines, and deliverables.
-            Mentors will guide, review, and challenge you as if you’re on an
-            actual team.By the end, you don't just gain experience — you gain
+            person team. You'll be assigned roles, deadlines, and deliverables.
+            Mentors will guide, review, and challenge you as if you're on an
+            actual team. By the end, you don't just gain experience — you gain
             confidence, portfolio pieces, and real working habits.
-          </p>
-        </div>
-        {/* hình ảnh carousel bên trái 5 */}
-        <div className="absolute top-720 left-10 w-[609px] h-[500px] z-20">
+          </motion.p>
+        </motion.div>
+
+        {/* Hình ảnh carousel bên trái 5 */}
+        <motion.div
+          className="absolute top-720 left-10 w-[609px] h-[500px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInLeft}
+          transition={{ delay: 0.8 }}
+        >
           <Carousel
             className="w-full max-w-6xl mx-auto"
             orientation="vertical"
@@ -443,10 +712,18 @@ export default function Homepage() {
             }}
           >
             <CarouselContent className="h-[500px]">
-              {" "}
-              {carouselItems.map((item) => (
+              {carouselItems.map((item, index) => (
                 <CarouselItem key={item.id} className="basis-full">
-                  <div className={`flex items-center gap-12 h-full`}>
+                  <motion.div
+                    className="flex items-center gap-12 h-full"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1,
+                      ease: "easeOut",
+                    }}
+                  >
                     <div className="flex-1">
                       <div className="relative w-full h-[500px] rounded-lg overflow-hidden">
                         <Image
@@ -458,22 +735,35 @@ export default function Homepage() {
                         />
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 </CarouselItem>
               ))}
             </CarouselContent>
 
             <CarouselPrevious1 className="-top-70 left-1/2 transform -translate-x-1/2 bg-[#E5F8FF] hover:bg-blue-100 shadow-2xl text-[#89DEFF] hover:text-[#89DEFF] py-60 px-6" />
-
-            <CarouselNext1 className="-bottom-70 left-1/2 transform -translate-x-1/2  bg-[#E5F8FF] hover:bg-blue-100 shadow-2xl text-[#89DEFF] hover:text-[#89DEFF] py-60 px-6" />
+            <CarouselNext1 className="-bottom-70 left-1/2 transform -translate-x-1/2 bg-[#E5F8FF] hover:bg-blue-100 shadow-2xl text-[#89DEFF] hover:text-[#89DEFF] py-60 px-6" />
           </Carousel>
-        </div>
-        {/* content ben phải 5 */}
-        <div className="absolute top-720 right-15 w-[600px] h-[443px] z-20">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 shadow-lg">
-            <div className="space-y-6">
+        </motion.div>
+
+        {/* Content bên phải 5 - Step List */}
+        <motion.div
+          className="absolute top-720 right-15 w-[600px] h-[443px] z-20"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={slideInRight}
+          transition={{ delay: 0.9 }}
+        >
+          <motion.div
+            className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-3xl p-8 shadow-lg"
+            variants={scaleIn}
+          >
+            <motion.div className="space-y-6" variants={stepContainer}>
               {/* Step 1 */}
-              <div className="flex items-start gap-4">
+              <motion.div
+                className="flex items-start gap-4"
+                variants={fadeInUp}
+              >
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1">
                   <p className="text-blue-600 font-semibold text-lg leading-relaxed">
@@ -486,10 +776,13 @@ export default function Homepage() {
                     </span>
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Step 2 */}
-              <div className="flex items-start gap-4">
+              <motion.div
+                className="flex items-start gap-4"
+                variants={fadeInUp}
+              >
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1">
                   <p className="text-blue-600 font-semibold text-lg leading-relaxed">
@@ -500,10 +793,13 @@ export default function Homepage() {
                     </span>
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Step 3 */}
-              <div className="flex items-start gap-4">
+              <motion.div
+                className="flex items-start gap-4"
+                variants={fadeInUp}
+              >
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1">
                   <p className="text-blue-600 font-semibold text-lg leading-relaxed">
@@ -514,10 +810,13 @@ export default function Homepage() {
                     </span>
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Step 4 */}
-              <div className="flex items-start gap-4">
+              <motion.div
+                className="flex items-start gap-4"
+                variants={fadeInUp}
+              >
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1">
                   <p className="text-blue-600 font-semibold text-lg leading-relaxed">
@@ -528,10 +827,13 @@ export default function Homepage() {
                     </span>
                   </p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Step 5 */}
-              <div className="flex items-start gap-4">
+              <motion.div
+                className="flex items-start gap-4"
+                variants={fadeInUp}
+              >
                 <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
                 <div className="flex-1">
                   <p className="text-blue-600 font-semibold text-lg leading-relaxed">
@@ -544,10 +846,30 @@ export default function Homepage() {
                     </span>
                   </p>
                 </div>
-              </div>
-            </div>
-          </div>
-        </div>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </div>
+
+      {/* Final image below the timeline */}
+      <div className="flex justify-center mt-4 mb-4">
+        <motion.div
+          className="relative w-[900px] h-[700px]"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
+          variants={fadeInUp}
+          transition={{ delay: 0.3 }}
+        >
+          <Image
+            src="/images/sandboxlast.png"
+            alt="Final sandbox image"
+            className="object-contain"
+            fill
+            priority
+          />
+        </motion.div>
       </div>
     </>
   );
