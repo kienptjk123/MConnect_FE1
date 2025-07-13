@@ -3,7 +3,7 @@ name: CICD
 on:
   push:
     branches:
-      - main2
+      - aws-ec2
 
 jobs:
   build:
@@ -26,7 +26,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [self-hosted, aws-ec2]
+    runs-on: [self-hosted, ip-172-31-25-74]
     steps:
       - name: Pull image from Docker Hub
         run: docker pull kienptjk123/mconnect:latest
