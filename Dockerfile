@@ -1,33 +1,31 @@
-# Step 1: Build the Vite frontend
+# Step 1: Build static Next.js app
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
+# Install dependencies
 COPY package.json package-lock.json ./
 RUN npm install -f
 
-# Copy source code
+# Copy full source code
 COPY . .
 
-RUN npm run build
+# Build & export static files to /out
+RUN npm run build && npx next export
 
-# Step 2: Serve the built app using NGINX
+# Step 2: Serve exported static files with nginx
 FROM nginx:1.23-alpine
 
-# Remove default static files
+# Clear default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy built assets
+# Copy exported site
 COPY --from=build /app/out /usr/share/nginx/html
 
-# ✅ Copy custom nginx config
+# Optional: Use custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Optional: Add custom nginx config if needed
-# COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port
+# Expose web port
 EXPOSE 80
 
-# Run NGINX
 CMD ["nginx", "-g", "daemon off;"]
