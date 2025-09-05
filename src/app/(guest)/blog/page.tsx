@@ -190,20 +190,16 @@ export default function BlogPage() {
               <h3 className="text-lg font-bold mb-6 text-gray-800">
                 POPULAR TAGS
               </h3>
-              <ul className="space-y-3">
-                {tagsData?.slice(0, 5).map((tag) => (
-                  <div key={tag.id}>
-                    <li>
-                      <a
-                        href="#"
-                        className="flex items-center justify-between text-gray-600 hover:text-purple-600 py-2 border-b border-gray-100"
-                      >
-                        <span>{tag.name}</span>
-                      </a>
-                    </li>
-                  </div>
+              <div className="flex flex-wrap gap-2">
+                {tagsData?.data.slice(0, 5).map((tag) => (
+                  <span
+                    key={tag.id}
+                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-purple-100 hover:text-purple-600 cursor-pointer transition-colors"
+                  >
+                    {tag.name}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
 
             {/* Recent Posts */}
