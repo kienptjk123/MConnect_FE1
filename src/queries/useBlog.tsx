@@ -9,6 +9,14 @@ export const useBlogsQuery = () => {
   });
 };
 
+export const useBlogByIdQuery = (id: number) => {
+  return useQuery({
+    queryKey: ["blog", id],
+    queryFn: () => blogApiRequest.getBlogById(id),
+    enabled: !!id,
+  });
+};
+
 export const useTagsQuery = () => {
   return useQuery({
     queryKey: ["tags"],

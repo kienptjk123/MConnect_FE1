@@ -14,7 +14,7 @@ export default function BlogPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTagId, setSelectedTagId] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const POSTS_PER_PAGE = 5;
+  const POSTS_PER_PAGE = 4;
 
   const blogsQuery = useBlogsQuery();
   const tagsQuery = useTagsQuery();

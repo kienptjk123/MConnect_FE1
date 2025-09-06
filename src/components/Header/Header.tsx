@@ -90,18 +90,22 @@ export default function Header() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Button
-              variant="outline"
-              className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-8"
-            >
-              Sign Up
-            </Button>
-            <Button
-              variant="outline"
-              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
-            >
-              Login
-            </Button>
+            <Link href="/register">
+              <Button
+                variant="outline"
+                className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-8"
+              >
+                Sign Up
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button
+                variant="outline"
+                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
+              >
+                Login
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
