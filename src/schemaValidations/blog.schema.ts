@@ -26,9 +26,9 @@ export const BlogSchema = z.object({
   tags: z.array(BlogTagSchema).default([]),
 });
 
-export const BlogListRes = z.object({
+export const BlogRes = z.object({
   data: z.array(BlogSchema),
   message: z.string(),
 });
 
-export type BlogListResType = z.TypeOf<typeof BlogListRes>;
+export type BlogResType = z.TypeOf<typeof BlogRes>;
