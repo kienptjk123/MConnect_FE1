@@ -96,7 +96,10 @@ export default function Header() {
             >
               Sign Up
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8">
+            <Button
+              variant="outline"
+              className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
+            >
               Login
             </Button>
           </div>

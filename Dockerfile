@@ -10,6 +10,7 @@ RUN npm install -f
 # Copy full source code
 COPY . .
 
+
 # Build and export static site
 RUN npm run build
 
@@ -19,7 +20,6 @@ FROM nginx:1.23-alpine
 # Clear default nginx content
 RUN rm -rf /usr/share/nginx/html/*
 
-# Copy exported site from previous stage
 COPY --from=build /app/out /usr/share/nginx/html
 
 # Optional: Use custom nginx config

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { getBlogs } from "../../apiRequests/blog";
 import { BlogListResType } from "../../schemaValidations/blog.schema";
 import Image from "next/image";
-import { formatISOToLongDate } from "@/lib/utils";
 import { getTags } from "@/app/apiRequests/tag";
 
 export default function BlogPage() {
@@ -118,7 +117,7 @@ export default function BlogPage() {
                             fill="#FC6441"
                           />
                         </svg>
-                        {formatISOToLongDate(blog.date)}
+                        {blog.date}
                       </span>
                       <span className="flex items-center gap-2">
                         <svg
