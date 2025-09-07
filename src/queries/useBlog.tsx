@@ -9,11 +9,11 @@ export const useBlogsQuery = () => {
   });
 };
 
-export const useBlogByIdQuery = (id: number) => {
+export const useBlogByIdQuery = (id: number, enabled: boolean) => {
   return useQuery({
-    queryKey: ["blog", id],
+    queryKey: ["blogs", id],
     queryFn: () => blogApiRequest.getBlogById(id),
-    enabled: !!id,
+    enabled,
   });
 };
 
