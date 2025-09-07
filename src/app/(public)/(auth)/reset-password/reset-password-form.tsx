@@ -26,7 +26,6 @@ export default function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const otp = searchParams.get("otp");
-  const email = searchParams.get("email");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,20 +45,19 @@ export default function ResetPasswordForm() {
     if (resetPasswordMutation.isPending) return;
 
     try {
-      const result = await resetPasswordMutation.mutateAsync(values);
+      await resetPasswordMutation.mutateAsync(values);
 
       toast({
-        title: "Thành công",
-        description: result.message || "Đặt lại mật khẩu thành công",
+        title: "Success",
+        description: "Password reset successfully",
       });
 
       // Chuyển về trang login
       router.push("/login");
     } catch (error: any) {
       toast({
-        title: "Lỗi",
-        description:
-          error?.payload?.message || "Có lỗi xảy ra khi đặt lại mật khẩu",
+        title: "Error",
+        description: error?.payload?.message || "An error occurred",
         variant: "destructive",
       });
     }
@@ -67,117 +65,108 @@ export default function ResetPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-6">
-        {email && (
-          <div className="text-center text-sm text-gray-600 mb-4">
-            Đặt lại mật khẩu cho: <strong>{email}</strong>
-          </div>
-        )}
-
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mật khẩu mới</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Nhập mật khẩu mới"
-                      className="appearance-none rounded-md relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirm_password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Xác nhận mật khẩu</FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      {...field}
-                      type={showConfirmPassword ? "text" : "password"}
-                      placeholder="Xác nhận mật khẩu mới"
-                      className="appearance-none rounded-md relative block w-full px-3 py-2 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-gray-400" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-gray-400" />
-                      )}
-                    </button>
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mã OTP</FormLabel>
-                <FormControl>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-gray-700 font-medium">
+                New Password <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <div className="relative">
                   <Input
                     {...field}
-                    type="text"
-                    placeholder="Mã OTP"
-                    readOnly
-                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 bg-gray-50 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter new password"
+                    className="w-full px-4 py-3 pr-12 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-400 bg-blue-50/30"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-blue-400" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-blue-400" />
+                    )}
+                  </button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div>
-          <Button
-            type="submit"
-            disabled={resetPasswordMutation.isPending}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {resetPasswordMutation.isPending
-              ? "Đang đặt lại..."
-              : "Đặt lại mật khẩu"}
-          </Button>
-        </div>
+        <FormField
+          control={form.control}
+          name="confirm_password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-gray-700 font-medium">
+                Confirm Password <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <div className="relative">
+                  <Input
+                    {...field}
+                    type={showConfirmPassword ? "text" : "password"}
+                    placeholder="Confirm new password"
+                    className="w-full px-4 py-3 pr-12 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-0 focus:border-blue-400 bg-blue-50/30"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5 text-blue-400" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-blue-400" />
+                    )}
+                  </button>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div className="text-center">
-          <span className="text-sm text-gray-600">
-            Yêu cầu mật khẩu: ít nhất 6 ký tự, có chữ hoa, số và ký tự đặc biệt
-          </span>
+        <FormField
+          control={form.control}
+          name="otp"
+          render={({ field }) => (
+            <FormItem className="hidden">
+              <FormLabel className="text-gray-700 font-medium">
+                OTP Code
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="text"
+                  placeholder="OTP Code"
+                  readOnly
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl bg-gray-100 text-gray-600"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button
+          type="submit"
+          disabled={resetPasswordMutation.isPending}
+          className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-200 shadow-lg text-lg"
+        >
+          {resetPasswordMutation.isPending ? "RESETTING..." : "RESET PASSWORD"}
+        </Button>
+
+        <div className="text-center text-sm text-red-500">
+          Password requirements: At least 6 characters with uppercase, numbers
+          and special characters
         </div>
       </form>
     </Form>

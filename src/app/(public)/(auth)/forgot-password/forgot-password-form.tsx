@@ -43,16 +43,18 @@ export default function ForgotPasswordForm() {
       setEmail(values.email);
 
       toast({
-        title: "Thành công",
-        description: "Mã OTP đã được gửi đến email của bạn",
+        title: "Success",
+        description: "OTP has been sent to your email",
       });
 
       // Chuyển sang trang verify với email
-      router.push(`/verify-forgot-password`);
+      router.push(
+        `/verify-forgot-password?email=${encodeURIComponent(values.email)}`
+      );
     } catch (error: any) {
       toast({
-        title: "Lỗi",
-        description: error?.payload?.message || "Có lỗi xảy ra",
+        title: "Error",
+        description: error?.payload?.message || "An error occurred",
         variant: "destructive",
       });
     }
@@ -60,44 +62,42 @@ export default function ForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-6">
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="email"
-                    placeholder="Nhập email của bạn"
-                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-gray-700 font-medium">
+                Email <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  type="email"
+                  placeholder="Enter your email to receive verification code"
+                  className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-400 bg-blue-50/30 placeholder-gray-500"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div>
-          <Button
-            type="submit"
-            disabled={forgotPasswordMutation.isPending}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {forgotPasswordMutation.isPending ? "Đang gửi..." : "Gửi mã OTP"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={forgotPasswordMutation.isPending}
+          className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-200 shadow-lg text-sm"
+        >
+          {forgotPasswordMutation.isPending ? "SENDING..." : "SEND OTP"}
+        </Button>
 
         <div className="text-center">
           <Link
             href="/login"
-            className="text-indigo-600 hover:text-indigo-500 text-sm"
+            className="text-blue-500 hover:text-blue-600 text-sm font-medium"
           >
-            Quay lại đăng nhập
+            Back to Login
           </Link>
         </div>
       </form>

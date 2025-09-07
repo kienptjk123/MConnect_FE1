@@ -1,11 +1,9 @@
-// filepath: d:\FPTUniversity\EXE101\MConnect_FE\src\app\(public)\(auth)\verify-forgot-password\verify-forgot-password-form.tsx
 "use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import {
   Form,
@@ -16,16 +14,24 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
+import {
   verifyForgotPasswordBody,
   VerifyForgotPasswordBodyType,
 } from "@/schemaValidations/auth.schema";
 import { useVerifyForgotPasswordMutation } from "@/queries/useAuth";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 export default function VerifyForgotPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const [countdown, setCountdown] = useState(0);
 
   const form = useForm<VerifyForgotPasswordBodyType>({
     resolver: zodResolver(verifyForgotPasswordBody),
@@ -36,6 +42,14 @@ export default function VerifyForgotPasswordForm() {
 
   const verifyForgotPasswordMutation = useVerifyForgotPasswordMutation();
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown > 0) {
+      timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [countdown]);
+
   const onSubmit = async (values: VerifyForgotPasswordBodyType) => {
     if (verifyForgotPasswordMutation.isPending) return;
 
@@ -43,16 +57,16 @@ export default function VerifyForgotPasswordForm() {
       await verifyForgotPasswordMutation.mutateAsync(values);
 
       toast({
-        title: "Thành công",
-        description: "Xác thực thành công",
+        title: "Success",
+        description: "Verification successful",
       });
 
       // Chuyển sang trang reset password với otp
       router.push(`/reset-password?otp=${encodeURIComponent(values.otp)}`);
     } catch (error: any) {
       toast({
-        title: "Lỗi",
-        description: error?.payload?.message || "Mã OTP không hợp lệ",
+        title: "Error",
+        description: error?.payload?.message || "Invalid OTP",
         variant: "destructive",
       });
     }
@@ -60,53 +74,83 @@ export default function VerifyForgotPasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         {email && (
-          <div className="text-center text-sm text-gray-600 mb-4">
-            Mã OTP đã được gửi đến: <strong>{email}</strong>
+          <div className="text-center text-sm text-gray-600 mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            OTP code has been sent to:{" "}
+            <strong className="text-blue-600">{email}</strong>
           </div>
         )}
 
-        <div className="space-y-4">
-          <FormField
-            control={form.control}
-            name="otp"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Mã OTP</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    type="text"
-                    placeholder="Nhập mã OTP 6 số"
+        <FormField
+          control={form.control}
+          name="otp"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-gray-700 font-medium block text-center">
+                OTP Code <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <div className="flex justify-center">
+                  <InputOTP
                     maxLength={6}
-                    className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm text-center text-2xl tracking-widest"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                    pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    <InputOTPGroup>
+                      <InputOTPSlot
+                        index={0}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                      <InputOTPSlot
+                        index={1}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                      <InputOTPSlot
+                        index={2}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                      <InputOTPSlot
+                        index={3}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                      <InputOTPSlot
+                        index={4}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                      <InputOTPSlot
+                        index={5}
+                        className=" border-blue-200 focus:border-blue-400 bg-blue-50/30"
+                      />
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <div>
-          <Button
-            type="submit"
-            disabled={verifyForgotPasswordMutation.isPending}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {verifyForgotPasswordMutation.isPending
-              ? "Đang xác thực..."
-              : "Xác thực OTP"}
-          </Button>
-        </div>
+        <Button
+          type="submit"
+          disabled={
+            verifyForgotPasswordMutation.isPending ||
+            form.watch("otp").length !== 6
+          }
+          className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-200 shadow-lg text-lg"
+        >
+          {verifyForgotPasswordMutation.isPending
+            ? "VERIFYING..."
+            : "VERIFY OTP"}
+        </Button>
 
         <div className="text-center">
           <Link
             href="/forgot-password"
-            className="text-indigo-600 hover:text-indigo-500 text-sm"
+            className="text-blue-500 hover:text-blue-600 text-sm font-medium"
           >
-            Gửi lại mã OTP
+            Back to Forgot Password
           </Link>
         </div>
       </form>

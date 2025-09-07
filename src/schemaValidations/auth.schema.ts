@@ -112,13 +112,13 @@ export const RefreshTokenRes = z.object({
 export type RefreshTokenResType = z.TypeOf<typeof RefreshTokenRes>;
 
 export const ForgotPasswordBody = z.object({
-  email: z.string().email("Email không hợp lệ"),
+  email: z.string().email("Invalid email"),
 });
 
 export type ForgotPasswordBodyType = z.TypeOf<typeof ForgotPasswordBody>;
 
 export const verifyForgotPasswordBody = z.object({
-  otp: z.string().min(1, "Mã OTP không được để trống"),
+  otp: z.string().min(1, "OTP code is required"),
 });
 
 export type VerifyForgotPasswordBodyType = z.TypeOf<
@@ -129,21 +129,21 @@ export const ResetPasswordBody = z
   .object({
     password: z
       .string()
-      .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
-      .regex(/[A-Z]/, "Mật khẩu phải có ít nhất 1 chữ cái in hoa")
-      .regex(/[0-9]/, "Mật khẩu phải có ít nhất 1 số")
+      .min(6, "Password must be at least 6 characters")
+      .regex(/[A-Z]/, "Password must contain at least 1 uppercase letter")
+      .regex(/[0-9]/, "Password must contain at least 1 number")
       .regex(
         /[!@#$%^&*(),.?":{}|<>]/,
-        "Mật khẩu phải có ít nhất 1 ký tự đặc biệt"
+        "Password must contain at least 1 special character"
       ),
     confirm_password: z
       .string()
-      .min(6, "Xác nhận mật khẩu phải có ít nhất 6 ký tự"),
-    otp: z.string().min(1, "Mã OTP không được để trống"),
+      .min(6, "Password confirmation must be at least 6 characters"),
+    otp: z.string().min(1, "OTP code is required"),
   })
   .strict()
   .refine((data) => data.password === data.confirm_password, {
-    message: "Mật khẩu xác nhận không khớp",
+    message: "Password confirmation does not match",
     path: ["confirm_password"],
   });
 

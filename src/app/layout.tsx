@@ -28,10 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`bg-[#F4FAFF] ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={` ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppProviders>
-          <div className="container max-w-[96rem] px-2 mx-auto">
+          <div className="container mx-auto">
             <Header />
             <main>{children}</main>
           </div>

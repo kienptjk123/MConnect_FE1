@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className=" bg-white shadow-lg border-b rounded-full my-3 ">
+    <header className=" border rounded-full my-3 mx-4 bg-white ">
       <div className="max-w-7xl mx-auto  px-2">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
