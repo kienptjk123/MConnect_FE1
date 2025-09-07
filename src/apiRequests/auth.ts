@@ -9,6 +9,9 @@ import {
   ResendVerifyEmailResType,
   RefreshTokenBodyType,
   RefreshTokenResType,
+  ResetPasswordBodyType,
+  ForgotPasswordBodyType,
+  VerifyForgotPasswordBodyType,
 } from "@/schemaValidations/auth.schema";
 
 const authApiRequest = {
@@ -71,6 +74,21 @@ const authApiRequest = {
     this.refreshTokenRequest = null;
     return result;
   },
+
+  forgotPassword: (body: ForgotPasswordBodyType) =>
+    http.post("/users/forgot-password", body, {
+      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    }),
+
+  verifyForgotPassword: (body: VerifyForgotPasswordBodyType) =>
+    http.post("/users/verify-forgot-password", body, {
+      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    }),
+
+  resetPassword: (body: ResetPasswordBodyType) =>
+    http.post("/users/reset-password", body, {
+      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    }),
 };
 
 export default authApiRequest;

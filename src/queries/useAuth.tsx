@@ -24,3 +24,21 @@ export const useResendVerifyEmailMutation = () => {
     mutationFn: authApiRequest.resendVerifyEmail,
   });
 };
+
+export const useForgotPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.forgotPassword,
+  });
+};
+
+export const useVerifyForgotPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.verifyForgotPassword,
+  });
+};
+
+export const useResetPasswordMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.resetPassword,
+  });
+};
