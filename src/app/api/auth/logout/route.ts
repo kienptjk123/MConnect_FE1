@@ -16,6 +16,12 @@ export async function POST() {
       maxAge: 0,
     });
 
+    cookieStore.set("role", "", {
+      path: "/",
+      httpOnly: true,
+      maxAge: 0,
+    });
+
     return Response.json(
       { message: "Logged out successfully" },
       {

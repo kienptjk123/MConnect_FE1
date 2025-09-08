@@ -34,6 +34,8 @@ import { useRouter } from "next/navigation";
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const registerMutation = useRegisterMutation();
   const router = useRouter();
 
@@ -66,9 +68,16 @@ export default function RegisterForm() {
         return;
       }
 
+      // Gộp firstName và lastName thành name
+      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+      if (!fullName) {
+        toast.error("Vui lòng nhập đầy đủ họ và tên");
+        return;
+      }
+
       const dateObj = new Date(values.dateOfBirth);
       const formattedValues: RegisterApiPayload = {
-        name: values.name,
+        name: fullName,
         email: values.email,
         password: values.password,
         confirm_password: values.confirm_password,
@@ -90,37 +99,51 @@ export default function RegisterForm() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0">
-      <CardHeader className="space-y-1 pb-6">
-        <CardTitle className="text-2xl font-bold text-center text-gray-800">
-          Đăng ký tài khoản
+    <Card className="bg-[#fae7e7]/50 rounded-[2rem] backdrop-blur-none border-0 w-[1000px] shadow-none py-3 px-10">
+      <CardHeader className="space-y-1 pb-2">
+        <CardTitle className="text-3xl font-bold text-start text-gray-800">
+          Mentee Registration
         </CardTitle>
-        <CardDescription className="text-center text-gray-600">
-          Tạo tài khoản để bắt đầu sử dụng dịch vụ
+        <CardDescription className="text-start text-black mt-4 font-bold">
+          Fields with are required
+        </CardDescription>
+        <CardDescription className="text-start text-black mt-2">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim
+        </CardDescription>
+        <CardDescription className="text-start font-semibold text-black mt-2">
+          Credentials
         </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-gray-700">
-                    Họ và tên
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Nhập họ và tên"
-                      {...field}
-                      className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                First Name
+              </label>
+              <Input
+                placeholder="Nguyen Van"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">
+                Last Name
+              </label>
+              <Input
+                placeholder="A"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                required
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -133,9 +156,9 @@ export default function RegisterForm() {
                   <FormControl>
                     <Input
                       type="email"
-                      placeholder="Nhập địa chỉ email"
+                      placeholder="abcd@gmail.com"
                       {...field}
-                      className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -149,7 +172,7 @@ export default function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Ngày sinh *
+                    Date
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -157,7 +180,7 @@ export default function RegisterForm() {
                       {...field}
                       required
                       max={new Date().toISOString().split("T")[0]}
-                      className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
                     />
                   </FormControl>
                   <FormMessage />
@@ -171,15 +194,15 @@ export default function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Mật khẩu
+                    Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showPassword ? "text" : "password"}
-                        placeholder="Nhập mật khẩu"
+                        placeholder="*******"
                         {...field}
-                        className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10"
+                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10"
                       />
                       <button
                         type="button"
@@ -205,15 +228,15 @@ export default function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700">
-                    Xác nhận mật khẩu
+                    Confirm Password
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <Input
                         type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Nhập lại mật khẩu"
+                        placeholder="*******"
                         {...field}
-                        className="h-11 border-gray-300 focus:border-blue-500 focus:ring-blue-500 pr-10"
+                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10"
                       />
                       <button
                         type="button"
@@ -237,22 +260,22 @@ export default function RegisterForm() {
 
             <Button
               type="submit"
-              className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              className="w-full h-10 mt-3 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
               disabled={registerMutation.isPending}
             >
-              {registerMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
+              {registerMutation.isPending ? "Loading..." : "Register"}
             </Button>
           </form>
         </Form>
 
-        <div className="text-center">
+        <div className="text-center mt-3">
           <p className="text-sm text-gray-600">
-            Đã có tài khoản?{" "}
+            Already have an account?{" "}
             <Link
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
             >
-              Đăng nhập ngay
+              Sign in now
             </Link>
           </p>
         </div>

@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "@/components/app-provider";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
+import Image from "next/image";
 
 export default function LoginForm() {
   const loginMutation = useLoginMutation();
@@ -43,17 +44,15 @@ export default function LoginForm() {
       console.warn("Login already in progress");
       return;
     }
-
     try {
       const result = await loginMutation.mutateAsync(data);
-
       toast({
         description: result.payload.message,
       });
       setRole(
         result.payload.result.role as "MENTOR" | "MENTEE" | "STAFF" | "ADMIN"
       );
-      router.push("/manage/dashboard");
+      router.push("/manage/mentee/dashboard");
     } catch (error) {
       console.log(error);
       toast({
@@ -63,149 +62,151 @@ export default function LoginForm() {
         variant: "destructive",
       });
     }
-
-    console.groupEnd();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Mentee / Mentor Login
-          </h1>
-          <div className="flex items-center justify-center space-x-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-blue-600">Registration</span>
-          </div>
-        </div>
-
-        <Card className="shadow-lg border-0">
-          <CardHeader className="space-y-1 pb-6">
-            <CardTitle className="text-xl font-semibold text-gray-800 text-center">
-              MENTEE / MENTOR LOGIN
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form
-                className="space-y-4 w-full"
-                noValidate
-                onSubmit={form.handleSubmit(onSubmit, (err) => {
-                  console.log(err);
-                })}
-              >
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="email"
-                          className="text-sm font-medium text-gray-700"
-                        >
-                          Email
-                        </Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          placeholder="abcd@gmail.com"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          required
-                          {...field}
-                        />
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="space-y-2">
-                        <Label
-                          htmlFor="password"
-                          className="text-sm font-medium text-gray-700"
-                        >
-                          Password
-                        </Label>
-                        <div className="relative">
-                          <Input
-                            id="password"
-                            type={showPassword ? "text" : "password"}
-                            placeholder="*******"
-                            className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                            required
-                            {...field}
-                          />
-                          <button
-                            type="button"
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                            onClick={() => setShowPassword(!showPassword)}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4 text-gray-400" />
-                            ) : (
-                              <Eye className="h-4 w-4 text-gray-400" />
-                            )}
-                          </button>
-                        </div>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="remember"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="remember" className="text-sm text-gray-700">
-                    Remember Me
-                  </label>
-                </div>
-
-                <Button
-                  type="submit"
-                  className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200"
-                  disabled={loginMutation.isPending}
-                >
-                  {loginMutation.isPending ? "Đang đăng nhập..." : "LOGIN"}
-                </Button>
-
-                <div className="text-center space-y-2">
-                  <Link
-                    href="/forgot-password"
-                    className="text-sm text-blue-600 hover:text-blue-800 underline block"
-                  >
-                    Forgot Your Password?
-                  </Link>
-                  <p className="text-sm text-gray-600">
-                    Chưa có tài khoản?{" "}
-                    <Link
-                      href="/register"
-                      className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+    <Card className="bg-[#fae7e7]/50 rounded-[2rem] backdrop-blur-none border-0 w-[1000px] shadow-none py-3 px-10">
+      <CardHeader className="space-y-1 pb-6">
+        <CardTitle className="text-3xl font-bold text-gray-800 text-start">
+          MENTEE / MENTOR LOGIN
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            className="space-y-4 w-full"
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit, (err) => {
+              console.log(err);
+            })}
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
                     >
-                      Đăng ký ngay
-                    </Link>
-                  </p>
+                      Email
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="abcd@gmail.com"
+                      className="w-full h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                      required
+                      {...field}
+                    />
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="password"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Password
+                    </Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="*******"
+                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                        required
+                        {...field}
+                      />
+                      <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-gray-400" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-gray-400" />
+                        )}
+                      </button>
+                    </div>
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 border-[#60A6EB] rounded"
+                />
+                <label
+                  htmlFor="remember"
+                  className="text-sm text-black font-medium"
+                >
+                  Remember Me
+                </label>
+              </div>
+
+              <Link
+                href="/forgot-password"
+                className="text-sm text-black font-medium"
+              >
+                Forgot Your Password?
+              </Link>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-md text-sm transition duration-200"
+              disabled={loginMutation.isPending}
+            >
+              {loginMutation.isPending ? "Đang đăng nhập..." : "Sign in"}
+            </Button>
+
+            <div className="text-center space-y-2">
+              <div className="flex items-center mb-2 mt-1">
+                <div className="flex-1 h-1 w-1 bg-gray-300"></div>
+                <div className="text-gray-400 font-bold text-lg px-3">or</div>
+                <div className="flex-1 h-1 w-1 bg-gray-300"></div>
+              </div>
+
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center justify-center bg-white border hover:bg-white/85 border-gray-300 text-gray-800 w-full py-3 text-sm rounded-lg mr-2">
+                  <Image
+                    src="/images/google-logo-search-new-svgrepo-com.svg"
+                    alt="Google"
+                    width={16}
+                    height={16}
+                    className="mr-2"
+                  />
+                  <div className="">Sign in with Google</div>
                 </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+              </div>
+
+              <div className="text-black font-bold mt-2 text-center">
+                Do not have an account?
+                <Link href="/register" className="text-blue-500 ml-1 font-bold">
+                  Register
+                </Link>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

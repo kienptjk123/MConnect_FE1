@@ -9,7 +9,7 @@ export async function POST(request: Request) {
   try {
     const { payload } = await authApiRequest.sLogin(body);
 
-    const { access_token, refresh_token } = payload.result;
+    const { access_token, refresh_token, role } = payload.result;
 
     const decodedAccessToken = jwt.decode(access_token) as {
       exp?: number;
@@ -29,6 +29,16 @@ export async function POST(request: Request) {
     });
 
     cookieStore.set("refreshToken", refresh_token, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: decodedRefreshToken?.exp
+        ? new Date(decodedRefreshToken.exp * 1000)
+        : undefined,
+    });
+
+    cookieStore.set("role", role, {
       path: "/",
       httpOnly: true,
       sameSite: "lax",

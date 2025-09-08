@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 export async function POST() {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
+  const currentRole = cookieStore.get("role")?.value; // Giữ role hiện tại
 
   if (!refreshToken) {
     return Response.json(
@@ -50,6 +51,16 @@ export async function POST() {
       )}`
     );
 
+    // Maintain role cookie if it exists
+    if (currentRole) {
+      response.headers.append(
+        "Set-Cookie",
+        `role=${currentRole}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(
+          (refreshTokenExpiry - Date.now()) / 1000
+        )}`
+      );
+    }
+
     return response;
   } catch {
     // If refresh token is invalid, clear the cookies
@@ -65,6 +76,10 @@ export async function POST() {
     response.headers.append(
       "Set-Cookie",
       "refreshToken=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+    );
+    response.headers.append(
+      "Set-Cookie",
+      "role=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
     );
 
     return response;

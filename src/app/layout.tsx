@@ -1,9 +1,7 @@
+import { AppProviders } from "@/components/app-providers";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header/Header";
-import Footer from "@/components/Footer/Footer";
-import { AppProviders } from "@/components/app-providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,11 +29,7 @@ export default function RootLayout({
         className={` ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AppProviders>
-          <div className="container mx-auto">
-            <Header />
-            <main>{children}</main>
-          </div>
-          <Footer />
+          <main>{children}</main>
         </AppProviders>
       </body>
     </html>

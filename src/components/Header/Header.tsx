@@ -93,7 +93,7 @@ export default function Header() {
             <Link href="/register">
               <Button
                 variant="outline"
-                className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-8"
+                className="border-blue-600 cursor-pointer text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-full px-8"
               >
                 Sign Up
               </Button>
@@ -101,7 +101,7 @@ export default function Header() {
             <Link href="/login">
               <Button
                 variant="outline"
-                className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8"
+                className="bg-blue-600 cursor-pointer hover:bg-blue-700 hover:text-white text-white rounded-full px-8"
               >
                 Login
               </Button>

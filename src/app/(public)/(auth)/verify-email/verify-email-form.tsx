@@ -138,13 +138,13 @@ export default function VerifyEmailForm() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto shadow-lg border-0">
+    <Card className="bg-[#fae7e7]/50 rounded-[2rem] backdrop-blur-none border-0 w-[1000px] shadow-none py-3 px-10">
       <CardHeader className="space-y-1 pb-6">
         <CardTitle className="text-2xl font-bold text-center text-gray-800">
-          Xác thực email
+          Verify OTP
         </CardTitle>
         <CardDescription className="text-center text-gray-600">
-          Nhập mã OTP được gửi đến email của bạn
+          Input OTP sent to your email
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -156,7 +156,7 @@ export default function VerifyEmailForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-gray-700 block text-center">
-                    Mã OTP (6 ký tự)
+                    OTP (6 digits)
                   </FormLabel>
                   <FormControl>
                     <div className="flex justify-center">
@@ -167,12 +167,30 @@ export default function VerifyEmailForm() {
                         onChange={field.onChange}
                       >
                         <InputOTPGroup>
-                          <InputOTPSlot index={0} />
-                          <InputOTPSlot index={1} />
-                          <InputOTPSlot index={2} />
-                          <InputOTPSlot index={3} />
-                          <InputOTPSlot index={4} />
-                          <InputOTPSlot index={5} />
+                          <InputOTPSlot
+                            index={0}
+                            className="h-[50px] w-[50px] bg-white border border-blue-500"
+                          />
+                          <InputOTPSlot
+                            index={1}
+                            className="h-[50px] w-[50px] bg-white border-t border-b border-r border-blue-500"
+                          />
+                          <InputOTPSlot
+                            index={2}
+                            className="h-[50px] w-[50px] bg-white border-t border-b border-r border-blue-500"
+                          />
+                          <InputOTPSlot
+                            index={3}
+                            className="h-[50px] w-[50px] bg-white border-t border-b border-r border-blue-500"
+                          />
+                          <InputOTPSlot
+                            index={4}
+                            className="h-[50px] w-[50px] bg-white border-t border-b border-r border-blue-500"
+                          />
+                          <InputOTPSlot
+                            index={5}
+                            className="h-[50px] w-[50px] bg-white border-t border-b border-r border-blue-500"
+                          />
                         </InputOTPGroup>
                       </InputOTP>
                     </div>
@@ -184,19 +202,21 @@ export default function VerifyEmailForm() {
 
             <Button
               type="submit"
-              className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+              className="w-full h-11 cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
               disabled={
                 verifyEmailMutation.isPending ||
                 form.watch("email_verify_token").length !== 6
               }
             >
-              {verifyEmailMutation.isPending ? "Đang xác thực..." : "Xác thực"}
+              {verifyEmailMutation.isPending ? "Đang xác thực..." : "Verify"}
             </Button>
           </form>
         </Form>
 
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-600 mb-3">Không nhận được mã?</p>
+          <p className="text-sm text-gray-600 mb-3">
+            Does not receive the otp?
+          </p>
           <Button
             variant="outline"
             onClick={handleResendOTP}
@@ -217,7 +237,7 @@ export default function VerifyEmailForm() {
               href="/login"
               className="font-medium text-blue-600 hover:text-blue-500 transition-colors"
             >
-              Quay lại đăng nhập
+              Back to sign in
             </Link>
           </p>
         </div>
