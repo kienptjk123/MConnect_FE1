@@ -147,3 +147,13 @@ export const formatDateTimeToTimeString = (date: string | Date) => {
 export const formatDateToLocaleString = (date: string | Date) => {
   return format(date instanceof Date ? date : new Date(date), "dd/MM/yyyy");
 };
+
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};

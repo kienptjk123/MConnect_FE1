@@ -42,6 +42,27 @@ export const ReplyBody = z.object({
   parent_reply_id: z.number().nullable().optional(),
 });
 
+export type ReplyData = {
+  id: number;
+  content: string;
+  authorType: string;
+  menteeProfileId: number;
+  questionId: number;
+  parentReplyId?: number | null;
+  createdAt: string;
+  updatedAt: string;
+  menteeProfile: {
+    id: number;
+    name: string;
+    avatar?: string | null;
+    username?: string | null;
+  };
+  _count: {
+    votes: number;
+    childReplies: number;
+  };
+};
+
 export type ReplyResType = z.TypeOf<typeof ReplyRes>;
 export type RepliesListResType = z.TypeOf<typeof ReplyListRes>;
 export type ReplyCreateBody = z.TypeOf<typeof ReplyBody>;

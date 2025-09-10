@@ -45,6 +45,25 @@ export const QuestionUpdateBody = z.object({
   image: z.instanceof(File).optional(),
 });
 
+export type QuestionData = {
+  id: number;
+  title: string;
+  content: string;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  menteeProfile: {
+    id: number;
+    name: string;
+    avatar?: string | null;
+    username?: string | null;
+  };
+  _count: {
+    replies: number;
+    votes: number;
+  };
+};
+
 export type QuestionResType = z.TypeOf<typeof QuestionRes>;
 export type QuestionsListResType = z.TypeOf<typeof QuestionsListRes>;
 export type QuestionBodyType = z.TypeOf<typeof QuestionCreateBody>;
