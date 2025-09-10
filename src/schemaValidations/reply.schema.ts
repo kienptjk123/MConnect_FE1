@@ -25,20 +25,23 @@ export const ReplySchema = z.object({
   _count: CountSchema,
 });
 
-export const ReplyCreateBody = z.object({
+export const ReplyRes = z.object({
+  data: ReplySchema,
+  message: z.string(),
+});
+
+export const ReplyListRes = z.object({
+  data: z.array(ReplySchema),
+  message: z.string(),
+});
+
+export const ReplyBody = z.object({
   content: z.string().min(1, "Content is required"),
   author_type: z.string(),
   question_id: z.number(),
   parent_reply_id: z.number().nullable().optional(),
 });
 
-export const ReplyUpdateBody = z.object({
-  content: z.string().min(1, "Content is required"),
-  author_type: z.string(),
-  question_id: z.number(),
-  parent_reply_id: z.number().nullable().optional(),
-});
-
-export type ReplyResType = z.TypeOf<typeof ReplySchema>;
-export type ReplyCreateBody = z.TypeOf<typeof ReplyCreateBody>;
-export type ReplyUpdateBody = z.TypeOf<typeof ReplyUpdateBody>;
+export type ReplyResType = z.TypeOf<typeof ReplyRes>;
+export type RepliesListResType = z.TypeOf<typeof ReplyListRes>;
+export type ReplyCreateBody = z.TypeOf<typeof ReplyBody>;

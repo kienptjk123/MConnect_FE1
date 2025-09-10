@@ -2,25 +2,18 @@ import http from "@/lib/http";
 import {
   QuestionBodyType,
   QuestionResType,
+  QuestionsListResType,
   QuestionUpdateBodyType,
 } from "@/schemaValidations/question.schema";
 
 const questionApiRequest = {
-  getQuestions: () => http.get<QuestionResType>("/questions"),
+  getQuestions: () => http.get<QuestionsListResType>("/questions"),
   getQuestionById: (id: number) =>
     http.get<QuestionResType>(`/questions/${id}`),
   createQuestion: (body: QuestionBodyType) =>
-    http.post<QuestionBodyType>("/questions/create", body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }),
+    http.post<QuestionResType>("/questions/create", body),
   updateQuestion: (id: number, body: QuestionUpdateBodyType) =>
-    http.put<QuestionUpdateBodyType>(`/questions/update/${id}`, body, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }),
+    http.put<QuestionResType>(`/questions/update/${id}`, body),
   deleteQuestion: (id: number) =>
     http.delete<{ message: string }>(`/questions/delete/${id}`),
 };

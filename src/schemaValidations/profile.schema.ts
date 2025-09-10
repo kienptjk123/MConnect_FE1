@@ -1,0 +1,28 @@
+import z from "zod";
+
+const ProfileSchema = z.object({
+  id: z.number(),
+  email: z.string(),
+  role: z.string(),
+  status: z.string(),
+  mentee_profile_id: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  name: z.string(),
+  bio: z.string().nullable(),
+  location: z.string().nullable(),
+  username: z.string(),
+  avatar: z.string().nullable(),
+  coverPhoto: z.string().nullable(),
+  date_of_birth: z.string().nullable(),
+  website: z.string().nullable(),
+  phone_number: z.string().nullable(),
+  description: z.string().nullable(),
+});
+
+export const ProfileRes = z.object({
+  message: z.string(),
+  result: ProfileSchema,
+});
+
+export type ProfileResType = z.TypeOf<typeof ProfileRes>;

@@ -23,6 +23,16 @@ export const QuestionSchema = z.object({
   _count: CountSchema,
 });
 
+export const QuestionRes = z.object({
+  data: QuestionSchema,
+  message: z.string(),
+});
+
+export const QuestionsListRes = z.object({
+  data: z.array(QuestionSchema),
+  message: z.string(),
+});
+
 export const QuestionCreateBody = z.object({
   title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
@@ -35,6 +45,7 @@ export const QuestionUpdateBody = z.object({
   image: z.instanceof(File).optional(),
 });
 
-export type QuestionResType = z.TypeOf<typeof QuestionSchema>;
+export type QuestionResType = z.TypeOf<typeof QuestionRes>;
+export type QuestionsListResType = z.TypeOf<typeof QuestionsListRes>;
 export type QuestionBodyType = z.TypeOf<typeof QuestionCreateBody>;
 export type QuestionUpdateBodyType = z.TypeOf<typeof QuestionUpdateBody>;
