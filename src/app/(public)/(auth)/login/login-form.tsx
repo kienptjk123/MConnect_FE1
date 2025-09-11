@@ -73,14 +73,14 @@ export default function LoginForm() {
       setRole(
         result.payload.result.role as "MENTOR" | "MENTEE" | "STAFF" | "ADMIN"
       );
-      // if (result.payload.result.access_token) {
-      //   const notificationResult =
-      //     await notificationService.initializeNotifications();
+      if (result.payload.result.access_token) {
+        const notificationResult =
+          await notificationService.initializeNotifications();
 
-      //   if (notificationResult.success) {
-      //     console.log("Notifications initialized successfully");
-      //   }
-      // }
+        if (notificationResult.success) {
+          console.log("Notifications initialized successfully");
+        }
+      }
 
       router.push("/manage/mentee/dashboard");
     } catch (error) {

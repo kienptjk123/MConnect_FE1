@@ -145,7 +145,7 @@ export const formatDateTimeToTimeString = (date: string | Date) => {
 };
 
 export const formatDateToLocaleString = (date: string | Date) => {
-  return format(date instanceof Date ? date : new Date(date), "dd/MM/yyyy");
+  return format(date instanceof Date ? date : new Date(date), "dd-MM-yyyy");
 };
 
 export const formatDate = (dateString: string) => {
