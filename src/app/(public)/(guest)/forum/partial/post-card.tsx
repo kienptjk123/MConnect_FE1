@@ -6,7 +6,7 @@ import { Heart, MessageCircle, Edit, Trash2 } from "lucide-react";
 import { QuestionData } from "@/schemaValidations/question.schema";
 import { UserProfile } from "@/schemaValidations/profile.schema";
 import { formatDate } from "@/lib/utils";
-import CommentSection from "@/app/manage/mentee/forum/partial/comment-section";
+import CommentSection from "@/app/(public)/(guest)/forum/partial/comment-section";
 
 interface PostCardProps {
   question: QuestionData;

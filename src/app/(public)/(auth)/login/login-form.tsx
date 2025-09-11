@@ -82,7 +82,7 @@ export default function LoginForm() {
         }
       }
 
-      router.push("/manage/mentee/dashboard");
+      router.push("/");
     } catch (error) {
       console.log(error);
       toast({

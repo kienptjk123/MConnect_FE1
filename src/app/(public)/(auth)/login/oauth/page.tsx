@@ -24,7 +24,7 @@ export default function OauthPage() {
         refresh_token: refresh_token,
         role: role,
       }).then(() => {
-        router.push("/manage/mentee/dashboard");
+        router.push("/");
       });
     } else {
       toast({

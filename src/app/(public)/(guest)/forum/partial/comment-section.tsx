@@ -7,7 +7,7 @@ import replyApiRequest from "@/apiRequests/reply";
 import { toast } from "@/components/ui/use-toast";
 import { UserProfile } from "@/schemaValidations/profile.schema";
 import { ReplyData } from "@/schemaValidations/reply.schema";
-import CommentItem from "@/app/manage/mentee/forum/partial/comment-item";
+import CommentItem from "@/app/(public)/(guest)/forum/partial/comment-item";
 
 interface CommentSectionProps {
   questionId: number;

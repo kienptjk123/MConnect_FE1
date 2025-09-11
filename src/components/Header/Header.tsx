@@ -1,9 +1,46 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+
+import profileApiRequest from "@/apiRequests/profile";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { ProfileResType } from "@/schemaValidations/profile.schema";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
 import { Search } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+function hasAccessToken() {
+  if (typeof window === "undefined") return false;
+  return !!localStorage.getItem("accessToken");
+}
 
 export default function Header() {
+  const [profile, setProfile] = useState<ProfileResType | null>(null);
+
+  useEffect(() => {
+    if (!hasAccessToken()) {
+      return;
+    }
+    (async () => {
+      try {
+        const res = await profileApiRequest.getProfile();
+        setProfile(res.payload);
+      } catch (err) {
+        console.error("Error fetching user profile:", err);
+      } finally {
+      }
+    })();
+  }, []);
+
   return (
     <header className=" border rounded-full my-3 mx-4 bg-white ">
       <div className="max-w-7xl mx-auto  px-2">
@@ -65,10 +102,10 @@ export default function Header() {
               Blog
             </Link>
             <Link
-              href="/contact"
+              href="/forum"
               className="text-gray-700 hover:text-blue-600 font-medium"
             >
-              Contact
+              Forum
             </Link>
             <Link
               href="/about"
@@ -90,22 +127,63 @@ export default function Header() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Link href="/register">
-              <Button
-                variant="outline"
-                className="border-blue-600 cursor-pointer text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-full px-8"
-              >
-                Sign Up
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="bg-blue-600 cursor-pointer hover:bg-blue-700 hover:text-white text-white rounded-full px-8"
-              >
-                Login
-              </Button>
-            </Link>
+            {profile ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    aria-label="Open user menu"
+                    className="focus:outline-none"
+                  >
+                    <Avatar className="h-10 w-10 ring-1 ring-gray-200 hover:cursor-pointer">
+                      <AvatarImage
+                        src={profile.result.avatar || undefined}
+                        alt={profile.result.name}
+                      />
+                      <AvatarFallback className="bg-blue-600 text-white">
+                        {profile.result.name || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="space-y-1">
+                    <p className="text-sm font-medium leading-none">
+                      {profile.result.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {profile.result.email}
+                    </p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile">My Profile</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/manage/mentee/dashboard">Learning Hub</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-red-600">
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Link href="/register">
+                  <Button
+                    variant="outline"
+                    className="border-blue-600 cursor-pointer text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-full px-8"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button className="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white rounded-full px-8">
+                    Login
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

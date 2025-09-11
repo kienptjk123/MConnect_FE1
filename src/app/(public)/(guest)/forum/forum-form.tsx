@@ -3,36 +3,22 @@
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 
+import type { QuestionData } from "@/schemaValidations/question.schema";
 import type {
-  QuestionData,
-  QuestionUpdateBodyType,
-} from "@/schemaValidations/question.schema";
-import type { VoteCreateBodyType } from "@/schemaValidations/vote.schema";
+  VoteCreateBodyType,
+  VoteData,
+} from "@/schemaValidations/vote.schema";
 import type { UserProfile } from "@/schemaValidations/profile.schema";
 import profileApiRequest from "@/apiRequests/profile";
 import { toast } from "@/components/ui/use-toast";
 import questionApiRequest from "@/apiRequests/question";
 import { voteApiRequests } from "@/apiRequests/vote";
-import PostCard from "@/app/manage/mentee/forum/partial/post-card";
-import CreatePostModal from "@/app/manage/mentee/forum/partial/create-post-modal";
-import EditPostModal from "@/app/manage/mentee/forum/partial/edit-post-modal";
+import PostCard from "@/app/(public)/(guest)/forum/partial/post-card";
+import CreatePostModal from "@/app/(public)/(guest)/forum/partial/create-post-modal";
+import EditPostModal from "@/app/(public)/(guest)/forum/partial/edit-post-modal";
 import Swal from "sweetalert2";
 
-type VoteData = {
-  id: number;
-  voteType: string;
-  userId: number;
-  questionId?: number | null;
-  replyId?: number | null;
-  createdAt: string;
-  user: {
-    id: number;
-    email: string;
-  };
-};
-
 export default function Forum() {
-  // States
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showEditPost, setShowEditPost] = useState(false);
   const [editingPost, setEditingPost] = useState<QuestionData | null>(null);
@@ -44,7 +30,9 @@ export default function Forum() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
 
   useEffect(() => {
-    fetchUserProfile();
+    if (!!localStorage.getItem("accessToken")) {
+      fetchUserProfile();
+    }
     fetchQuestions();
   }, []);
 
@@ -311,15 +299,6 @@ export default function Forum() {
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto max-w-5xl py-8 px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-500 mb-2">
-            Discussion Forum
-          </h1>
-          <p className="text-gray-600">
-            Share knowledge and connect with the community
-          </p>
-        </div>
-
         <div className="mb-8">
           <button
             onClick={() => setShowCreatePost(true)}
