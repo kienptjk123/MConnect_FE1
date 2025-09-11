@@ -15,6 +15,27 @@ import { useAppContext } from "@/components/app-provider";
 import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
+import envConfig from "@/config";
+import notificationService from "@/services/notification-service";
+
+const getOauthGoogleUrl = () => {
+  const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+  const options = {
+    redirect_uri: envConfig.NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI,
+    client_id: envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    access_type: "offline",
+    response_type: "code",
+    prompt: "consent",
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.profile",
+      "https://www.googleapis.com/auth/userinfo.email",
+    ].join(" "),
+  };
+  const qs = new URLSearchParams(options);
+  return `${rootUrl}?${qs.toString()}`;
+};
+
+const googleAuthUrl = getOauthGoogleUrl();
 
 export default function LoginForm() {
   const loginMutation = useLoginMutation();
@@ -52,6 +73,15 @@ export default function LoginForm() {
       setRole(
         result.payload.result.role as "MENTOR" | "MENTEE" | "STAFF" | "ADMIN"
       );
+      // if (result.payload.result.access_token) {
+      //   const notificationResult =
+      //     await notificationService.initializeNotifications();
+
+      //   if (notificationResult.success) {
+      //     console.log("Notifications initialized successfully");
+      //   }
+      // }
+
       router.push("/manage/mentee/dashboard");
     } catch (error) {
       console.log(error);
@@ -193,7 +223,9 @@ export default function LoginForm() {
                     height={16}
                     className="mr-2"
                   />
-                  <div className="">Sign in with Google</div>
+                  <Link href={googleAuthUrl}>
+                    <div className="">Sign in with Google</div>
+                  </Link>
                 </div>
               </div>
 

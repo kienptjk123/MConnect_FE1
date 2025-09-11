@@ -25,4 +25,22 @@ export const ProfileRes = z.object({
   result: ProfileSchema,
 });
 
+export type UserProfile = {
+  id: number;
+  email: string;
+  role: string;
+  status: string;
+  mentee_profile_id: number;
+  name: string;
+  bio?: string | null;
+  location?: string | null;
+  username: string;
+  avatar?: string | null;
+  coverPhoto?: string | null;
+  date_of_birth?: string | null;
+  website?: string | null;
+  phone_number?: string | null;
+  description?: string | null;
+};
+
 export type ProfileResType = z.TypeOf<typeof ProfileRes>;

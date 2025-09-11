@@ -42,3 +42,9 @@ export const useResetPasswordMutation = () => {
     mutationFn: authApiRequest.resetPassword,
   });
 };
+
+export const useSetTokenToCookieMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.setTokenToCookie,
+  });
+};

@@ -101,6 +101,14 @@ const authApiRequest = {
     http.post("/api/auth/reset-password", body, {
       baseUrl: "",
     }),
+  setTokenToCookie: (body: {
+    refresh_token: string;
+    access_token: string;
+    role: string;
+  }) =>
+    http.post("/api/auth/token", body, {
+      baseUrl: "",
+    }),
 };
 
 export default authApiRequest;

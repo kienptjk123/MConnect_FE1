@@ -31,6 +31,19 @@ export const VoteBody = z.object({
   reply_id: z.number().optional(),
 });
 
+export type VoteData = {
+  id: number;
+  voteType: string;
+  userId: number;
+  questionId?: number | null;
+  replyId?: number | null;
+  createdAt: string;
+  user: {
+    id: number;
+    email: string;
+  };
+};
+
 export type VoteResType = z.TypeOf<typeof VoteRes>;
 export type VotesListResType = z.TypeOf<typeof VotesListRes>;
 export type VoteCreateBodyType = z.TypeOf<typeof VoteBody>;
