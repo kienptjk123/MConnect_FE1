@@ -7,6 +7,12 @@ export const useLoginMutation = () => {
   });
 };
 
+export const useLogoutMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.logout,
+  });
+};
+
 export const useRegisterMutation = () => {
   return useMutation({
     mutationFn: authApiRequest.register,
@@ -40,5 +46,11 @@ export const useVerifyForgotPasswordMutation = () => {
 export const useResetPasswordMutation = () => {
   return useMutation({
     mutationFn: authApiRequest.resetPassword,
+  });
+};
+
+export const useSetTokenToCookieMutation = () => {
+  return useMutation({
+    mutationFn: authApiRequest.setTokenToCookie,
   });
 };

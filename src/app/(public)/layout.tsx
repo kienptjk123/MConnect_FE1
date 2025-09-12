@@ -10,6 +10,7 @@ export default function PublicLayout({
     <>
       <div className="mx-auto dark:bg-white">
         <Header />
+
         <main>{children}</main>
       </div>
       <Footer />

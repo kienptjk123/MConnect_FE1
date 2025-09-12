@@ -1,10 +1,10 @@
-import BlogForm from "@/app/(public)/(guest)/blog/blog-form";
+import ForumForm from "@/app/(public)/(guest)/forum/forum-form";
 import BreadcrumbTitle from "@/components/BreadCrumb/BreadcrumbTitle";
-import React from "react";
+import React, { Suspense } from "react";
 
-export default function BlogPage() {
+export default function page() {
   return (
-    <>
+    <Suspense>
       <div className="relative w-screen ">
         <svg
           className="w-full block "
@@ -140,7 +140,7 @@ export default function BlogPage() {
           <BreadcrumbTitle />
         </div>
       </div>
-      <BlogForm />
-    </>
+      <ForumForm />
+    </Suspense>
   );
 }

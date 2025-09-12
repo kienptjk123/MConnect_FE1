@@ -26,6 +26,7 @@ import {
   ListVideo,
   LogOut,
   MessageCircle,
+  MessageCircleQuestionIcon,
   MonitorPlayIcon,
   Settings,
   ShoppingBag,
@@ -66,6 +67,11 @@ const navigationItems = [
     title: "Messages",
     url: "/manage/mentee/message",
     icon: MessageCircle,
+  },
+  {
+    title: "Forum",
+    url: "/manage/mentee/forum",
+    icon: MessageCircleQuestionIcon,
   },
 ];
 

@@ -6,15 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import {
   ForgotPasswordBody,
   ForgotPasswordBodyType,
@@ -24,7 +19,7 @@ import Link from "next/link";
 
 export default function ForgotPasswordForm() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [, setEmail] = useState("");
 
   const form = useForm<ForgotPasswordBodyType>({
     resolver: zodResolver(ForgotPasswordBody),
@@ -39,15 +34,13 @@ export default function ForgotPasswordForm() {
     if (forgotPasswordMutation.isPending) return;
 
     try {
-      const result = await forgotPasswordMutation.mutateAsync(values);
+      await forgotPasswordMutation.mutateAsync(values);
       setEmail(values.email);
 
       toast({
         title: "Success",
         description: "OTP has been sent to your email",
       });
-
-      // Chuyển sang trang verify với email
       router.push(
         `/verify-forgot-password?email=${encodeURIComponent(values.email)}`
       );
@@ -61,46 +54,64 @@ export default function ForgotPasswordForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-gray-700 font-medium">
-                Email <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="email"
-                  placeholder="Enter your email to receive verification code"
-                  className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-400 bg-blue-50/30 placeholder-gray-500"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button
-          type="submit"
-          disabled={forgotPasswordMutation.isPending}
-          className="w-full bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-4 px-4 rounded-xl transition-all duration-200 shadow-lg text-sm"
-        >
-          {forgotPasswordMutation.isPending ? "SENDING..." : "SEND OTP"}
-        </Button>
-
-        <div className="text-center">
-          <Link
-            href="/login"
-            className="text-blue-500 hover:text-blue-600 text-sm font-medium"
+    <Card className="bg-[#fae7e7]/50 rounded-[2rem] backdrop-blur-none border-0 w-[60%] shadow-none py-3 px-10">
+      <CardHeader className="space-y-1 pb-6">
+        <CardTitle className="text-3xl font-bold text-gray-800 text-center">
+          FORGOT PASSWORD
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            className="space-y-4 w-full"
+            noValidate
+            onSubmit={form.handleSubmit(onSubmit)}
           >
-            Back to Login
-          </Link>
-        </div>
-      </form>
-    </Form>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="space-y-2">
+                    <Label
+                      htmlFor="email"
+                      className="text-sm font-medium text-gray-700"
+                    >
+                      Email <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email to receive verification code"
+                      className="w-full h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                      required
+                      {...field}
+                    />
+                    <FormMessage />
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={forgotPasswordMutation.isPending}
+              className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-md text-sm transition duration-200"
+            >
+              {forgotPasswordMutation.isPending ? "SENDING..." : "SEND OTP"}
+            </Button>
+
+            <div className="text-center space-y-2">
+              <div className="text-black font-bold mt-2 text-center">
+                Remember your password? <br />
+                <Link href="/login" className="text-blue-500 ml-1 font-bold">
+                  Back to Login
+                </Link>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
   );
 }

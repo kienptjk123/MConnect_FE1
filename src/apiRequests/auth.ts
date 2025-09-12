@@ -75,19 +75,39 @@ const authApiRequest = {
     return result;
   },
 
+  sForgotPassword: (body: ForgotPasswordBodyType) =>
+    http.post<ForgotPasswordBodyType>("/users/forgot-password", body),
+
+  sVerifyForgotPassword: (body: VerifyForgotPasswordBodyType) =>
+    http.post<VerifyForgotPasswordBodyType>(
+      "/users/verify-forgot-password",
+      body
+    ),
+
+  sResetPassword: (body: ResetPasswordBodyType) =>
+    http.post<ResetPasswordBodyType>("/users/reset-password", body),
+
   forgotPassword: (body: ForgotPasswordBodyType) =>
-    http.post("/users/forgot-password", body, {
-      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    http.post("/api/auth/forgot-password", body, {
+      baseUrl: "",
     }),
 
   verifyForgotPassword: (body: VerifyForgotPasswordBodyType) =>
-    http.post("/users/verify-forgot-password", body, {
-      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    http.post("/api/auth/verify-forgot-password", body, {
+      baseUrl: "",
     }),
 
   resetPassword: (body: ResetPasswordBodyType) =>
-    http.post("/users/reset-password", body, {
-      baseUrl: process.env.NEXT_PUBLIC_API_ENDPOINT,
+    http.post("/api/auth/reset-password", body, {
+      baseUrl: "",
+    }),
+  setTokenToCookie: (body: {
+    refresh_token: string;
+    access_token: string;
+    role: string;
+  }) =>
+    http.post("/api/auth/token", body, {
+      baseUrl: "",
     }),
 };
 

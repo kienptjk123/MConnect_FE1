@@ -169,6 +169,13 @@ const request = async <Response>(
       const { access_token, refresh_token } = (payload as LoginResType).result;
       setAccessTokenToLocalStorage(access_token);
       setRefreshTokenToLocalStorage(refresh_token);
+    } else if ("api/auth/token" === normalizeUrl) {
+      const { access_token, refresh_token } = payload as {
+        access_token: string;
+        refresh_token: string;
+      };
+      setAccessTokenToLocalStorage(access_token);
+      setRefreshTokenToLocalStorage(refresh_token);
     } else if (["api/auth/verify-email"].includes(normalizeUrl)) {
       // Handle verify email response - may contain new tokens
       if (

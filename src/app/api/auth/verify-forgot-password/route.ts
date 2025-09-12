@@ -5,7 +5,7 @@ import { HttpError } from "@/lib/http";
 export async function POST(request: Request) {
   try {
     const body = (await request.json()) as VerifyForgotPasswordBodyType;
-    const { payload } = await authApiRequest.verifyForgotPassword(body);
+    const { payload } = await authApiRequest.sVerifyForgotPassword(body);
     return Response.json(payload);
   } catch (error) {
     if (error instanceof HttpError) {
