@@ -76,14 +76,16 @@ export default function HeroSection() {
           animate="visible"
           variants={staggerContainer}
         >
-          <div className="text-white flex flex-col justify-center items-center text-center">
+          <div className=" flex flex-col justify-center items-center text-center">
             <motion.h1
-              className="text-5xl font-semibold leading-tight mb-6"
+              className="text-5xl dark:text-white text-white  font-semibold leading-tight mb-6"
               variants={fadeInUp}
             >
               Achieving Your Dreams
               <br />
-              <span className="ml-6">Through Mconnect</span>
+              <span className="ml-6 dark:text-white text-white">
+                Through Mconnect
+              </span>
             </motion.h1>
 
             <motion.p
@@ -98,14 +100,14 @@ export default function HeroSection() {
               variants={buttonContainer}
             >
               <motion.div variants={fadeInUp}>
-                <Button className="bg-[#527EDE] hover:bg-blue-700 text-white px-12 py-6 rounded-full text-lg font-semibold">
+                <Button className="bg-[#527EDE] hover:bg-blue-700 dark:text-white px-12 py-6 rounded-full text-lg font-semibold">
                   Find A Mentor
                 </Button>
               </motion.div>
               <motion.div variants={fadeInUp}>
                 <Button
                   variant="outline"
-                  className="border-2 border-[#60A6EB] text-black hover:bg-white hover:bg-gray-300 px-8 py-6 rounded-full text-lg font-semibold"
+                  className="dark:border-2 dark:border-[#60A6EB] dark:text-black  dark:bg-white dark:hover:bg-gray-300 px-8 py-6 rounded-full text-lg font-semibold"
                 >
                   Become A Mentor
                 </Button>

@@ -13,6 +13,9 @@ export async function POST(request: Request) {
 
     const decodedAccessToken = jwt.decode(access_token) as {
       exp?: number;
+      user_id?: number;
+      role?: string;
+      verify?: string;
     } | null;
     const decodedRefreshToken = jwt.decode(refresh_token) as {
       exp?: number;
@@ -47,6 +50,32 @@ export async function POST(request: Request) {
         ? new Date(decodedRefreshToken.exp * 1000)
         : undefined,
     });
+
+    // Set user_id from decoded access token
+    if (decodedAccessToken?.user_id) {
+      cookieStore.set("user_id", decodedAccessToken.user_id.toString(), {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: decodedRefreshToken?.exp
+          ? new Date(decodedRefreshToken.exp * 1000)
+          : undefined,
+      });
+    }
+
+    // Set verify status from decoded access token
+    if (decodedAccessToken?.verify) {
+      cookieStore.set("verify", decodedAccessToken.verify, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: decodedRefreshToken?.exp
+          ? new Date(decodedRefreshToken.exp * 1000)
+          : undefined,
+      });
+    }
 
     return Response.json(payload);
   } catch (error: unknown) {

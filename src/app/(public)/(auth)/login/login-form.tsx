@@ -96,7 +96,7 @@ export default function LoginForm() {
                       id="email"
                       type="email"
                       placeholder="abcd@gmail.com"
-                      className="w-full h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                      className="w-full h-10 border border-[#60A6EB] rounded-md bg-white dark:text-gray-700 mt-2"
                       required
                       {...field}
                     />
@@ -114,7 +114,7 @@ export default function LoginForm() {
                   <div className="space-y-2">
                     <Label
                       htmlFor="password"
-                      className="text-sm font-medium text-gray-700"
+                      className="text-sm font-medium dark:text-gray-700"
                     >
                       Password
                     </Label>
@@ -123,7 +123,7 @@ export default function LoginForm() {
                         id="password"
                         type={showPassword ? "text" : "password"}
                         placeholder="*******"
-                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                        className="h-10 border border-[#60A6EB] dark:text-gray-700 rounded-md bg-white mt-2"
                         required
                         {...field}
                       />
@@ -151,7 +151,7 @@ export default function LoginForm() {
                   id="remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 border-[#60A6EB] rounded"
+                  className="h-4 w-4 dark:text-blue-600 dark:border-[#60A6EB] rounded dark:bg-white"
                 />
                 <label
                   htmlFor="remember"

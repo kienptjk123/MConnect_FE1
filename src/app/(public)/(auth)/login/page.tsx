@@ -1,9 +1,10 @@
 import { Suspense } from "react";
 import LoginForm from "./login-form";
+import Loading from "@/app/loading";
 
 export default function LoginPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<Loading />}>
       <LoginForm />
     </Suspense>
   );

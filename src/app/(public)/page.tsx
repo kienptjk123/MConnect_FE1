@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import AnimatedSVGSection from "@/components/AnimatedSVGSection/AnimatedSVGSection";
-import MentorSection from "@/components/MentorSection/MentorSection";
 import HeroSection from "@/components/HeroSection/HeroSection";
+import MentorSection from "@/app/manage/mentee/explore-mentor/_components/MentorSection/MentorSection";
 
 export default function Homepage() {
   const carouselItems = [
@@ -29,7 +29,7 @@ export default function Homepage() {
       {/* logo company section  */}
       <div className="mx-8 py-2">
         <div className="max-w-full">
-          <div className="bg-[#E4F2FF] rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
+          <div className="dark:bg-[#E4F2FF] rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
             <div className="flex items-center justify-around gap-8 md:gap-16">
               <svg
                 width="156"

@@ -120,27 +120,27 @@ export default function RegisterForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium dark:text-gray-700">
                 First Name
               </label>
               <Input
                 placeholder="Nguyen Van"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                className="h-10 border border-[#60A6EB] rounded-md bg-white dark:text-gray-700 mt-2"
                 required
               />
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700">
+              <label className="text-sm font-medium dark:text-gray-700">
                 Last Name
               </label>
               <Input
                 placeholder="A"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
                 required
               />
             </div>
@@ -158,7 +158,7 @@ export default function RegisterForm() {
                       type="email"
                       placeholder="abcd@gmail.com"
                       {...field}
-                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
                     />
                   </FormControl>
                   <FormMessage />
@@ -180,7 +180,7 @@ export default function RegisterForm() {
                       {...field}
                       required
                       max={new Date().toISOString().split("T")[0]}
-                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2"
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
                     />
                   </FormControl>
                   <FormMessage />
@@ -202,7 +202,7 @@ export default function RegisterForm() {
                         type={showPassword ? "text" : "password"}
                         placeholder="*******"
                         {...field}
-                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10"
+                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10 dark:text-gray-700"
                       />
                       <button
                         type="button"
@@ -236,7 +236,7 @@ export default function RegisterForm() {
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="*******"
                         {...field}
-                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10"
+                        className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10 dark:text-gray-700"
                       />
                       <button
                         type="button"

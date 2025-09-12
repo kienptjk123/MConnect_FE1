@@ -5,7 +5,7 @@ import { Search } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className=" border rounded-full my-3 mx-4 bg-white ">
+    <header className="dark:border border dark:rounded-full rounded-full mx-4 dark:bg-white dark:shadow-2xl shadow-2xl">
       <div className="max-w-7xl mx-auto  px-2">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -83,9 +83,9 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="Search"
-                className="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50"
+                className="w-64 dark:text-gray-700 pl-10 pr-4 py-2 dark:border dark:border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-100 bg-gray-100"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 dark:text-gray-400 h-4 w-4" />
             </div>
           </div>
 
@@ -93,7 +93,7 @@ export default function Header() {
             <Link href="/register">
               <Button
                 variant="outline"
-                className="border-blue-600 cursor-pointer text-blue-600 hover:text-blue-600 hover:bg-blue-50 rounded-full px-8"
+                className="dark:border-blue-600 border-blue-600 cursor-pointer dark:text-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-50 rounded-full px-8"
               >
                 Sign Up
               </Button>
@@ -101,7 +101,7 @@ export default function Header() {
             <Link href="/login">
               <Button
                 variant="outline"
-                className="bg-blue-600 cursor-pointer hover:bg-blue-700 hover:text-white text-white rounded-full px-8"
+                className="dark:bg-blue-600 bg-blue-600  text-white cursor-pointer hover:bg-blue-700 hover:text-white dark:text-white rounded-full px-8"
               >
                 Login
               </Button>

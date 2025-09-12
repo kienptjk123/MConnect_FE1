@@ -1,9 +1,6 @@
+import MenteeHeader from "@/app/manage/mentee/mentee-header";
 import MenteeSidebar from "@/app/manage/mentee/mentee-sidebar";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function PublicLayout({
   children,
@@ -13,8 +10,10 @@ export default function PublicLayout({
   return (
     <SidebarProvider>
       <MenteeSidebar />
-      <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-pink-50 transition-colors" />
-      <SidebarInset>{children}</SidebarInset>
+      <SidebarInset>
+        <MenteeHeader />
+        {children}
+      </SidebarInset>
     </SidebarProvider>
   );
 }

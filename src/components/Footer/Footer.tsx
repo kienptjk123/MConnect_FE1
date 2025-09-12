@@ -9,6 +9,7 @@ import {
   Instagram,
   Twitter,
 } from "lucide-react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -71,30 +72,30 @@ const Footer = () => {
               tortor aliqua facilisi cras fermentum odio eu.
             </p>
             <div className="flex gap-3">
-              <a
+              <Link
                 href="#"
                 className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
               >
                 <Facebook className="w-4 h-4 text-white" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
               >
                 <Instagram className="w-4 h-4 text-white" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
               >
                 <span className="text-white text-sm font-bold">in</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
               >
                 <Twitter className="w-4 h-4 text-white" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -103,44 +104,44 @@ const Footer = () => {
             <h3 className="text-white font-semibold text-lg">Our Services:</h3>
             <ul className="space-y-2">
               <li>
-                <a
+                <Link
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Web Development
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> UI/UX Design
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Management
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Digital Marketing
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="#"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Blog News
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
