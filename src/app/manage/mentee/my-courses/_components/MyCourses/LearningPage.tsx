@@ -1,6 +1,15 @@
 "use client";
 
 import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
+import "@vidstack/react/player/styles/default/theme.css";
+import "@vidstack/react/player/styles/default/layouts/audio.css";
+import "@vidstack/react/player/styles/default/layouts/video.css";
+
+import { MediaPlayer, MediaProvider, Poster, Track } from "@vidstack/react";
+import {
+  DefaultVideoLayout,
+  defaultLayoutIcons,
+} from "@vidstack/react/player/layouts/default";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -182,12 +191,36 @@ export default function LearningPage() {
         <div className="flex-1 flex flex-col bg-black">
           <div className="flex-1 flex items-center justify-center">
             {getCurrentVideoUrl() ? (
-              <VideoPlayer
-                videoUrl={getCurrentVideoUrl()}
-                thumbnail={course.thumbnail}
-                title={currentLesson?.title || ""}
-                onTimeUpdate={handleVideoProgress}
-              />
+              <MediaPlayer
+                src={getCurrentVideoUrl()}
+                viewType="video"
+                streamType="on-demand"
+                logLevel="warn"
+                crossOrigin
+                playsInline
+                title="Sprite Fight"
+                style={{ maxWidth: "100%", height: "auto" }}
+                aspectRatio="16:9"
+              >
+                <Track
+                  src="https://media-files.vidstack.io/sprite-fight/subs/english.vtt"
+                  label="English"
+                  kind="subtitles"
+                  default
+                />
+                <Track
+                  src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
+                  kind="chapters"
+                  default
+                />
+                <MediaProvider>
+                  <Poster className="vds-poster" />
+                </MediaProvider>
+                <DefaultVideoLayout
+                  thumbnails="https://files.vidstack.io/sprite-fight/thumbnails.vtt"
+                  icons={defaultLayoutIcons}
+                />
+              </MediaPlayer>
             ) : (
               <div className="text-center text-white">
                 <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
