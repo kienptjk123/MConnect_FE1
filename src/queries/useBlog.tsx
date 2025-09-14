@@ -16,10 +16,3 @@ export const useBlogByIdQuery = (id: number, enabled: boolean) => {
     enabled,
   });
 };
-
-export const useTagsQuery = () => {
-  return useQuery({
-    queryKey: ["tags"],
-    queryFn: tagApiRequest.getTags,
-  });
-};

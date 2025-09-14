@@ -24,6 +24,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@studio-freight/lenis": "^1.0.42",
     "@tanstack/react-query": "^5.86.0",
+    "@tanstack/react-table": "^8.21.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@vidstack/react": "^1.12.13",
     "class-variance-authority": "^0.7.1",
