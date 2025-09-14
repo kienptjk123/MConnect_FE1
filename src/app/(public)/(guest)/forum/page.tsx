@@ -1,10 +1,11 @@
 import ForumForm from "@/app/(public)/(guest)/forum/forum-form";
 import BreadcrumbTitle from "@/components/BreadCrumb/BreadcrumbTitle";
+import RubiksLoading from "@/components/RubiksLoading/RubiksLoading";
 import React, { Suspense } from "react";
 
 export default function page() {
   return (
-    <Suspense>
+    <Suspense fallback={<RubiksLoading />}>
       <div className="relative w-screen ">
         <svg
           className="w-full block "
