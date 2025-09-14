@@ -44,11 +44,11 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
   );
 
   return (
-    <Card className="p-6 top-6 sticky">
+    <Card className="p-6 top-6 sticky dark:bg-[#080808]">
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <span className="text-3xl font-bold text-gray-900">
+            <span className="text-3xl font-bold  light:text-gray-900">
               {Number(course.price).toLocaleString("vi-VN")} VND
             </span>
           </div>
@@ -56,7 +56,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
       </div>
 
       <div className="space-y-4 mb-6">
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <Clock className="h-5 w-5 mr-3" />
             <span>Duration</span>
@@ -68,7 +68,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           </span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <BookOpen className="h-5 w-5 mr-3" />
             <span>Lesson</span>
@@ -76,7 +76,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>{totalLessons} lessons</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <BookOpen className="h-5 w-5 mr-3" />
             <span>Category</span>
@@ -84,7 +84,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>{course.categories?.[0]?.courseCategory?.name}</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <Globe className="h-5 w-5 mr-3" />
             <span>Language</span>
@@ -92,7 +92,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>Vietnamese</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <Bookmark className="h-5 w-5 mr-3" />
             <span>Access</span>
@@ -100,7 +100,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>Full Lifetime</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <ShieldCheck className="h-5 w-5 mr-3" />
             <span>Certificate</span>
@@ -108,7 +108,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>Yes</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <Users className="h-5 w-5 mr-3" />
             <span>Students Enrolled</span>
@@ -116,7 +116,7 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
           <span>{course._count.enrollments}</span>
         </div>
 
-        <div className="flex items-center justify-between border-b pb-3 text-gray-600">
+        <div className="flex items-center justify-between border-b pb-3 light:text-gray-600">
           <div className="flex items-center justify-center">
             <Stars className="h-5 w-5 mr-3" />
             <span>Average Rating</span>
@@ -128,7 +128,10 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
       </div>
 
       <div className="pt-4 mt-4">
-        <Button className="w-full bg-blue-500 hover:bg-blue-400" size="lg">
+        <Button
+          className="w-full bg-blue-500 hover:bg-blue-400 dark:text-white"
+          size="lg"
+        >
           <ShoppingCart className="h-5 w-5 mr-2" />
           Add To Cart
         </Button>

@@ -1,20 +1,18 @@
 "use client";
-
-import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
-import "@vidstack/react/player/styles/default/theme.css";
-import "@vidstack/react/player/styles/default/layouts/audio.css";
-import "@vidstack/react/player/styles/default/layouts/video.css";
-
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import {
+  useCourseProgress,
+  useCourses,
+  useLessonStream,
+} from "@/queries/useCourse";
+import { useUpdateCourseProgress } from "@/queries/useMyCourses";
 import { MediaPlayer, MediaProvider, Poster, Track } from "@vidstack/react";
 import {
   DefaultVideoLayout,
   defaultLayoutIcons,
 } from "@vidstack/react/player/layouts/default";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { useCourseProgress, useLessonStream } from "@/queries/useCourse";
-import { useUpdateCourseProgress } from "@/queries/useMyCourses";
 import "@vidstack/react/player/styles/default/layouts/audio.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
@@ -33,8 +31,12 @@ import { useCallback, useState } from "react";
 
 export default function LearningPage() {
   const params = useParams();
-  const courseId = parseInt(params.id as string, 10);
-  const user_id = cookieStore.get("user_id");
+  const courseId = params.slug as string;
+  const { data: allCourses, isLoading: loadingCourses } = useCourses();
+
+  const courses = allCourses?.payload?.result?.courses?.find(
+    (c) => c.slug === params.slug
+  );
 
   const [currentModuleIndex, setCurrentModuleIndex] = useState(0);
   const [currentLessonIndex, setCurrentLessonIndex] = useState(0);
@@ -46,7 +48,7 @@ export default function LearningPage() {
     data: courseData,
     isLoading,
     error,
-  } = useCourseProgress(courseId || 0);
+  } = useCourseProgress(courses?.id || 0);
   const { mutate: updateProgress } = useUpdateCourseProgress();
 
   const course = courseData?.payload?.result?.course;
@@ -61,7 +63,7 @@ export default function LearningPage() {
       if (!currentLesson || !course) return;
 
       updateProgress({
-        courseId: courseId,
+        courseId: Number(courseId),
         data: {
           lessonId: currentLesson.id,
           lastPositionSec: Math.floor(currentTime),
@@ -168,8 +170,7 @@ export default function LearningPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Header */}
+    <div className="h-screen flex flex-col px-4">
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
@@ -187,49 +188,27 @@ export default function LearningPage() {
         </div>
       </div>
 
-      <div className="flex-1 flex">
+      <div className="flex-1 gap-2 flex">
         <div className="flex-1 flex flex-col bg-black">
-          <div className="flex-1 flex items-center justify-center">
-            {getCurrentVideoUrl() ? (
-              <MediaPlayer
-                src={getCurrentVideoUrl()}
-                viewType="video"
-                streamType="on-demand"
-                logLevel="warn"
-                crossOrigin
-                playsInline
-                title="Sprite Fight"
-                style={{ maxWidth: "100%", height: "auto" }}
-                aspectRatio="16:9"
-              >
-                <Track
-                  src="https://media-files.vidstack.io/sprite-fight/subs/english.vtt"
-                  label="English"
-                  kind="subtitles"
-                  default
-                />
-                <Track
-                  src="https://media-files.vidstack.io/sprite-fight/chapters.vtt"
-                  kind="chapters"
-                  default
-                />
-                <MediaProvider>
-                  <Poster className="vds-poster" />
-                </MediaProvider>
-                <DefaultVideoLayout
-                  thumbnails="https://files.vidstack.io/sprite-fight/thumbnails.vtt"
-                  icons={defaultLayoutIcons}
-                />
-              </MediaPlayer>
-            ) : (
-              <div className="text-center text-white">
-                <BookOpen className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg opacity-75">No video for this lesson</p>
-                <p className="text-sm opacity-50 mt-2">
-                  {currentLesson?.title}
-                </p>
-              </div>
-            )}
+          <div className="flex-1 flex items-center justify-center rounded-xl">
+            <MediaPlayer
+              src={getCurrentVideoUrl()}
+              viewType="video"
+              streamType="on-demand"
+              logLevel="warn"
+              crossOrigin
+              playsInline
+              title="Sprite Fight"
+              style={{ maxWidth: "100%", height: "100%" }}
+              aspectRatio="16:9"
+            >
+              <Track src="" label="English" kind="subtitles" default />
+              <Track src="" kind="chapters" default />
+              <MediaProvider>
+                <Poster className="vds-poster" />
+              </MediaProvider>
+              <DefaultVideoLayout thumbnails="" icons={defaultLayoutIcons} />
+            </MediaPlayer>
           </div>
 
           <div className="bg-white text-gray-900 p-4">

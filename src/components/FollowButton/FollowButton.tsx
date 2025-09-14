@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { useSocket } from '@/components/SocketProvider';
-import { UserPlus, UserMinus } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { useSocket } from "@/components/SocketProvider";
+import { UserPlus, UserMinus } from "lucide-react";
 
 interface FollowButtonProps {
   targetUserId: string | number;
@@ -11,10 +11,10 @@ interface FollowButtonProps {
   className?: string;
 }
 
-export function FollowButton({ 
-  targetUserId, 
+export function FollowButton({
+  targetUserId,
   initialFollowState = false,
-  className = ""
+  className = "",
 }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialFollowState);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,23 +22,22 @@ export function FollowButton({
 
   useEffect(() => {
     if (socket) {
-      // Listen for follow status updates
-      socket.on('follow_status_updated', (data: any) => {
+      socket.on("follow_status_updated", (data: any) => {
         if (data.targetUserId === targetUserId) {
           setIsFollowing(data.isFollowing);
         }
       });
 
       // Listen for new followers
-      socket.on('new_follower', (data: any) => {
+      socket.on("new_follower", (data: any) => {
         if (data.followedUserId === targetUserId) {
           console.log(`New follower for user ${targetUserId}:`, data);
         }
       });
 
       return () => {
-        socket.off('follow_status_updated');
-        socket.off('new_follower');
+        socket.off("follow_status_updated");
+        socket.off("new_follower");
       };
     }
   }, [socket, targetUserId]);
@@ -51,18 +50,18 @@ export function FollowButton({
     try {
       if (isFollowing) {
         // Unfollow
-        socket.emit('unfollow_user', { targetUserId });
+        socket.emit("unfollow_user", { targetUserId });
         console.log(`Attempting to unfollow user: ${targetUserId}`);
       } else {
         // Follow
-        socket.emit('follow_user', { targetUserId });
+        socket.emit("follow_user", { targetUserId });
         console.log(`Attempting to follow user: ${targetUserId}`);
       }
 
       // Optimistically update the state
       setIsFollowing(!isFollowing);
     } catch (error) {
-      console.error('Error toggling follow status:', error);
+      console.error("Error toggling follow status:", error);
       // Revert state if error occurs
       setIsFollowing(isFollowing);
     } finally {

@@ -68,27 +68,22 @@ const navigationItems = [
     url: "/manage/mentee/message",
     icon: MessageCircle,
   },
-  {
-    title: "Forum",
-    url: "/manage/mentee/forum",
-    icon: MessageCircleQuestionIcon,
-  },
 ];
 
 export default function MenteeSidebar() {
   const location = usePathname();
   return (
-    <Sidebar collapsible="icon" className="">
-      <SidebarHeader className="">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="dark:bg-[#080808]">
         <div className="flex items-center gap-2 px-3 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-3">
           <Image src="/images/sandboxlogo.png" width={40} height={40} alt="" />
-          <span className="truncate font-bold text-gray-900 text-lg group-data-[collapsible=icon]:hidden">
+          <span className="truncate font-bold dark:text-white text-gray-900  text-lg group-data-[collapsible=icon]:hidden">
             MConnect
           </span>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className=" custom-scrollbar overflow-y-auto">
+      <SidebarContent className=" custom-scrollbar overflow-y-auto dark:bg-[#080808]">
         <SidebarGroup>
           <SidebarGroupContent className="">
             <SidebarMenu className="space-y-1">
@@ -99,7 +94,7 @@ export default function MenteeSidebar() {
                     <SidebarMenuButton
                       asChild
                       isActive={isActive}
-                      className="group relative h-12 rounded-xl transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-100 hover:to-blue-200 hover:shadow-sm data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-400 data-[active=true]:to-blue-500 data-[active=true]:text-white data-[active=true]:shadow-lg group-data-[collapsible=icon]:justify-center   "
+                      className="group relative hover:text-white h-12 rounded-xl transition-all duration-200 hover:bg-gradient-to-r hover:bg-blue-400 hover:shadow-sm data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-400 data-[active=true]:to-blue-500 data-[active=true]:text-white data-[active=true]:shadow-lg group-data-[collapsible=icon]:justify-center"
                       tooltip={item.title}
                     >
                       <Link

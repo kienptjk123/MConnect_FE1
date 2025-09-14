@@ -127,22 +127,6 @@ export default function Header() {
           </div>
 
           <div className="flex items-center space-x-3">
-            <Link href="/register">
-              <Button
-                variant="outline"
-                className="dark:border-blue-600 border-blue-600 cursor-pointer dark:text-blue-600 dark:hover:text-blue-600 dark:hover:bg-blue-50 rounded-full px-8"
-              >
-                Sign Up
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button
-                variant="outline"
-                className="dark:bg-blue-600 bg-blue-600  text-white cursor-pointer hover:bg-blue-700 hover:text-white dark:text-white rounded-full px-8"
-              >
-                Login
-              </Button>
-            </Link>
             {profile ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
