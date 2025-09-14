@@ -1,6 +1,6 @@
-import z from "zod";
+import z, { date } from "zod";
 
-const ProfileSchema = z.object({
+export const ProfileSchema = z.object({
   id: z.number(),
   email: z.string(),
   role: z.string(),
@@ -24,23 +24,67 @@ export const ProfileRes = z.object({
   message: z.string(),
   result: ProfileSchema,
 });
+const phoneRegex = /^(\+84|84|0)[3|5|7|8|9][0-9]{8}$/;
 
-export type UserProfile = {
-  id: number;
-  email: string;
-  role: string;
-  status: string;
-  mentee_profile_id: number;
-  name: string;
-  bio?: string | null;
-  location?: string | null;
-  username: string;
-  avatar?: string | null;
-  coverPhoto?: string | null;
-  date_of_birth?: string | null;
-  website?: string | null;
-  phone_number?: string | null;
-  description?: string | null;
-};
+export const UpdateProfileSchema = z.object({
+  name: z
+    .string()
+    .min(3, "Name must be at least 3 characters")
+    .max(100)
+    .optional(),
+  bio: z
+    .string()
+    .max(160, "Bio must be less than 160 characters")
+    .nullable()
+    .optional(),
+  date_of_birth: z.string().optional(),
+  location: z
+    .string()
+    .max(100, "Location must be less than 100 characters")
+    .nullable()
+    .optional(),
+  website: z
+    .string()
+    .url("Please enter a valid URL")
+    .max(100)
+    .nullable()
+    .optional(),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters")
+    .max(30)
+    .optional(),
+  phone_number: z
+    .string()
+    .regex(phoneRegex, "Please enter a valid phone number")
+    .max(10)
+    .nullable()
+    .optional(),
+  description: z
+    .string()
+    .max(100, "Description must be less than 100 characters")
+    .nullable()
+    .optional(),
+  avatar: z.instanceof(File).nullable().optional(),
+  coverPhoto: z.instanceof(File).nullable().optional(),
+});
+
+export const UpdatePasswordSchema = z
+  .object({
+    oldPassword: z
+      .string()
+      .min(6, "Old password must be at least 6 characters"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z
+      .string()
+      .min(6, "Confirm password must be at least 6 characters"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export type ProfileResType = z.TypeOf<typeof ProfileRes>;
+export type UserProfile = z.TypeOf<typeof ProfileSchema>;
+export type UpdateProfile = z.TypeOf<typeof UpdateProfileSchema>;
+export type UpdatePassword = z.TypeOf<typeof UpdatePasswordSchema>;

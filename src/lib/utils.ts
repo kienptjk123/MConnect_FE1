@@ -157,3 +157,13 @@ export const formatDate = (dateString: string) => {
     minute: "2-digit",
   });
 };
+
+export const formatDateForInput = (dateString: string | null | undefined) => {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // YYYY-MM-DD
+  } catch {
+    return ""; // Fallback nếu invalid date
+  }
+};
