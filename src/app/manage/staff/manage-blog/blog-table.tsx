@@ -32,25 +32,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
-import { useDeleteTagMutation } from "@/queries/useTag";
-import { getTagColumns } from "./columns";
-import { CreateTagDialog } from "./create-tag-form";
-import type { TagType } from "@/schemaValidations/tag.schema";
+import { useDeleteBlogMutation } from "@/queries/useBlog";
+import { getBlogColumns } from "./columns";
+import type { BlogType } from "@/schemaValidations/blog.schema";
 import {
   RefreshCcw,
   Search,
   SlidersHorizontal,
   Download,
-  TagIcon,
+  FileText,
+  Plus,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-export default function TagTable({ data }: { data: TagType[] }) {
-  const deleteTagMutation = useDeleteTagMutation();
+export default function BlogTable({ data }: { data: BlogType[] }) {
+  const deleteBlogMutation = useDeleteBlogMutation();
+  const router = useRouter();
 
-  const onDelete = async (tag: TagType) => {
+  const onDelete = async (blog: BlogType) => {
     const result = await Swal.fire({
-      title: `Are you sure to delete "${tag.name}"?`,
+      title: `Are you sure to delete "${blog.title}"?`,
       text: "This action cannot be undone.",
       icon: "warning",
       showCancelButton: true,
@@ -62,22 +64,22 @@ export default function TagTable({ data }: { data: TagType[] }) {
 
     if (!result.isConfirmed) return;
     try {
-      await deleteTagMutation.mutateAsync(tag.id);
+      await deleteBlogMutation.mutateAsync(blog.id);
       toast({
-        title: "Tag deleted",
-        description: `"${tag.name}" was removed.`,
+        title: "Blog deleted",
+        description: `"${blog.title}" was removed.`,
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to delete tag.",
+        description: "Failed to delete blog.",
         variant: "destructive",
       });
     }
   };
 
-  const columns = useMemo<ColumnDef<TagType>[]>(
-    () => getTagColumns(onDelete),
+  const columns = useMemo<ColumnDef<BlogType>[]>(
+    () => getBlogColumns(onDelete),
     []
   );
 
@@ -117,14 +119,20 @@ export default function TagTable({ data }: { data: TagType[] }) {
 
   const exportCsv = () => {
     const rows = table.getFilteredRowModel().rows.map((r) => r.original);
-    const header = ["id", "name", "description"];
+    const header = ["id", "title", "author", "date", "tags", "content"];
     const csv = [
       header.join(","),
       ...rows.map((r) =>
         [
           r.id,
-          JSON.stringify(r.name ?? ""),
-          JSON.stringify(r.description ?? ""),
+          JSON.stringify(r.title ?? ""),
+          JSON.stringify(r.staff.name ?? ""),
+          JSON.stringify(r.date ?? ""),
+          JSON.stringify(r.tags.map((tag) => tag.tag.name).join(", ") ?? ""),
+          JSON.stringify(
+            (r.content?.substring(0, 100) || "") +
+              (r.content?.length > 100 ? "..." : "")
+          ),
         ].join(",")
       ),
     ].join("\n");
@@ -132,7 +140,7 @@ export default function TagTable({ data }: { data: TagType[] }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "tags.csv";
+    a.download = "blogs.csv";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -144,7 +152,7 @@ export default function TagTable({ data }: { data: TagType[] }) {
           <div className="flex items-center gap-2 w-full rounded-md border border-gray-300 px-2 bg-white shadow-sm">
             <Search className="h-5 w-5 text-gray-400" />
             <Input
-              placeholder="Search tags..."
+              placeholder="Search blogs..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-gray-400"
@@ -281,19 +289,27 @@ export default function TagTable({ data }: { data: TagType[] }) {
                 >
                   <div className="flex flex-col items-center justify-center gap-4 text-center">
                     <div className="rounded-md bg-gray-100 p-4">
-                      <TagIcon className="h-6 w-6 text-gray-400" />
+                      <FileText className="h-6 w-6 text-gray-400" />
                     </div>
                     <div className="space-y-2">
                       <p className="text-lg font-medium text-gray-700">
-                        No tags found
+                        No blogs found
                       </p>
                       <p className="text-sm text-gray-500 max-w-md">
                         {search
-                          ? "Try adjusting your search terms or create a new tag."
-                          : "Create your first tag to get started."}
+                          ? "Try adjusting your search terms or create a new blog."
+                          : "Create your first blog to get started."}
                       </p>
                     </div>
-                    <CreateTagDialog />
+                    <Button
+                      onClick={() =>
+                        router.push("/manage/staff/manage-blog/create")
+                      }
+                      className="gap-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Create Blog
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

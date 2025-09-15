@@ -9,7 +9,7 @@ import {
   UpdateTagSchema,
   type UpdateTagType,
 } from "@/schemaValidations/tag.schema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUpdateTagMutation } from "@/queries/useTag";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,23 +33,38 @@ export function UpdateTagForm({
   const [open, setOpen] = useState(false);
   const { mutateAsync, isPending } = useUpdateTagMutation();
 
-  const form = useForm<UpdateTagType>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isDirty },
+  } = useForm<UpdateTagType>({
     resolver: zodResolver(UpdateTagSchema),
     defaultValues: { name: tag.name ?? "", description: tag.description ?? "" },
   });
 
+  useEffect(() => {
+    if (open) {
+      reset({ name: tag.name ?? "", description: tag.description ?? "" });
+    }
+  }, [open, tag, reset]);
+
   const onSubmit = async (values: UpdateTagType) => {
     try {
-      await mutateAsync(values as any);
+      await mutateAsync({ id: tag.id, ...values });
       toast({
         title: "Tag updated",
         description: `"${values.name}" was updated.`,
       });
       setOpen(false);
-    } catch (error: any) {
+    } catch (err: any) {
+      const detail =
+        err?.payload?.errors?.map((e: any) => e?.message).join("; ") ||
+        err?.message ||
+        "Please try again.";
       toast({
         title: "Failed to update tag",
-        description: error?.message ?? "Please try again.",
+        description: detail,
         variant: "destructive",
       });
     }
@@ -59,11 +74,17 @@ export function UpdateTagForm({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger ?? (
-          <Button variant="ghost" size="icon" className="rounded-md">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-md"
+            title="Edit"
+          >
             <Pencil className="h-4 w-4" />
           </Button>
         )}
       </DialogTrigger>
+
       <DialogContent className="sm:max-w-md rounded-md bg-white border-gray-200 shadow-lg">
         <DialogHeader className="space-y-3 pb-2">
           <DialogTitle className="flex items-center gap-3 text-xl font-semibold text-gray-800">
@@ -77,10 +98,7 @@ export function UpdateTagForm({
           </p>
         </DialogHeader>
 
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="grid gap-4 pt-2"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 pt-2">
           <div className="grid gap-2">
             <Label
               htmlFor={`name-${tag.id}`}
@@ -90,12 +108,12 @@ export function UpdateTagForm({
             </Label>
             <Input
               id={`name-${tag.id}`}
-              {...form.register("name")}
+              {...register("name")}
               className="rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
             />
-            {form.formState.errors.name && (
+            {errors.name && (
               <p className="text-xs text-red-500 font-medium">
-                {form.formState.errors.name.message}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -110,12 +128,12 @@ export function UpdateTagForm({
             </Label>
             <Textarea
               id={`description-${tag.id}`}
-              {...form.register("description")}
+              {...register("description")}
               className="rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 min-h-[80px] resize-none"
             />
-            {form.formState.errors.description && (
+            {errors.description && (
               <p className="text-xs text-red-500 font-medium">
-                {form.formState.errors.description.message}
+                {errors.description.message}
               </p>
             )}
           </div>
@@ -132,7 +150,7 @@ export function UpdateTagForm({
             <Button
               type="submit"
               className="rounded-md bg-blue-400 hover:bg-blue-500 text-white disabled:opacity-50"
-              disabled={isPending}
+              disabled={isPending || !isDirty}
             >
               {isPending ? (
                 <div className="flex items-center gap-2">
