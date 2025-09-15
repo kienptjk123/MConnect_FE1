@@ -174,3 +174,12 @@ export const hasValidRefreshToken = (): boolean => {
   const tokenValue = refreshTokenCookie.split("=")[1];
   return Boolean(tokenValue && tokenValue.length > 0);
 };
+export const formatDateForInput = (dateString: string | null | undefined) => {
+  if (!dateString) return "";
+  try {
+    const date = new Date(dateString);
+    return date.toISOString().split("T")[0]; // YYYY-MM-DD
+  } catch {
+    return ""; // Fallback nếu invalid date
+  }
+};

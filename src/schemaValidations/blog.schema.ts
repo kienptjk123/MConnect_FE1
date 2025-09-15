@@ -36,5 +36,41 @@ export const BlogRes = z.object({
   message: z.string(),
 });
 
+export const BlogCreateSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  date: z.string().min(1, "Date is required"),
+  image: z.string().optional(),
+  tags: z.array(z.number()).optional(),
+});
+
+export const BlogUpdateSchema = z.object({
+  title: z.string().min(1, "Title is required").optional(),
+  content: z.string().min(1, "Content is required").optional(),
+  date: z.string().min(1, "Date is required").optional(),
+  image: z.string().optional(),
+  tags: z.array(z.number()).optional(),
+});
+
+// FormData schemas for file upload
+export const BlogCreateFormSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  date: z.string().min(1, "Date is required"),
+  tags: z.array(z.number()).optional(),
+});
+
+export const BlogUpdateFormSchema = z.object({
+  title: z.string().min(1, "Title is required").optional(),
+  content: z.string().min(1, "Content is required").optional(),
+  date: z.string().min(1, "Date is required").optional(),
+  tags: z.array(z.number()).optional(),
+});
+
+export type BlogType = z.TypeOf<typeof BlogSchema>;
 export type BlogResType = z.TypeOf<typeof BlogRes>;
 export type BlogByIdResType = z.TypeOf<typeof BlogByIdRes>;
+export type BlogCreateType = z.TypeOf<typeof BlogCreateSchema>;
+export type BlogUpdateType = z.TypeOf<typeof BlogUpdateSchema>;
+export type BlogCreateFormType = z.TypeOf<typeof BlogCreateFormSchema>;
+export type BlogUpdateFormType = z.TypeOf<typeof BlogUpdateFormSchema>;
