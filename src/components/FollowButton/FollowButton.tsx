@@ -18,8 +18,9 @@ export function FollowButton({
 }: FollowButtonProps) {
   const [isFollowing, setIsFollowing] = useState(initialFollowState);
   const [isLoading, setIsLoading] = useState(false);
-  const { socket, isConnected } = useSocket();
+  const { socket } = useSocket();
 
+  console.log(socket ? "Socket connected" : "Socket not connected");
   useEffect(() => {
     if (socket) {
       socket.on("follow_status_updated", (data: any) => {
@@ -72,7 +73,7 @@ export function FollowButton({
   return (
     <Button
       onClick={handleFollowToggle}
-      disabled={isLoading || !isConnected}
+      disabled={isLoading || !socket}
       variant={isFollowing ? "outline" : "default"}
       size="sm"
       className={className}

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import CourseCard from "@/app/manage/mentee/explore-courses/_components/CourseCard/CourseCard";
+import { FriendRequestButton } from "@/components/FriendRequestButton/FriendRequestButton";
 import {
   ArrowLeft,
   Phone,
@@ -123,10 +124,10 @@ export default function MentorDetailPage() {
                   <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                     {/* Avatar */}
                     <div className="w-32 h-32 rounded-full border-4 border-white bg-gray-100 overflow-hidden flex-shrink-0">
-                      {mentor.avatar ? (
+                      {mentor?.avatar ? (
                         <Image
                           src={mentor.avatar}
-                          alt={mentor.name}
+                          alt={mentor?.name}
                           width={128}
                           height={128}
                           className="w-full h-full object-cover"
@@ -134,7 +135,7 @@ export default function MentorDetailPage() {
                       ) : (
                         <div className="w-full h-full bg-blue-100 flex items-center justify-center">
                           <span className="text-blue-600 font-semibold text-3xl">
-                            {mentor.name.charAt(0).toUpperCase()}
+                            {mentor?.name?.charAt(0)?.toUpperCase()}
                           </span>
                         </div>
                       )}
@@ -143,21 +144,21 @@ export default function MentorDetailPage() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h1 className="text-3xl font-bold text-gray-900">
-                          {mentor.name}
+                          {mentor?.name}
                         </h1>
                         <Badge
                           variant={
-                            mentorData.role === "MENTOR"
+                            mentorData?.role === "MENTOR"
                               ? "default"
                               : "secondary"
                           }
                         >
-                          {mentorData.role}
+                          {mentorData?.role}
                         </Badge>
                       </div>
 
                       <p className="text-lg text-gray-600 mb-4">
-                        @{mentor.username}
+                        @{mentor?.username}
                       </p>
 
                       <div className="flex items-center gap-6 text-sm text-gray-600">
@@ -169,6 +170,20 @@ export default function MentorDetailPage() {
                           <Users className="h-4 w-4 mr-1" />
                           <span>254 Students</span>
                         </div>
+                      </div>
+
+                      {/* Quick Action Buttons */}
+                      <div className="mt-4 flex gap-3">
+                        <FriendRequestButton
+                          targetUserId={mentorData?.id}
+                          targetUserName={mentor?.name}
+                          size="sm"
+                          variant="outline"
+                        />
+                        <Button size="sm" variant="ghost">
+                          <MessageCircle className="h-4 w-4 mr-2" />
+                          Message
+                        </Button>
                       </div>
                     </div>
                   </div>
@@ -212,23 +227,20 @@ export default function MentorDetailPage() {
                 </Card>
               </div>
 
-              {/* Right Column - Contact & Info */}
               <div className="space-y-6">
-                {/* Contact Card */}
-                <Card className="p-6 sticky top-6">
+                <Card className="p-6 top-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Contact Information
                   </h3>
 
                   <div className="space-y-4">
-                    {/* Email */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center text-gray-600">
                         <Mail className="h-4 w-4 mr-3" />
                         <span className="text-sm">Send Message</span>
                       </div>
                       <span className="text-sm font-medium">
-                        {mentorData.email}
+                        {mentorData?.email}
                       </span>
                     </div>
 
@@ -240,7 +252,7 @@ export default function MentorDetailPage() {
                           <span className="text-sm">24/7 Support</span>
                         </div>
                         <span className="text-sm font-medium">
-                          {mentor.phoneNumber}
+                          {mentor?.phoneNumber}
                         </span>
                       </div>
                     )}
@@ -290,11 +302,19 @@ export default function MentorDetailPage() {
                   </div>
 
                   {/* Contact Button */}
-                  <div className="mt-6 pt-6 border-t">
+                  <div className="mt-6 pt-6 border-t space-y-3">
                     <Button className="w-full" size="lg">
                       <MessageCircle className="h-5 w-5 mr-2" />
                       Contact Mentor
                     </Button>
+
+                    <FriendRequestButton
+                      targetUserId={mentorData.id}
+                      targetUserName={mentor?.name}
+                      className="w-full"
+                      size="lg"
+                      variant="outline"
+                    />
                   </div>
                 </Card>
 

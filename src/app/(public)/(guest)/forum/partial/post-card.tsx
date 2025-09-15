@@ -45,12 +45,12 @@ export default function PostCard({
               }
               width={60}
               height={60}
-              alt={question.menteeProfile.name}
+              alt={question.menteeProfile?.name}
               className="rounded-full"
             />
             <div>
               <h3 className="font-semibold text-gray-900">
-                {question.menteeProfile.name}
+                {question.menteeProfile?.name}
               </h3>
               <p className="text-sm text-gray-500">
                 {formatDate(question.createdAt)}

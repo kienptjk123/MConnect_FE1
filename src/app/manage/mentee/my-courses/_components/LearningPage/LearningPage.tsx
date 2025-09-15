@@ -18,7 +18,6 @@ import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
 import {
   ArrowLeft,
-  BookOpen,
   Check,
   ChevronDown,
   ChevronRight,
@@ -31,7 +30,6 @@ import { useCallback, useState } from "react";
 
 export default function LearningPage() {
   const params = useParams();
-  const courseId = params.slug as string;
   const { data: allCourses, isLoading: loadingCourses } = useCourses();
 
   const courses = allCourses?.payload?.result?.courses?.find(
@@ -61,9 +59,8 @@ export default function LearningPage() {
   const handleVideoProgress = useCallback(
     (currentTime: number) => {
       if (!currentLesson || !course) return;
-
       updateProgress({
-        courseId: Number(courseId),
+        courseId: Number(courses?.id),
         data: {
           lessonId: currentLesson.id,
           lastPositionSec: Math.floor(currentTime),
@@ -72,7 +69,7 @@ export default function LearningPage() {
         },
       });
     },
-    [currentLesson, course, courseId, updateProgress]
+    [currentLesson, course, courses?.id, updateProgress]
   );
 
   const toggleModule = (moduleIndex: number) => {
@@ -192,6 +189,7 @@ export default function LearningPage() {
         <div className="flex-1 flex flex-col bg-black">
           <div className="flex-1 flex items-center justify-center rounded-xl">
             <MediaPlayer
+              onClick={() => handleVideoProgress(getCurrentVideoUrl() ? 0 : 0)}
               src={getCurrentVideoUrl()}
               viewType="video"
               streamType="on-demand"

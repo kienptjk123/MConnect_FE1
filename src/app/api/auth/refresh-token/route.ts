@@ -1,11 +1,14 @@
 import authApiRequest from "@/apiRequests/auth";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const refreshToken = cookieStore.get("refreshToken")?.value;
-  const currentRole = cookieStore.get("role")?.value; // Giữ role hiện tại
+
+  const url = new URL(request.url);
+  const returnTokenData = url.searchParams.get("returnData") === "true";
 
   if (!refreshToken) {
     return Response.json(
@@ -16,72 +19,144 @@ export async function POST() {
 
   try {
     const result = await authApiRequest.sRefreshToken({
-      refreshToken,
+      refresh_token: refreshToken,
     });
 
-    const { access_token: accessToken, refresh_token: newRefreshToken } =
+    const { access_token, refresh_token: newRefreshToken } =
       result.payload.result;
 
-    // Decode tokens to get expiry times
-    const decodedAccessToken = jwt.decode(accessToken) as jwt.JwtPayload | null;
-    const decodedRefreshToken = jwt.decode(
-      newRefreshToken
-    ) as jwt.JwtPayload | null;
+    // Decode tokens to get user info and expiry times
+    const decodedAccessToken = jwt.decode(access_token) as {
+      exp?: number;
+      user_id?: number;
+      role?: string;
+      verify?: string;
+    } | null;
+    const decodedRefreshToken = jwt.decode(newRefreshToken) as {
+      exp?: number;
+    } | null;
 
-    const accessTokenExpiry = decodedAccessToken?.exp
-      ? decodedAccessToken.exp * 1000
-      : Date.now() + 15 * 60 * 1000; // 15 minutes default
-    const refreshTokenExpiry = decodedRefreshToken?.exp
-      ? decodedRefreshToken.exp * 1000
-      : Date.now() + 24 * 60 * 60 * 1000; // 24 hours default
+    // Set accessToken cookie
+    cookieStore.set("accessToken", access_token, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: decodedAccessToken?.exp
+        ? new Date(decodedAccessToken.exp * 1000)
+        : undefined,
+    });
 
-    const response = Response.json(result.payload.result);
+    // Set refreshToken cookie
+    cookieStore.set("refreshToken", newRefreshToken, {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: decodedRefreshToken?.exp
+        ? new Date(decodedRefreshToken.exp * 1000)
+        : undefined,
+    });
 
-    // Set new tokens in HTTP-only cookies
-    response.headers.set(
-      "Set-Cookie",
-      `accessToken=${accessToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(
-        (accessTokenExpiry - Date.now()) / 1000
-      )}`
-    );
-    response.headers.append(
-      "Set-Cookie",
-      `refreshToken=${newRefreshToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(
-        (refreshTokenExpiry - Date.now()) / 1000
-      )}`
-    );
-
-    // Maintain role cookie if it exists
-    if (currentRole) {
-      response.headers.append(
-        "Set-Cookie",
-        `role=${currentRole}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=${Math.floor(
-          (refreshTokenExpiry - Date.now()) / 1000
-        )}`
-      );
+    // Set role cookie
+    if (decodedAccessToken?.role) {
+      cookieStore.set("role", decodedAccessToken.role, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: decodedRefreshToken?.exp
+          ? new Date(decodedRefreshToken.exp * 1000)
+          : undefined,
+      });
     }
 
-    return response;
-  } catch {
-    // If refresh token is invalid, clear the cookies
-    const response = Response.json(
-      { message: "Invalid refresh token" },
-      { status: 401 }
-    );
+    // Set user_id from decoded access token
+    if (decodedAccessToken?.user_id) {
+      cookieStore.set("user_id", decodedAccessToken.user_id.toString(), {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: decodedRefreshToken?.exp
+          ? new Date(decodedRefreshToken.exp * 1000)
+          : undefined,
+      });
+    }
 
-    response.headers.set(
-      "Set-Cookie",
-      "accessToken=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-    );
-    response.headers.append(
-      "Set-Cookie",
-      "refreshToken=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-    );
-    response.headers.append(
-      "Set-Cookie",
-      "role=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-    );
+    // Set verify status from decoded access token
+    if (decodedAccessToken?.verify) {
+      cookieStore.set("verify", decodedAccessToken.verify, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+        expires: decodedRefreshToken?.exp
+          ? new Date(decodedRefreshToken.exp * 1000)
+          : undefined,
+      });
+    }
 
-    return response;
+    // Return different response based on parameter
+    if (returnTokenData) {
+      // Return tokens for localStorage setting (like login response)
+      return Response.json({
+        message: "Tokens refreshed successfully",
+        result: {
+          access_token,
+          refresh_token: newRefreshToken,
+          role: decodedAccessToken?.role,
+        },
+      });
+    } else {
+      // Original behavior - just return the result
+      return Response.json(result.payload.result);
+    }
+  } catch (error: unknown) {
+    // If refresh token is invalid, clear all cookies
+    cookieStore.set("accessToken", "", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0), // Expire immediately
+    });
+
+    cookieStore.set("refreshToken", "", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0), // Expire immediately
+    });
+
+    cookieStore.set("role", "", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0), // Expire immediately
+    });
+
+    cookieStore.set("user_id", "", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0), // Expire immediately
+    });
+
+    cookieStore.set("verify", "", {
+      path: "/",
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(0), // Expire immediately
+    });
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Invalid refresh token";
+
+    return Response.json({ message: errorMessage }, { status: 401 });
   }
 }

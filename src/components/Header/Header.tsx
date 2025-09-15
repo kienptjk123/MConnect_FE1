@@ -28,21 +28,67 @@ export default function Header() {
 
   useEffect(() => {
     if (!hasAccessToken()) {
+      console.log("🔐 [Header] No access token found, skipping profile fetch");
       return;
     }
+
+    console.log("🚀 [Header] Starting profile fetch...");
+    console.log(
+      "🌐 [Header] API Endpoint:",
+      process.env.NEXT_PUBLIC_API_ENDPOINT
+    );
+
     (async () => {
       try {
         const res = await profileApiRequest.getProfile();
+        console.log("✅ [Header] Profile fetched successfully:", res);
         setProfile(res.payload);
       } catch (err) {
-        console.error("Error fetching user profile:", err);
+        console.error("❌ [Header] Error fetching user profile:", {
+          error: err,
+          message: err instanceof Error ? err.message : "Unknown error",
+          stack: err instanceof Error ? err.stack : undefined,
+          accessToken: hasAccessToken() ? "Present" : "Missing",
+          apiEndpoint: process.env.NEXT_PUBLIC_API_ENDPOINT || "Not configured",
+        });
+
+        // Check if it's a network error
+        if (err instanceof Error) {
+          if (
+            err.message.includes("Failed to fetch") ||
+            err.message.includes("fetch")
+          ) {
+            console.error(
+              "🌐 [Header] Network error detected. Possible causes:"
+            );
+            console.error(
+              "  1. Backend API server is not running at:",
+              process.env.NEXT_PUBLIC_API_ENDPOINT
+            );
+            console.error("  2. CORS configuration issues");
+            console.error("  3. Network connectivity problems");
+            console.error("  4. Firewall blocking the connection");
+            console.error(
+              "💡 [Header] Try starting the backend server or check network settings"
+            );
+          }
+          if (
+            err.message.includes("401") ||
+            err.message.includes("Unauthorized")
+          ) {
+            console.error(
+              "🔒 [Header] Authentication error - token might be expired"
+            );
+            console.error("💡 [Header] Try logging out and logging back in");
+          }
+        }
       } finally {
       }
     })();
   }, []);
 
   return (
-    <header className="dark:border border dark:rounded-full rounded-full mx-4 dark:bg-white dark:shadow-2xl shadow-2xl">
+    <header className="dark:border border dark:rounded-full rounded-full mx-4 dark:bg-white dark:shadow-2xl shadow-2xl min-w-full container">
       <div className="max-w-7xl mx-auto  px-2">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -144,45 +190,47 @@ export default function Header() {
               </Button>
             </Link> */}
             {profile ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    aria-label="Open user menu"
-                    className="focus:outline-none"
-                  >
-                    <Avatar className="h-10 w-10 ring-1 ring-gray-200 hover:cursor-pointer">
-                      <AvatarImage
-                        src={profile.result.avatar || undefined}
-                        alt={profile.result.name}
-                      />
-                      <AvatarFallback className="bg-blue-600 text-white">
-                        {profile.result.name || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  </button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel className="space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {profile.result.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {profile.result.email}
-                    </p>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile">My Profile</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/manage/mentee/dashboard">Learning Hub</Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-600">
-                    Log out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center space-x-3">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      aria-label="Open user menu"
+                      className="focus:outline-none"
+                    >
+                      <Avatar className="h-10 w-10 ring-1 ring-gray-200 hover:cursor-pointer">
+                        <AvatarImage
+                          src={profile?.result?.avatar || undefined}
+                          alt={profile?.result?.name}
+                        />
+                        <AvatarFallback className="bg-blue-600 text-white">
+                          {profile?.result?.name || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel className="space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {profile?.result?.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {profile?.result?.email}
+                      </p>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/profile">My Profile</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/manage/mentee/dashboard">Learning Hub</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="text-red-600">
+                      Log out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <>
                 <Link href="/register">

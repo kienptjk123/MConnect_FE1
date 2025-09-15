@@ -1,18 +1,18 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { CourseType } from "@/schemaValidations/course.schema";
 import {
-  Clock,
-  Users,
-  Star,
   BookOpen,
   BookText,
+  Clock,
   MoveRight,
+  Star,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
-import { CourseType } from "@/schemaValidations/course.schema";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 
 interface CourseCardProps {
@@ -130,15 +130,15 @@ export default function CourseCard({ course }: CourseCardProps) {
                 <AvatarImage
                   width={9}
                   height={9}
-                  src={course.mentorProfile.avatar || ""}
+                  src={course.mentorProfile?.avatar || ""}
                 />
                 <AvatarFallback className="text-sm bg-blue-100 text-blue-700 ">
-                  {course.mentorProfile.name.charAt(0)}
+                  {course.mentorProfile.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-base font-medium text-gray-700 capitalize truncate dark:text-white">
-                  {course.mentorProfile.username}
+                  {course?.mentorProfile?.username}
                 </p>
               </div>
             </div>

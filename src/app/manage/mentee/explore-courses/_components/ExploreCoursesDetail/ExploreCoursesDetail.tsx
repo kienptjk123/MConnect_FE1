@@ -192,14 +192,14 @@ export default function CourseDetailPage() {
             <div className="dark:border-1 dark:border-white  rounded-lg shadow-sm p-6">
               <div className="flex justify-between items-center">
                 <div className="">
-                  {course.mentorProfile && (
+                  {course?.mentorProfile && (
                     <div className="">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-                          {course.mentorProfile.avatar ? (
+                          {course?.mentorProfile?.avatar ? (
                             <Image
-                              src={course.mentorProfile.avatar}
-                              alt={course.mentorProfile.name}
+                              src={course?.mentorProfile?.avatar}
+                              alt={course?.mentorProfile?.name}
                               width={48}
                               height={48}
                               className="w-full h-full object-cover"
@@ -207,7 +207,7 @@ export default function CourseDetailPage() {
                           ) : (
                             <span className="text-blue-600 font-semibold text-lg">
                               {course.mentorProfile.name
-                                .charAt(0)
+                                ?.charAt(0)
                                 .toUpperCase()}
                             </span>
                           )}
@@ -217,7 +217,7 @@ export default function CourseDetailPage() {
                             Created by
                           </p>
                           <p className="text-lg text-gray-900 dark:text-white">
-                            {course.mentorProfile.name}
+                            {course?.mentorProfile?.name}
                           </p>
                         </div>
                       </div>

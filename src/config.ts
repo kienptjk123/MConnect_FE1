@@ -16,7 +16,7 @@ const configProject = configSchema.safeParse({
 });
 
 if (!configProject.success) {
-  console.error(configProject.error.errors);
+  console.error(configProject.error.issues);
   throw new Error("Các khai báo biến môi trường không hợp lệ");
 }
 

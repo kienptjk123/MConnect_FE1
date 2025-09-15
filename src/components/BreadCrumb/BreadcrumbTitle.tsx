@@ -33,7 +33,7 @@ export default function BreadcrumbTitle({ className, override }: Props) {
     seg = pathname.split("/").filter(Boolean)[0] ?? "";
   }
   const pretty =
-    seg.length > 0 ? seg.charAt(0).toUpperCase() + seg.slice(1) : "";
+    seg.length > 0 ? seg?.charAt(0).toUpperCase() + seg.slice(1) : "";
 
   return (
     <div

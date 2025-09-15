@@ -4,42 +4,34 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useCourseProgress } from "@/queries/useCourse";
+import { useLearningCourses } from "@/queries/useMyCourses";
 import { BookOpen, Download, Play, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const ENROLLED_COURSE_IDS = [1];
-
 export default function MyCourses() {
   const [activeTab, setActiveTab] = useState<"all" | "active" | "completed">(
     "all"
   );
-  const { data, isLoading, error } = useCourseProgress(ENROLLED_COURSE_IDS[0]);
-  const enrollments = data?.payload?.result
-    ? [
-        {
-          id: data.payload.result.enrollment.id,
-          course: data.payload.result.course,
-          progressPercentage: data.payload.result.progressPercentage,
-          totalLessons: data.payload.result.totalLessons,
-          completedLessons: data.payload.result.completedLessons,
-        },
-      ]
-    : [];
+  const { data, isLoading, error } = useLearningCourses();
 
-  const filterCourses = (courses: any[]) => {
+  const enrollments = data?.payload?.result?.enrollments || [];
+
+  const filterCourses = (enrollments: any[]) => {
     switch (activeTab) {
       case "active":
-        return courses.filter(
-          (course) =>
-            course.progressPercentage > 0 && course.progressPercentage < 100
+        return enrollments.filter(
+          (enrollment) =>
+            enrollment.progressPercentage > 0 &&
+            enrollment.progressPercentage < 100
         );
       case "completed":
-        return courses.filter((course) => course.progressPercentage >= 100);
+        return enrollments.filter(
+          (enrollment) => enrollment.progressPercentage >= 100
+        );
       default:
-        return courses;
+        return enrollments;
     }
   };
 
@@ -170,11 +162,13 @@ export default function MyCourses() {
         )}
 
         {!isLoading && filteredCourses.length > 0 && (
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {filteredCourses.map((enrollment) => (
-              <CourseCard key={enrollment.id} enrollment={enrollment} />
-            ))}
-          </div>
+          <>
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {filteredCourses.map((enrollment) => (
+                <CourseCard key={enrollment.id} enrollment={enrollment} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -201,9 +195,11 @@ function CourseCard({ enrollment }: { enrollment: any }) {
                 <span className="text-2xl">📚</span>
               </div>
               <div className="px-4">
-                <p className="text-sm font-medium opacity-90">{course.title}</p>
+                <p className="text-sm font-medium opacity-90">
+                  {course?.title}
+                </p>
                 <p className="text-xs opacity-70 mt-1">
-                  Mentor ID: {course.mentorProfileId}
+                  by {course?.mentorProfile?.name || "Unknown Mentor"}
                 </p>
               </div>
             </div>
@@ -224,9 +220,13 @@ function CourseCard({ enrollment }: { enrollment: any }) {
       <div className="p-6">
         {/* Rating */}
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex text-yellow-400">{"★".repeat(5)}</div>
+          <div className="flex text-yellow-400">
+            {"★".repeat(Math.floor(course?.avgRating || 0))}
+            {"☆".repeat(5 - Math.floor(course?.avgRating || 0))}
+          </div>
           <span className="text-sm text-gray-600">
-            ({course.ratingCount} Reviews)
+            {course?.avgRating?.toFixed(1) || "0.0"} ({course?.ratingCount || 0}{" "}
+            Reviews)
           </span>
         </div>
 

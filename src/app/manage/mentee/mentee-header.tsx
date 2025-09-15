@@ -1,5 +1,7 @@
 import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import CartDropdown from "@/app/manage/mentee/cart/_components/CartDropdown/CartDropdown";
+import NotificationDropdown from "@/app/manage/mentee/notifications/_components/NotificationDropdown/NotificationDropdown";
 
 export default function MenteeHeader() {
   return (
@@ -10,9 +12,9 @@ export default function MenteeHeader() {
         <div></div>
       </div>
       <div className="ml-auto flex items-center gap-3 px-6">
+        <NotificationDropdown />
+        <CartDropdown />
         <ModeToggle />
-        {/* <NotificationDropdown />
-        <UserDropdown /> */}
       </div>
     </header>
   );

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useCourseDetail } from "@/queries/useCourse";
-import VideoPlayer from "@/components/VideoPlayer/VideoPlayer";
 import CourseInfoPanel from "@/app/manage/mentee/explore-courses/_components/CourseInfoPanel/CourseInfoPanel";
 import ModuleLessons from "@/app/manage/mentee/explore-courses/_components/ModuleLessons/ModuleLessons";
 import { Button } from "@/components/ui/button";
@@ -164,12 +163,6 @@ export default function CourseDetailPages() {
             <div className="bg-white rounded-lg shadow-sm overflow-hidden">
               {currentLesson ? (
                 <>
-                  <VideoPlayer
-                    videoUrl={getVideoUrl(currentLesson)}
-                    title={currentLesson.title}
-                  />
-
-                  {/* Lesson Info */}
                   <div className="p-6">
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
                       {currentLesson.title}
