@@ -1,32 +1,31 @@
-# Step 1: Build static Next.js app
-FROM node:18-alpine AS build
+# Step 1: Build Next.js app
+FROM node:18-bullseye-slim AS build
 
+# Set working dir
 WORKDIR /app
 
 # Install dependencies
 COPY package.json package-lock.json ./
-RUN npm install -f
+RUN npm ci
 
-# Copy full source code
+# Copy source code
 COPY . .
 
-
-# Build and export static site
+# Build Next.js
 RUN npm run build
 
-# Step 2: Serve exported static files with Nginx
-FROM nginx:1.23-alpine
+# Step 2: Run Next.js app
+FROM node:18-bullseye-slim AS runner
+WORKDIR /app
 
-# Clear default nginx content
-RUN rm -rf /usr/share/nginx/html/*
+ENV NODE_ENV=production
 
-COPY --from=build /app/out /usr/share/nginx/html
+# Copy standalone build (minimal files)
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
 
-# Optional: Use custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 3000
 
-# Expose web port
-EXPOSE 80
-
-# Run nginx in foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Run Next.js production server
+CMD ["node", "server.js"]
