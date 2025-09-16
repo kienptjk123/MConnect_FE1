@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     unoptimized: true,
     remotePatterns: [{ protocol: "https", hostname: "**" }],
   },
+  experimental: {
+    optimizeCss: false,
+  },
 };
 
 export default nextConfig;

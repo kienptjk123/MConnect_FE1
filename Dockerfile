@@ -13,6 +13,8 @@ RUN npm ci
 
 # Fix cho Tailwind v4: oxide binary
 RUN npm install --save-dev @tailwindcss/oxide
+RUN npm install --save-dev lightningcss
+
 
 # Copy toàn bộ source code
 COPY . .
