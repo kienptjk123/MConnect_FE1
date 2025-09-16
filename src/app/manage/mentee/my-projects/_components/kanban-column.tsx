@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { TaskType } from "@/schemaValidations/taskKanban.schema";
+import { TaskType } from "@/schemaValidations/kanban.schema";
 import React, { type ReactNode, useState } from "react";
 
 interface KanbanColumnProps {

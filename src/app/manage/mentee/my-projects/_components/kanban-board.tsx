@@ -3,7 +3,7 @@
 import { kanbanTaskApiRequest } from "@/apiRequests/kanban";
 import { TaskCard } from "@/app/manage/mentee/my-projects/_components/task-card";
 import { toast } from "@/components/ui/use-toast";
-import { TaskType } from "@/schemaValidations/taskKanban.schema";
+import { TaskType } from "@/schemaValidations/kanban.schema";
 import { useEffect, useMemo, useState } from "react";
 import { KanbanColumn } from "./kanban-column";
 import { KanbanHeader } from "./kanban-header";

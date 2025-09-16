@@ -28,7 +28,7 @@ export const useCreateUpdateRequestMutation = () => {
 
 export const useEditUpdateRequestMutation = () => {
   return useMutation({
-    mutationFn: ({ id, ...body }: { id: number; body: EditUpdateRequest }) =>
-      updateRequestApiRequests.editUpdateRequest(body as any, id),
+    mutationFn: ({ id, body }: { id: number; body: EditUpdateRequest }) =>
+      updateRequestApiRequests.editUpdateRequest(body, id),
   });
 };
