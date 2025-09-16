@@ -5,6 +5,13 @@ FROM node:20-bullseye-slim AS build
 
 WORKDIR /app
 
+ENV NEXT_PUBLIC_API_ENDPOINT=https://developgenderhealth.io.vn/
+ENV NEXT_PUBLIC_URL=http://localhost:3000
+ENV NEXT_PUBLIC_SOCKET_URL=https://developgenderhealth.io.vn/
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=355941671357-n80rj8ibhat9i0klintrtcuo06go2brd.apps.googleusercontent.com
+ENV NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=https://developgenderhealth.io.vn/users/oauth/google
+ENV CLIENT_REDIRECT_CALLBACK=http://localhost:3000/oauth/callback
+
 # Copy package files
 COPY package.json package-lock.json ./
 
