@@ -5,6 +5,7 @@ FROM node:20-bullseye-slim AS build
 
 WORKDIR /app
 
+# Env variables cho build
 ENV NEXT_PUBLIC_API_ENDPOINT=https://developgenderhealth.io.vn/
 ENV NEXT_PUBLIC_URL=http://localhost:3000
 ENV NEXT_PUBLIC_SOCKET_URL=https://developgenderhealth.io.vn/
@@ -15,15 +16,13 @@ ENV CLIENT_REDIRECT_CALLBACK=http://localhost:3000/oauth/callback
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Cài dependencies
+# Install deps
 RUN npm ci
 
-# Fix cho Tailwind v4: oxide binary
-RUN npm install --save-dev @tailwindcss/oxide
-RUN npm install --save-dev lightningcss
+# Fix cho Tailwind v4
+RUN npm install --save-dev @tailwindcss/oxide lightningcss
 
-
-# Copy toàn bộ source code
+# Copy toàn bộ source
 COPY . .
 
 # Build Next.js
@@ -37,11 +36,13 @@ FROM node:20-bullseye-slim AS runner
 
 WORKDIR /app
 
-# Copy từ build stage
+ENV NODE_ENV=production
+
+# Copy output từ build stage
 COPY --from=build /app ./
 
-# Expose cổng 3000
+# Expose port
 EXPOSE 3000
 
-# Start app
-CMD ["npm", "start"]
+# Start app (ép listen 0.0.0.0 để Nginx proxy được)
+CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
