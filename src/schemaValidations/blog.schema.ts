@@ -52,7 +52,6 @@ export const BlogUpdateSchema = z.object({
   tags: z.array(z.number()).optional(),
 });
 
-// FormData schemas for file upload
 export const BlogCreateFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   content: z.string().min(1, "Content is required"),
