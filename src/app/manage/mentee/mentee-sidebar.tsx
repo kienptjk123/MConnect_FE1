@@ -28,7 +28,6 @@ import {
   LogOut,
   MessageCircle,
   MonitorPlayIcon,
-  Settings,
   ShoppingBag,
   User,
   User2,
@@ -179,13 +178,23 @@ export default function MenteeSidebar() {
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-blue-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 my-1 hover:bg-blue-50">
-                  <User className="mr-3 h-4 w-4 text-blue-500" />
-                  <span>Profile</span>
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                >
+                  <Link href="/manage/mentee/profile" className="flex gap-2">
+                    <User className="mr-3 h-4 w-4 text-blue-500" />
+                    <span>Profile</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg mx-1 my-1 hover:bg-blue-50">
-                  <ShoppingBag className="mr-3 h-4 w-4 text-blue-500" />
-                  <span>Orders</span>
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                >
+                  <Link href="/manage/mentee/order" className="flex gap-2">
+                    <ShoppingBag className="mr-3 h-4 w-4 text-blue-500" />
+                    <span>Orders</span>
+                  </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuSeparator className="bg-blue-100" />
