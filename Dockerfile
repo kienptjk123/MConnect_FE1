@@ -1,7 +1,7 @@
 # ==========================
 # STEP 1: Build Next.js app
 # ==========================
-FROM node:20-alpine AS build
+FROM node:20-bullseye-slim AS build
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ RUN npm run build
 # ==========================
 # STEP 2: Run Next.js app
 # ==========================
-FROM node:20-alpine AS runner
+FROM node:20-bullseye-slim AS runner
 
 WORKDIR /app
 
