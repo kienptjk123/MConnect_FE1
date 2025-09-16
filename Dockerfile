@@ -44,5 +44,4 @@ COPY --from=build /app ./
 # Expose port
 EXPOSE 3000
 
-# Start app (ép listen 0.0.0.0 để Nginx proxy được)
 CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
