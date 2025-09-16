@@ -1,22 +1,38 @@
-# Step 1: Build Next.js app
+# ==========================
+# STEP 1: Build Next.js app
+# ==========================
 FROM node:20-alpine AS build
 
 WORKDIR /app
 
-# Install dependencies
+# Copy package files
 COPY package.json package-lock.json ./
+
+# Cài dependencies
 RUN npm ci
 
-# Build Next.js
+# Fix cho Tailwind v4: oxide binary
+RUN npm install --save-dev @tailwindcss/oxide
+
+# Copy toàn bộ source code
 COPY . .
+
+# Build Next.js
 RUN npm run build
 
-# Step 2: Run Next.js app
+
+# ==========================
+# STEP 2: Run Next.js app
+# ==========================
 FROM node:20-alpine AS runner
 
 WORKDIR /app
 
+# Copy từ build stage
 COPY --from=build /app ./
 
+# Expose cổng 3000
 EXPOSE 3000
+
+# Start app
 CMD ["npm", "start"]
