@@ -1,22 +1,21 @@
 "use client";
+import { useAppContext } from "@/components/app-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import envConfig from "@/config";
+import { useLoginMutation } from "@/queries/useAuth";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginMutation } from "@/queries/useAuth";
-import { toast } from "@/components/ui/use-toast";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAppContext } from "@/components/app-provider";
-import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-import envConfig from "@/config";
-import notificationService from "@/services/notification-service";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const getOauthGoogleUrl = () => {
   const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -167,8 +166,7 @@ export default function LoginForm() {
                         required
                         {...field}
                       />
-                      <button
-                        type="button"
+                      <div
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                         onClick={() => setShowPassword(!showPassword)}
                       >
@@ -177,7 +175,7 @@ export default function LoginForm() {
                         ) : (
                           <Eye className="h-4 w-4 text-gray-400" />
                         )}
-                      </button>
+                      </div>
                     </div>
                     <FormMessage />
                   </div>

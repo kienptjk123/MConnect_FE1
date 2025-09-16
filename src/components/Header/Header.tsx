@@ -88,7 +88,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="dark:border border dark:rounded-full rounded-full mx-4 dark:bg-white dark:shadow-2xl shadow-2xl min-w-full container">
+    <header className="dark:border border dark:rounded-full rounded-full dark:bg-white dark:shadow-2xl shadow-2xl min-w-full mx-auto w-full">
       <div className="max-w-7xl mx-auto  px-2">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">

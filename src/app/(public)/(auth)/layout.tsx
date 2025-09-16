@@ -16,6 +16,7 @@ export default function AuthLayout({
             objectFit="cover"
             className="w-full h-full"
             priority
+            fetchPriority="high"
           />
         </div>
 
