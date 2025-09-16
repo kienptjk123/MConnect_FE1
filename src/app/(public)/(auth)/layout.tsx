@@ -7,8 +7,8 @@ export default function AuthLayout({
 }) {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      <div className="min-h-[1000px] relative flex justify-center items-center">
-        <div className="absolute inset-0 top-0 left-0 object-cover">
+      <div className="min-h-screen relative flex justify-center items-center">
+        <div className="absolute min-h-screen inset-0 top-0 left-0 object-cover">
           <Image
             src="/images/login.png"
             alt="Background"

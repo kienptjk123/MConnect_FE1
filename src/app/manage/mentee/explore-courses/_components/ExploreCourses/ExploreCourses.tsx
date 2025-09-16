@@ -95,13 +95,13 @@ export default function ExploreCourses() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen dark:bg-[#080808]">
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Explore Courses
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
+          <p className="text-gray-600 dark:text-white text-sm sm:text-base">
             Discover amazing courses from experienced mentors
           </p>
         </div>
@@ -126,8 +126,8 @@ export default function ExploreCourses() {
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-gray-500" />
-                  <span className="text-sm font-medium text-gray-700">
+                  <Filter className="w-4 h-4 text-gray-500 dark:text-white" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     Category
                   </span>
                   <Select
@@ -148,7 +148,7 @@ export default function ExploreCourses() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-sm font-medium text-gray-700">
+                  <span className="text-sm font-medium text-gray-700 dark:text-white">
                     Sort by:
                   </span>
                   <Select value={sortBy} onValueChange={handleSortChange}>

@@ -1,32 +1,48 @@
-# Step 1: Build static Next.js app
-FROM node:18-alpine AS build
+# ==========================
+# STEP 1: Build Next.js app
+# ==========================
+FROM node:20-bullseye-slim AS build
 
 WORKDIR /app
 
-# Install dependencies
-COPY package.json package-lock.json ./
-RUN npm install -f
+# Env variables cho build
+ENV NEXT_PUBLIC_API_ENDPOINT=https://developgenderhealth.io.vn/
+ENV NEXT_PUBLIC_URL=http://localhost:3000
+ENV NEXT_PUBLIC_SOCKET_URL=https://developgenderhealth.io.vn/
+ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=355941671357-n80rj8ibhat9i0klintrtcuo06go2brd.apps.googleusercontent.com
+ENV NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=https://developgenderhealth.io.vn/users/oauth/google
+ENV CLIENT_REDIRECT_CALLBACK=http://localhost:3000/oauth/callback
 
-# Copy full source code
+# Copy package files
+COPY package.json package-lock.json ./
+
+# Install deps
+RUN npm ci
+
+# Fix cho Tailwind v4
+RUN npm install --save-dev @tailwindcss/oxide lightningcss
+
+# Copy toàn bộ source
 COPY . .
 
-
-# Build and export static site
+# Build Next.js
 RUN npm run build
 
-# Step 2: Serve exported static files with Nginx
-FROM nginx:1.23-alpine
 
-# Clear default nginx content
-RUN rm -rf /usr/share/nginx/html/*
+# ==========================
+# STEP 2: Run Next.js app
+# ==========================
+FROM node:20-bullseye-slim AS runner
 
-COPY --from=build /app/out /usr/share/nginx/html
+WORKDIR /app
 
-# Optional: Use custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+ENV NODE_ENV=production
 
-# Expose web port
-EXPOSE 80
+# Copy output từ build stage
+COPY --from=build /app ./
 
-# Run nginx in foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Expose port
+EXPOSE 3000
+
+# Start app (ép listen 0.0.0.0 để Nginx proxy được)
+CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]

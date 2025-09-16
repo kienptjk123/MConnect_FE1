@@ -70,19 +70,29 @@ export default function LoginForm() {
       toast({
         description: result.payload.message,
       });
-      setRole(
-        result.payload.result.role as "MENTOR" | "MENTEE" | "STAFF" | "ADMIN"
+
+      const userRole = result.payload.result.role as
+        | "MENTOR"
+        | "MENTEE"
+        | "STAFF"
+        | "ADMIN";
+      setRole(userRole);
+      const dashboardRoutes = {
+        MENTEE: "/manage/mentee/dashboard",
+        MENTOR: "/manage/mentor/dashboard",
+        STAFF: "/manage/staff/dashboard",
+        ADMIN: "/manage/admin/dashboard",
+      };
+
+      const redirectUrl = dashboardRoutes[userRole] || "/";
+      console.log(
+        "🔐 [LoginForm] Redirecting to:",
+        redirectUrl,
+        "for role:",
+        userRole
       );
-      if (result.payload.result.access_token) {
-        const notificationResult =
-          await notificationService.initializeNotifications();
 
-        if (notificationResult.success) {
-          console.log("Notifications initialized successfully");
-        }
-      }
-
-      router.push("/");
+      router.push(redirectUrl);
     } catch (error) {
       console.log(error);
       toast({

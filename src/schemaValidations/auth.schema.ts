@@ -96,7 +96,7 @@ export const ResendVerifyEmailRes = z.object({
 export type ResendVerifyEmailResType = z.TypeOf<typeof ResendVerifyEmailRes>;
 
 export const RefreshTokenBody = z.object({
-  refreshToken: z.string(),
+  refresh_token: z.string(),
 });
 
 export type RefreshTokenBodyType = z.TypeOf<typeof RefreshTokenBody>;

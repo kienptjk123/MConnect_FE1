@@ -50,9 +50,7 @@ const authApiRequest = {
   resendVerifyEmail: () =>
     http.post<ResendVerifyEmailResType>("/users/resend-verify-email", {}),
   sRefreshToken: (body: RefreshTokenBodyType) =>
-    http.post<RefreshTokenResType>("/auth/refresh-token", body, {
-      baseUrl: "",
-    }),
+    http.post<RefreshTokenResType>("/users/refresh-token", body),
 
   logout: () =>
     http.post("/api/auth/logout", null, {
@@ -74,6 +72,19 @@ const authApiRequest = {
     this.refreshTokenRequest = null;
     return result;
   },
+
+  // Method that refreshes tokens and sets them to both cookies and localStorage
+  refreshAndSetTokens: () =>
+    http.post<{
+      message: string;
+      result: {
+        access_token: string;
+        refresh_token: string;
+        role: string;
+      };
+    }>("/api/auth/refresh-token?returnData=true", null, {
+      baseUrl: "",
+    }),
 
   sForgotPassword: (body: ForgotPasswordBodyType) =>
     http.post<ForgotPasswordBodyType>("/users/forgot-password", body),

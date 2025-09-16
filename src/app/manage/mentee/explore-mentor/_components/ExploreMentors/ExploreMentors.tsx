@@ -37,9 +37,9 @@ export default function ExploreMentors() {
     if (!query.trim()) return mentors;
     return mentors.filter(
       (mentor) =>
-        mentor.name.toLowerCase().includes(query.toLowerCase().trim()) ||
-        mentor.username.toLowerCase().includes(query.toLowerCase().trim()) ||
-        mentor.location?.toLowerCase().includes(query.toLowerCase().trim())
+        mentor?.name?.toLowerCase().includes(query.toLowerCase().trim()) ||
+        mentor?.username?.toLowerCase().includes(query.toLowerCase().trim()) ||
+        mentor?.location?.toLowerCase().includes(query.toLowerCase().trim())
     );
   };
 
@@ -53,10 +53,12 @@ export default function ExploreMentors() {
 
     switch (sortType) {
       case "name":
-        return sortedMentors.sort((a, b) => a.name.localeCompare(b.name));
+        return sortedMentors.sort(
+          (a, b) => a?.name?.localeCompare(b?.name || "") || 0
+        );
       case "username":
-        return sortedMentors.sort((a, b) =>
-          a.username.localeCompare(b.username)
+        return sortedMentors.sort(
+          (a, b) => a?.username?.localeCompare(b?.username || "") || 0
         );
       case "recent":
         return sortedMentors.sort(
@@ -185,7 +187,9 @@ export default function ExploreMentors() {
             {paginatedMentors.map((mentor) => (
               <Link
                 key={mentor.id}
-                href={`/manage/mentee/explore-mentor/${mentor.username}`}
+                href={`/manage/mentee/explore-mentor/${
+                  mentor?.username || mentor?.id
+                }`}
               >
                 <MentorCard mentor={mentor} />
               </Link>

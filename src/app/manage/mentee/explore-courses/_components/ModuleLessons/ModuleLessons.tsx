@@ -50,12 +50,12 @@ export default function ModuleLessons({ course }: ModuleLessonsProps) {
 
   return (
     <>
-      <Card className="bg-white border-0 shadow-none">
+      <Card className="dark:bg-[#080808]  border-0 shadow-none">
         <CardHeader className="p-0">
-          <CardTitle className="text-xl font-bold text-gray-900">
+          <CardTitle className="text-xl font-bold dark:text-white text-gray-900">
             Course Content
           </CardTitle>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 dark:text-white">
             {course.modules.length} modules •{" "}
             {course.modules.reduce(
               (total, module) => total + module.lessons.length,
@@ -83,12 +83,12 @@ export default function ModuleLessons({ course }: ModuleLessonsProps) {
                   <AccordionTrigger className="px-4 py-3 hover:no-underline transition-colors duration-500">
                     <div className="flex w-full items-center justify-between">
                       <div className="flex items-center gap-2 text-left">
-                        <span className="font-semibold text-gray-900">
+                        <span className="font-semibold dark:text-white text-gray-900">
                           {module.order}. {module.title}
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-3 text-sm text-gray-600">
+                      <div className="flex items-center gap-3 text-sm dark:text-white text-gray-600">
                         <span>{module.lessons.length} lessons</span>
                         <span>•</span>
                         <span>{formatDuration(moduleDuration)}</span>
@@ -96,7 +96,7 @@ export default function ModuleLessons({ course }: ModuleLessonsProps) {
                     </div>
                   </AccordionTrigger>
 
-                  <AccordionContent className="border-t border-gray-200 bg-gray-50 overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
+                  <AccordionContent className="border-t border-gray-200 bg-gray-50 dark:bg-[#080808] overflow-hidden data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down">
                     {module.lessons.map((lesson, lessonIndex) => {
                       const hasVideo =
                         lesson.media && lesson.media.type === "VIDEO";
@@ -112,16 +112,16 @@ export default function ModuleLessons({ course }: ModuleLessonsProps) {
 
                             <div className="flex-shrink-0">
                               {hasVideo && (
-                                <Video className="w-4 h-4 text-gray-600" />
+                                <Video className="w-4 h-4 text-gray-600 dark:text-white" />
                               )}
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <h4 className="font-medium truncate text-gray-900">
+                              <h4 className="font-medium truncate text-gray-900 dark:text-white">
                                 {lesson.title}
                               </h4>
                               <div className="flex items-center gap-2 mt-1">
-                                <div className="flex items-center gap-1 text-xs text-gray-500">
+                                <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-white">
                                   <Clock className="w-3 h-3" />
                                   <span>
                                     {formatDuration(lesson.durationSec)}
@@ -138,7 +138,7 @@ export default function ModuleLessons({ course }: ModuleLessonsProps) {
                               </div>
                             </div>
                           </div>
-                          <Lock className="w-4 h-4 text-gray-600" />
+                          <Lock className="w-4 h-4 text-gray-600 dark:text-white" />
                         </div>
                       );
                     })}

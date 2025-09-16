@@ -1,18 +1,18 @@
 "use client";
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { CourseType } from "@/schemaValidations/course.schema";
 import {
-  Clock,
-  Users,
-  Star,
   BookOpen,
   BookText,
+  Clock,
   MoveRight,
+  Star,
+  Users,
 } from "lucide-react";
 import Image from "next/image";
-import { CourseType } from "@/schemaValidations/course.schema";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 
 interface CourseCardProps {
@@ -33,7 +33,7 @@ export default function CourseCard({ course }: CourseCardProps) {
   };
 
   return (
-    <Card className="group cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-blue-100 border-0 bg-white rounded-xl overflow-hidden">
+    <Card className="group cursor-pointer transition-all duration-300 hover:shadow-lg dark:hover:shadow-none hover:shadow-blue-100 border-0 bg-white dark:bg-[#080808] dark:border-1 dark:border-white rounded-xl overflow-hidden">
       <div className="relative">
         <div className="relative h-56 bg-gradient-to-br from-blue-500 to-purple-600 overflow-hidden">
           {course.thumbnail ? (
@@ -81,7 +81,7 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
           <Link
             href={`/manage/mentee/explore-courses/${course.slug}`}
-            className="mt-3 font-bold text-xl line-clamp-2 text-gray-900 mb-3
+            className="mt-3 font-bold text-xl line-clamp-2 text-gray-900 dark:text-white mb-3
              relative w-fit transition-colors duration-400 
              hover:text-blue-500
              after:content-[''] after:absolute after:left-0 after:bottom-0
@@ -91,7 +91,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             {course.title}
           </Link>
 
-          <div className="flex items-center gap-4 mb-3 text-xs text-gray-500">
+          <div className="flex items-center gap-4 mb-3 text-xs dark:text-white text-gray-500">
             <div className="flex items-center gap-1 text-sm">
               <Users className="w-4 h-4" />
               <span>{course._count.enrollments} students</span>
@@ -106,7 +106,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             </div>
           </div>
 
-          <div className="flex mt-3 mb-3 items-center justify-between font-semibold text-gray-500">
+          <div className="flex mt-3 mb-3 items-center justify-between font-semibold dark:text-white text-gray-500">
             <div className="">${Number(course.price).toFixed(2)}</div>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -130,22 +130,22 @@ export default function CourseCard({ course }: CourseCardProps) {
                 <AvatarImage
                   width={9}
                   height={9}
-                  src={course.mentorProfile.avatar || ""}
+                  src={course.mentorProfile?.avatar || ""}
                 />
-                <AvatarFallback className="text-sm bg-blue-100 text-blue-700">
-                  {course.mentorProfile.name.charAt(0)}
+                <AvatarFallback className="text-sm bg-blue-100 text-blue-700 ">
+                  {course.mentorProfile.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-base font-medium text-gray-700 capitalize truncate">
-                  {course.mentorProfile.username}
+                <p className="text-base font-medium text-gray-700 capitalize truncate dark:text-white">
+                  {course?.mentorProfile?.username}
                 </p>
               </div>
             </div>
 
             <Link
               href={`/manage/mentee/enroll/${course.id}`}
-              className="flex items-center justify-center gap-2 text-gray-700 font-semibold hover:text-blue-500 transition-colors duration-300"
+              className="flex items-center justify-center gap-2 text-gray-700 dark:text-white font-semibold hover:text-blue-500 transition-colors duration-300"
             >
               <span className="text-base">Enroll Now</span>
               <MoveRight className="w-5 h-5 text-gray-700 hover:text-blue-500" />

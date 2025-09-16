@@ -20,30 +20,19 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { formatDateForInput } from "@/lib/utils";
 import {
-  ProfileResType,
-  UpdatePassword,
   UpdatePasswordSchema,
   UpdateProfile,
   UpdateProfileSchema,
   UserProfile,
 } from "@/schemaValidations/profile.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Edit3,
-  Eye,
-  EyeOff,
-  Heart,
-  MapPin,
-  Save,
-  Upload,
-  X,
-} from "lucide-react";
+import { Edit3, Eye, EyeOff, MapPin, Save, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 
 export default function ProfileForm() {
-  const [userProfile, setUserProfile] = useState<UserProfile>({});
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
@@ -69,7 +58,7 @@ export default function ProfileForm() {
       website: "",
       phone_number: "",
       description: "",
-      date_of_birth: formatDateForInput(userProfile.date_of_birth) || "",
+      date_of_birth: formatDateForInput(userProfile?.date_of_birth) || "",
     },
   });
 
@@ -149,31 +138,31 @@ export default function ProfileForm() {
         const formData = new FormData();
 
         // So sánh và append các field đã thay đổi
-        if (data.name && data.name !== userProfile.name) {
+        if (data.name && data.name !== userProfile?.name) {
           formData.append("name", data.name);
           hasChanges = true;
         }
-        if (data.location !== userProfile.location) {
+        if (data.location !== userProfile?.location) {
           formData.append("location", data.location || "");
           hasChanges = true;
         }
-        if (data.bio !== userProfile.bio) {
+        if (data.bio !== userProfile?.bio) {
           formData.append("bio", data.bio || "");
           hasChanges = true;
         }
-        if (data.date_of_birth !== userProfile.date_of_birth) {
+        if (data.date_of_birth !== userProfile?.date_of_birth) {
           formData.append("date_of_birth", data.date_of_birth || "");
           hasChanges = true;
         }
-        if (data.phone_number !== userProfile.phone_number) {
+        if (data.phone_number !== userProfile?.phone_number) {
           formData.append("phone_number", data.phone_number || "");
           hasChanges = true;
         }
-        if (data.website !== userProfile.website) {
+        if (data.website !== userProfile?.website) {
           formData.append("website", data.website || "");
           hasChanges = true;
         }
-        if (data.description !== userProfile.description) {
+        if (data.description !== userProfile?.description) {
           formData.append("description", data.description || "");
           hasChanges = true;
         }
@@ -215,31 +204,31 @@ export default function ProfileForm() {
         const updateData: Partial<UpdateProfile> = {};
 
         // So sánh và chỉ update những field đã thay đổi
-        if (data.name && data.name !== userProfile.name) {
+        if (data.name && data.name !== userProfile?.name) {
           updateData.name = data.name;
           hasChanges = true;
         }
-        if (data.location !== userProfile.location) {
+        if (data.location !== userProfile?.location) {
           updateData.location = data.location;
           hasChanges = true;
         }
-        if (data.bio !== userProfile.bio) {
+        if (data.bio !== userProfile?.bio) {
           updateData.bio = data.bio;
           hasChanges = true;
         }
-        if (data.date_of_birth !== userProfile.date_of_birth) {
+        if (data.date_of_birth !== userProfile?.date_of_birth) {
           updateData.date_of_birth = data.date_of_birth;
           hasChanges = true;
         }
-        if (data.phone_number !== userProfile.phone_number) {
+        if (data.phone_number !== userProfile?.phone_number) {
           updateData.phone_number = data.phone_number;
           hasChanges = true;
         }
-        if (data.website !== userProfile.website) {
+        if (data.website !== userProfile?.website) {
           updateData.website = data.website;
           hasChanges = true;
         }
-        if (data.description !== userProfile.description) {
+        if (data.description !== userProfile?.description) {
           updateData.description = data.description;
           hasChanges = true;
         }
@@ -303,13 +292,13 @@ export default function ProfileForm() {
 
     // Reset form về giá trị ban đầu từ userProfile
     reset({
-      name: userProfile.name || "",
-      bio: userProfile.bio || "",
-      location: userProfile.location || "",
-      website: userProfile.website || "",
-      phone_number: userProfile.phone_number || "",
-      description: userProfile.description || "",
-      date_of_birth: formatDateForInput(userProfile.date_of_birth) || "",
+      name: userProfile?.name || "",
+      bio: userProfile?.bio || "",
+      location: userProfile?.location || "",
+      website: userProfile?.website || "",
+      phone_number: userProfile?.phone_number || "",
+      description: userProfile?.description || "",
+      date_of_birth: formatDateForInput(userProfile?.date_of_birth) || "",
     });
 
     setIsEditing(false);
@@ -382,7 +371,7 @@ export default function ProfileForm() {
             }`}
             style={{
               backgroundImage: `url(${
-                coverPreview || userProfile.coverPhoto || "/placeholder.svg"
+                coverPreview || userProfile?.coverPhoto || "/placeholder.svg"
               })`,
               backgroundSize: "cover",
               backgroundPosition: "center",
@@ -419,13 +408,13 @@ export default function ProfileForm() {
                 <Avatar className="w-32 h-32 border-4 border-white shadow-xl">
                   <AvatarImage
                     src={
-                      avatarPreview || userProfile.avatar || "/placeholder.svg"
+                      avatarPreview || userProfile?.avatar || "/placeholder.svg"
                     }
-                    alt={userProfile.name}
+                    alt={userProfile?.name}
                   />
                   <AvatarFallback className="bg-blue-200 text-blue-800 text-2xl font-bold">
-                    {userProfile.name
-                      ? userProfile.name.charAt(0).toUpperCase()
+                    {userProfile?.name
+                      ? userProfile?.name.charAt(0).toUpperCase()
                       : ""}
                   </AvatarFallback>
                 </Avatar>
@@ -650,7 +639,7 @@ export default function ProfileForm() {
                 <div className="space-y-6">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                      {userProfile.name || "User Name"}
+                      {userProfile?.name || "User Name"}
                     </h1>
                     <div className="flex flex-wrap items-center gap-4 text-gray-600">
                       <Badge
@@ -659,16 +648,16 @@ export default function ProfileForm() {
                       >
                         @{userProfile?.email || "user@example.com"}
                       </Badge>
-                      {userProfile.location && (
+                      {userProfile?.location && (
                         <div className="flex items-center gap-1">
                           <MapPin className="w-4 h-4 text-blue-500" />
                           <span className="text-sm">
-                            {userProfile.location}
+                            {userProfile?.location}
                           </span>
                         </div>
                       )}
 
-                      {userProfile.phone_number && (
+                      {userProfile?.phone_number && (
                         <div className="flex items-center gap-1">
                           <svg
                             className="w-4 h-4 text-green-500"
@@ -684,11 +673,11 @@ export default function ProfileForm() {
                             />
                           </svg>
                           <span className="text-sm">
-                            {userProfile.phone_number}
+                            {userProfile?.phone_number}
                           </span>
                         </div>
                       )}
-                      {userProfile.date_of_birth && (
+                      {userProfile?.date_of_birth && (
                         <div className="flex items-center gap-1">
                           <svg
                             className="w-4 h-4 text-yellow-500"
@@ -705,7 +694,7 @@ export default function ProfileForm() {
                           </svg>
                           <span className="text-sm">
                             {new Date(
-                              userProfile.date_of_birth
+                              userProfile?.date_of_birth
                             ).toLocaleDateString()}
                           </span>
                         </div>
@@ -719,19 +708,19 @@ export default function ProfileForm() {
                       Bio
                     </h3>
                     <p className="text-gray-600 leading-relaxed">
-                      {userProfile.bio ||
+                      {userProfile?.bio ||
                         "Welcome to Mconnect. We are committed to providing you with the best learning services."}
                     </p>
                   </div>
 
                   {/* Description Section */}
-                  {userProfile.description && (
+                  {userProfile?.description && (
                     <div className="pt-4 border-t border-blue-100">
                       <h3 className="text-lg font-semibold text-gray-800 mb-2">
                         Description
                       </h3>
                       <p className="text-gray-600 leading-relaxed">
-                        {userProfile.description}
+                        {userProfile?.description}
                       </p>
                     </div>
                   )}
@@ -739,30 +728,30 @@ export default function ProfileForm() {
                   {/* Additional Info */}
                   <div className="pt-4 border-t border-blue-100">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                      {userProfile.created_at && (
+                      {userProfile?.created_at && (
                         <div>
                           <span className="font-medium text-gray-700">
                             Member since:{" "}
                           </span>
                           <span>
                             {new Date(
-                              userProfile.created_at
+                              userProfile?.created_at
                             ).toLocaleDateString()}
                           </span>
                         </div>
                       )}
-                      {userProfile.website && (
+                      {userProfile?.website && (
                         <div className="flex items-center gap-1">
                           <span className="font-medium text-gray-700">
                             Website:{" "}
                           </span>
                           <a
-                            href={userProfile.website}
+                            href={userProfile?.website}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sm text-blue-600 hover:underline"
                           >
-                            {userProfile.website.replace(/^https?:\/\//, "")}
+                            {userProfile?.website.replace(/^https?:\/\//, "")}
                           </a>
                         </div>
                       )}

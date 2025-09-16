@@ -8,9 +8,8 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <div className="mx-auto dark:bg-white">
+      <div className="dark:bg-white container mx-auto">
         <Header />
-
         <main>{children}</main>
       </div>
       <Footer />

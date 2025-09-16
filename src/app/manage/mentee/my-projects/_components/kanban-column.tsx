@@ -57,7 +57,6 @@ export function KanbanColumn({
 
   return (
     <div className="flex-shrink-0 w-96 bg-gray-50 p-4 rounded-2xl">
-      {/* Column Header */}
       <div className="flex items-center justify-center mb-4">
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center gap-2">
@@ -78,7 +77,6 @@ export function KanbanColumn({
         </div>
       </div>
 
-      {/* Drop Zone */}
       <div
         className={`min-h-[600px] rounded-lg p-2 transition-all duration-200 ${
           isDragOver

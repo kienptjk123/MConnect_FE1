@@ -1,10 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // output: "export", // Commented out temporarily for API routes to work
+  output: "standalone",
   images: {
     unoptimized: true,
     remotePatterns: [{ protocol: "https", hostname: "**" }],
+  },
+  experimental: {
+    optimizeCss: false,
   },
 };
 

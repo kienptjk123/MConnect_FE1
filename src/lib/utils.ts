@@ -57,6 +57,9 @@ export const getRefreshTokenFromLocalStorage = () =>
 export const setAccessTokenToLocalStorage = (value: string) =>
   isBrowser && localStorage.setItem("accessToken", value);
 
+export const setIdToLocalStorage = (value: string) =>
+  isBrowser && localStorage.setItem("userId", value);
+
 export const setRefreshTokenToLocalStorage = (value: string) =>
   isBrowser && localStorage.setItem("refreshToken", value);
 export const removeTokensFromLocalStorage = () => {
@@ -94,13 +97,10 @@ export const checkAndRefreshToken = async (param?: {
   ) {
     // Gọi API refresh token
     try {
-      const role = decodedRefreshToken.role;
-      const res =
-        role === Role.Guest
-          ? await guestApiRequest.refreshToken()
-          : await authApiRequest.refreshToken();
-      setAccessTokenToLocalStorage(res.payload.data.accessToken);
-      setRefreshTokenToLocalStorage(res.payload.data.refreshToken);
+      const role = decodedRefreshToken?.role;
+      const res = await authApiRequest.refreshToken();
+      setAccessTokenToLocalStorage(res.payload.result.access_token);
+      setRefreshTokenToLocalStorage(res.payload.result.refresh_token);
       param?.onSuccess && param.onSuccess();
     } catch (error) {
       param?.onError && param.onError();
@@ -158,6 +158,22 @@ export const formatDate = (dateString: string) => {
   });
 };
 
+/**
+ * Check if user has valid refresh token in cookies
+ * This is used to prevent unnecessary API calls on auth pages
+ */
+export const hasValidRefreshToken = (): boolean => {
+  if (!isBrowser) return false;
+
+  const refreshTokenCookie = document.cookie
+    .split(";")
+    .find((c) => c.trim().startsWith("refreshToken="));
+
+  if (!refreshTokenCookie) return false;
+
+  const tokenValue = refreshTokenCookie.split("=")[1];
+  return Boolean(tokenValue && tokenValue.length > 0);
+};
 export const formatDateForInput = (dateString: string | null | undefined) => {
   if (!dateString) return "";
   try {
