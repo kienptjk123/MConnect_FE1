@@ -113,7 +113,7 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
       return raw.includes(String(filterValue).toLowerCase());
     },
     initialState: {
-      pagination: { pageSize: 10 },
+      pagination: { pageSize: 5 },
     },
   });
 

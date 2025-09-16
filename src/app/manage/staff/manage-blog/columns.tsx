@@ -1,24 +1,11 @@
 "use client";
-import type { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  MoreHorizontal,
-  Trash2,
-  Eye,
-  Edit,
-  FileText,
-  Calendar,
-} from "lucide-react";
-import type { BlogType } from "@/schemaValidations/blog.schema";
-import { useRouter } from "next/navigation";
 import { formatDateToLocaleString } from "@/lib/utils";
+import type { BlogType } from "@/schemaValidations/blog.schema";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Edit, Eye, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function getBlogColumns(
   onDelete: (row: BlogType) => void

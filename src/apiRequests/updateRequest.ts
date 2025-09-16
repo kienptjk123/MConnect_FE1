@@ -16,5 +16,5 @@ export const updateRequestApiRequests = {
   createUpdateRequest: (body: CreateUpdateRequest) =>
     http.post("/update-requests/create", body),
   editUpdateRequest: (body: EditUpdateRequest, id: number) =>
-    http.patch(`/upgrade-requests/${id}`, body),
+    http.patch(`/upgrade-requests/${id}/review`, body),
 };

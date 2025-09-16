@@ -169,26 +169,27 @@ export default function EditMentorApplicationForm() {
             Back
           </Button>
         </div>
-
-        <div className="flex items-center gap-3">
-          <Button
-            onClick={() => setIsEditing(!isEditing)}
-            variant="default"
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white hover:cursor-pointer"
-          >
-            {isEditing ? (
-              <>
-                <X className="h-4 w-4" />
-                Cancel
-              </>
-            ) : (
-              <>
-                <Eye className="h-4 w-4" />
-                Edit
-              </>
-            )}
-          </Button>
-        </div>
+        {application.status === "PENDING" && (
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={() => setIsEditing(!isEditing)}
+              variant="default"
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white hover:cursor-pointer"
+            >
+              {isEditing ? (
+                <>
+                  <X className="h-4 w-4" />
+                  Cancel
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4" />
+                  Edit
+                </>
+              )}
+            </Button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -466,7 +467,7 @@ export default function EditMentorApplicationForm() {
                       <Label className="text-sm font-medium text-gray-700">
                         Review Comment
                       </Label>
-                      <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                      <div className="mt-2 p-3 bg-gray-100 rounded-md">
                         <p className="text-gray-800 text-sm leading-relaxed">
                           {application.review_comment}
                         </p>
