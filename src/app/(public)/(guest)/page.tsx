@@ -1,18 +1,7 @@
-import { Button } from "@/components/ui/button";
+import HomepageClient from "@/app/(public)/(guest)/homepageclient";
 import HeroSection from "@/components/HeroSection/HeroSection";
+import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
-const AnimatedSVGSection = dynamic(
-  () => import("@/components/AnimatedSVGSection/AnimatedSVGSection"),
-  { ssr: false }
-);
-
-const MentorSection = dynamic(
-  () =>
-    import(
-      "@/app/manage/mentee/explore-mentor/_components/MentorSection/MentorSection"
-    ),
-  { ssr: false }
-);
 
 export default function Homepage() {
   const carouselItems = [
@@ -207,9 +196,7 @@ export default function Homepage() {
           </div>
         </div>
       </div>
-      <AnimatedSVGSection carouselItems={carouselItems} />
-      {/* mentor section  */}
-      <MentorSection />
+      <HomepageClient carouselItems={carouselItems} />
     </>
   );
 }
