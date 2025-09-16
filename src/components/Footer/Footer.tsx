@@ -73,25 +73,25 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               <Link
-                href="#"
+                href="/"
                 className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
               >
                 <Facebook className="w-4 h-4 text-white" />
               </Link>
               <Link
-                href="#"
+                href="/"
                 className="w-8 h-8 bg-pink-600 rounded-full flex items-center justify-center hover:bg-pink-700 transition-colors"
               >
                 <Instagram className="w-4 h-4 text-white" />
               </Link>
               <Link
-                href="#"
+                href="/"
                 className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
               >
                 <span className="text-white text-sm font-bold">in</span>
               </Link>
               <Link
-                href="#"
+                href="/"
                 className="w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors"
               >
                 <Twitter className="w-4 h-4 text-white" />
@@ -105,7 +105,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Web Development
@@ -113,7 +113,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> UI/UX Design
@@ -121,7 +121,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Management
@@ -129,7 +129,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Digital Marketing
@@ -137,7 +137,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="#"
+                  href="/"
                   className="text-gray-400 hover:text-white transition-colors flex items-center gap-2"
                 >
                   <span>▶</span> Blog News

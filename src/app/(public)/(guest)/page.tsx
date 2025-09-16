@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button";
-import AnimatedSVGSection from "@/components/AnimatedSVGSection/AnimatedSVGSection";
 import HeroSection from "@/components/HeroSection/HeroSection";
-import MentorSection from "@/app/manage/mentee/explore-mentor/_components/MentorSection/MentorSection";
+import dynamic from "next/dynamic";
+const AnimatedSVGSection = dynamic(
+  () => import("@/components/AnimatedSVGSection/AnimatedSVGSection"),
+  { ssr: false }
+);
+
+const MentorSection = dynamic(
+  () =>
+    import(
+      "@/app/manage/mentee/explore-mentor/_components/MentorSection/MentorSection"
+    ),
+  { ssr: false }
+);
 
 export default function Homepage() {
   const carouselItems = [
@@ -24,9 +35,7 @@ export default function Homepage() {
   ];
   return (
     <>
-      {/* first section */}
       <HeroSection />
-      {/* logo company section  */}
       <div className="mx-8 py-2">
         <div className="max-w-full">
           <div className="dark:bg-[#E4F2FF] rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">

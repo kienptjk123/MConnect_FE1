@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     optimizeCss: false,
+    esmExternals: true,
   },
 };
 

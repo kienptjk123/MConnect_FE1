@@ -149,6 +149,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
 
@@ -166,6 +167,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
 
@@ -184,6 +186,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
 
@@ -274,6 +277,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
 
@@ -292,6 +296,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
 
@@ -370,6 +375,7 @@ export default function AnimatedSVGSection({
                           className="object-contain"
                           fill
                           priority
+                          fetchPriority="high"
                         />
                       </div>
                     </div>
@@ -506,6 +512,7 @@ export default function AnimatedSVGSection({
             className="object-contain"
             fill
             priority
+            fetchPriority="high"
           />
         </motion.div>
       </div>
