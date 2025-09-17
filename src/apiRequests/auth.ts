@@ -30,16 +30,16 @@ const authApiRequest = {
   sRegister: (body: RegisterApiPayload) =>
     http.post<RegisterResType>("/users/register", body),
 
+  register: (body: RegisterApiPayload) =>
+    http.post<RegisterResType>("/api/auth/register", body, {
+      baseUrl: "",
+    }),
+
   sVerifyEmail: (body: VerifyEmailBodyType, accessToken: string) =>
     http.post<VerifyEmailResType>("/users/verify-email", body, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }),
-
-  register: (body: RegisterApiPayload) =>
-    http.post<RegisterResType>("/api/auth/register", body, {
-      baseUrl: "",
     }),
 
   verifyEmail: (body: VerifyEmailBodyType) =>

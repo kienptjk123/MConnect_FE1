@@ -1,6 +1,4 @@
-# ==========================
-# STEP 1: Build Next.js app
-# ==========================
+
 FROM node:20-bullseye-slim AS build
 
 WORKDIR /app

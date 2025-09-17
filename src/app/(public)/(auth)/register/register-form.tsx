@@ -1,14 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import {
-  RegisterBody,
-  RegisterBodyType,
-  RegisterApiPayload,
-} from "@/schemaValidations/auth.schema";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Card,
   CardContent,
@@ -24,25 +16,32 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Link from "next/link";
-import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useRegisterMutation } from "@/queries/useAuth";
-import { toast } from "sonner";
+import {
+  RegisterApiPayload,
+  RegisterBody,
+  RegisterBodyType,
+} from "@/schemaValidations/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const registerMutation = useRegisterMutation();
   const router = useRouter();
 
   const form = useForm<RegisterBodyType>({
     resolver: zodResolver(RegisterBody),
     defaultValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       confirm_password: "",
@@ -68,8 +67,8 @@ export default function RegisterForm() {
         return;
       }
 
-      // Gộp firstName và lastName thành name
-      const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
+      const fullName =
+        `${values.firstName.trim()} ${values.lastName.trim()}`.trim();
       if (!fullName) {
         toast.error("Vui lòng nhập đầy đủ họ và tên");
         return;
@@ -83,8 +82,9 @@ export default function RegisterForm() {
         confirm_password: values.confirm_password,
         date_of_birth: dateObj.toISOString(),
       };
-      await registerMutation.mutateAsync(formattedValues);
-
+      console.log("zxczxc", formattedValues);
+      const res = await registerMutation.mutateAsync(formattedValues);
+      console.log("REGISTER SUCCESS:", res);
       toast.success(
         "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản."
       );
@@ -118,32 +118,49 @@ export default function RegisterForm() {
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div>
-              <label className="text-sm font-medium dark:text-gray-700">
-                First Name
-              </label>
-              <Input
-                placeholder="Nguyen Van"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className="h-10 border border-[#60A6EB] rounded-md bg-white dark:text-gray-700 mt-2"
-                required
-              />
-            </div>
+          <form
+            onSubmit={form.handleSubmit(onSubmit, (error) => {
+              console.log(error);
+              console.log(form.getValues());
+            })}
+            noValidate
+            className="space-y-4"
+          >
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
+                      placeholder="Nguyen Van"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-            <div>
-              <label className="text-sm font-medium dark:text-gray-700">
-                Last Name
-              </label>
-              <Input
-                placeholder="A"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
-                required
-              />
-            </div>
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 dark:text-gray-700"
+                      placeholder="A"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
@@ -204,8 +221,7 @@ export default function RegisterForm() {
                         {...field}
                         className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10 dark:text-gray-700"
                       />
-                      <button
-                        type="button"
+                      <div
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                       >
@@ -214,7 +230,7 @@ export default function RegisterForm() {
                         ) : (
                           <Eye className="w-4 h-4" />
                         )}
-                      </button>
+                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
@@ -238,8 +254,7 @@ export default function RegisterForm() {
                         {...field}
                         className="h-10 border border-[#60A6EB] rounded-md bg-white mt-2 pr-10 dark:text-gray-700"
                       />
-                      <button
-                        type="button"
+                      <div
                         onClick={() =>
                           setShowConfirmPassword(!showConfirmPassword)
                         }
@@ -250,7 +265,7 @@ export default function RegisterForm() {
                         ) : (
                           <Eye className="w-4 h-4" />
                         )}
-                      </button>
+                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
