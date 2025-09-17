@@ -1,11 +1,20 @@
 import { updateRequestApiRequests } from "@/apiRequests/updateRequest";
 import { EditUpdateRequest } from "@/schemaValidations/upgradeRequest";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useUpdateRequestQuery = () => {
   return useQuery({
     queryKey: ["updateRequests"],
     queryFn: updateRequestApiRequests.getAllUpdateRequests,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+};
+
+export const useMyUpdateRequestsQuery = () => {
+  return useQuery({
+    queryKey: ["myUpdateRequests"],
+    queryFn: updateRequestApiRequests.getUpdateRequests,
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -21,8 +30,13 @@ export const useUpdateRequestByIdQuery = (id: number, enabled: boolean) => {
   });
 };
 export const useCreateUpdateRequestMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateRequestApiRequests.createUpdateRequest,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["updateRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["myUpdateRequests"] });
+    },
   });
 };
 

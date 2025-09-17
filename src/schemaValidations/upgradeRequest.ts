@@ -73,8 +73,14 @@ export const EditUpdateRequestSchema = z.object({
   review_comment: z.string().optional().nullable(),
 });
 
+export const MyUpgradeRequestSchemaRes = z.object({
+  result: UpgradeRequestSchema.nullable(),
+  message: z.string(),
+});
+
 export type UpgradeRequestType = z.infer<typeof UpgradeRequestSchema>;
 export type UpgradeRequestResType = z.infer<typeof UpgradeRequestRes>;
 export type CreateUpdateRequest = z.infer<typeof CreateUpdateRequestSchema>;
 export type EditUpdateRequest = z.infer<typeof EditUpdateRequestSchema>;
 export type UpgradeRequestByIdResType = z.infer<typeof UpgradeRequestByIdRes>;
+export type MyUpgradeRequestType = z.infer<typeof MyUpgradeRequestSchemaRes>;
