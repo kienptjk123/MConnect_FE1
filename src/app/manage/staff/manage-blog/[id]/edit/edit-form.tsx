@@ -65,8 +65,6 @@ export default function EditBlogFormPage() {
 
       if (selectedImage) {
         formData.append("image", selectedImage);
-      } else {
-        formData.append("image", "");
       }
 
       if (selectedTags.length > 0) {

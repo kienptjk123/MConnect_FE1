@@ -47,8 +47,12 @@ export function getBlogColumns(
       header: "Content",
       cell: ({ row }) => {
         const content = row.original.content;
+        const plainText = content.replace(/<[^>]+>/g, "");
         const preview =
-          content.length > 50 ? content.substring(0, 50) + "..." : content;
+          plainText.length > 50
+            ? plainText.substring(0, 50) + "..."
+            : plainText;
+
         return (
           <span className="text-gray-600 text-sm truncate max-w-[40ch]">
             {preview}
