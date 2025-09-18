@@ -10,6 +10,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fullcalendar/angular": "^6.1.19",
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/interaction": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
+    "@fullcalendar/resource": "^6.1.19",
+    "@fullcalendar/resource-timegrid": "^6.1.19",
+    "@fullcalendar/resource-timeline": "^6.1.19",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -53,6 +61,7 @@
     "sweetalert2": "^11.23.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
+    "undefined": "^0.1.0",
     "zod": "^4.1.8",
     "zustand": "^5.0.8"
   },
