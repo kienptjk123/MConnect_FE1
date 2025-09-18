@@ -15,6 +15,9 @@ const mentorApiRequest = {
   getMentorCourses: (mentorId: number) => {
     return http.get<MentorCoursesResponseType>(`/courses/mentor/${mentorId}`);
   },
+  deleteMentor: (id: number) => {
+    return http.delete(`/users/delete/${id}`);
+  },
 };
 
 export default mentorApiRequest;

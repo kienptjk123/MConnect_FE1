@@ -23,6 +23,7 @@ import {
   ChevronDown,
   FolderDot,
   LayoutDashboard,
+  ListChecks,
   ListVideo,
   LogOut,
   MessageCircle,
@@ -47,6 +48,11 @@ const navigationItems = [
     title: "Messages",
     url: "/manage/mentor/messages",
     icon: MessageCircle,
+  },
+  {
+    title: "Kanban",
+    url: "/manage/mentor/kanban",
+    icon: ListChecks,
   },
 ];
 

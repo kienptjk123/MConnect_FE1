@@ -1,5 +1,5 @@
 import { kanbanTaskApiRequest } from "@/apiRequests/kanban";
-import { TaskType } from "@/schemaValidations/taskKanban.schema";
+import { TaskType } from "@/schemaValidations/kanban.schema";
 import { useQuery } from "@tanstack/react-query";
 
 export const useKanbanTasks = () => {

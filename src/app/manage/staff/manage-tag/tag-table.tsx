@@ -111,7 +111,7 @@ export default function TagTable({ data }: { data: TagType[] }) {
       return raw.includes(String(filterValue).toLowerCase());
     },
     initialState: {
-      pagination: { pageSize: 10 },
+      pagination: { pageSize: 5 },
     },
   });
 

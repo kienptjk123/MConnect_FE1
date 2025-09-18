@@ -219,10 +219,15 @@ export default function Header() {
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href="/profile">My Profile</Link>
+                      <Link href="/manage/mentee/profile">My Profile</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/manage/mentee/dashboard">Learning Hub</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/manage/mentee/mentor-application">
+                        Mentor Application
+                      </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem className="text-red-600">

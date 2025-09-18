@@ -1,27 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
-import {
-  type ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  type SortingState,
-  type VisibilityState,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -30,65 +9,56 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { toast } from "@/components/ui/use-toast";
-import { cn } from "@/lib/utils";
-import { useDeleteBlogMutation } from "@/queries/useBlog";
-import { getBlogColumns } from "./columns";
-import type { BlogType } from "@/schemaValidations/blog.schema";
+import { Input } from "@/components/ui/input";
 import {
-  RefreshCcw,
-  Search,
-  SlidersHorizontal,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import {
+  type ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type SortingState,
+  useReactTable,
+  type VisibilityState,
+} from "@tanstack/react-table";
+import React, { useMemo, useState } from "react";
+
+import { getUpdateRequestColumns } from "@/app/manage/staff/mentor-application/columns";
+import { UpgradeRequestType } from "@/schemaValidations/upgradeRequest";
+import {
   Download,
   FileText,
   Plus,
+  RefreshCcw,
+  Search,
+  SlidersHorizontal,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Swal from "sweetalert2";
 
-export default function BlogTable({ data }: { data: BlogType[] }) {
-  const deleteBlogMutation = useDeleteBlogMutation();
+export default function MentorApplicationTable({
+  data,
+}: {
+  data: UpgradeRequestType[];
+}) {
   const router = useRouter();
 
-  const onDelete = async (blog: BlogType) => {
-    const result = await Swal.fire({
-      title: `Are you sure to delete "${blog.title}"?`,
-      text: "This action cannot be undone.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "Delete",
-      cancelButtonText: "Cancel",
-    });
-
-    if (!result.isConfirmed) return;
-    try {
-      await deleteBlogMutation.mutateAsync(blog.id);
-      toast({
-        title: "Blog deleted",
-        description: `"${blog.title}" was removed.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to delete blog.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const columns = useMemo<ColumnDef<BlogType>[]>(
-    () => getBlogColumns(onDelete),
+  const columns = useMemo<ColumnDef<UpgradeRequestType>[]>(
+    () => getUpdateRequestColumns(),
     []
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [density, setDensity] = useState<"comfortable" | "compact">(
-    "comfortable"
-  );
 
   // simple debounce for search
   const [search, setSearch] = useState("");
@@ -119,20 +89,38 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
 
   const exportCsv = () => {
     const rows = table.getFilteredRowModel().rows.map((r) => r.original);
-    const header = ["id", "title", "author", "date", "tags", "content"];
+    const header = [
+      "id",
+      "name",
+      "bio",
+      "major",
+      "cv_url",
+      "description",
+      "website",
+      "created_at",
+      "phone_number",
+      "status",
+      "review_comment",
+      "created_at",
+      "updated_at",
+    ];
     const csv = [
       header.join(","),
       ...rows.map((r) =>
         [
           r.id,
-          JSON.stringify(r.title ?? ""),
-          JSON.stringify(r.staff.name ?? ""),
-          JSON.stringify(r.date ?? ""),
-          JSON.stringify(r.tags.map((tag) => tag.tag.name).join(", ") ?? ""),
-          JSON.stringify(
-            (r.content?.substring(0, 100) || "") +
-              (r.content?.length > 100 ? "..." : "")
-          ),
+          JSON.stringify(r.id ?? ""),
+          JSON.stringify(r.name ?? ""),
+          JSON.stringify(r.bio ?? ""),
+          JSON.stringify(r.major ?? ""),
+          JSON.stringify(r.cv_url ?? ""),
+          JSON.stringify(r.description ?? ""),
+          JSON.stringify(r.website ?? ""),
+          JSON.stringify(r.phone_number ?? ""),
+          JSON.stringify(r.status ?? ""),
+          JSON.stringify(r.review_comment ?? ""),
+          JSON.stringify(r.created_at ?? ""),
+          JSON.stringify(r.updated_at ?? ""),
         ].join(",")
       ),
     ].join("\n");
@@ -140,7 +128,7 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "blogs.csv";
+    a.download = "requests.csv";
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -152,7 +140,7 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
           <div className="flex items-center gap-2 w-full rounded-md border border-gray-300 px-2 bg-white shadow-sm">
             <Search className="h-5 w-5 text-gray-400" />
             <Input
-              placeholder="Search blogs..."
+              placeholder="Search requests by name or major..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="border-0 shadow-none focus-visible:ring-0 bg-transparent placeholder:text-gray-400"
@@ -265,10 +253,9 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={cn(
-                    "transition-colors border-gray-200",
-                    density === "compact" ? "h-10" : "h-12",
+                    "transition-colors border-gray-200 h-10",
                     "hover:bg-blue-50",
-                    index % 2 === 0 ? "bg-gray-50" : "bg-white"
+                    "bg-white"
                   )}
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -293,22 +280,22 @@ export default function BlogTable({ data }: { data: BlogType[] }) {
                     </div>
                     <div className="space-y-2">
                       <p className="text-lg font-medium text-gray-700">
-                        No blogs found
+                        No requests found
                       </p>
                       <p className="text-sm text-gray-500 max-w-md">
                         {search
-                          ? "Try adjusting your search terms or create a new blog."
-                          : "Create your first blog to get started."}
+                          ? "Try adjusting your search terms or create a new request."
+                          : "Create your first request to get started."}
                       </p>
                     </div>
                     <Button
                       onClick={() =>
-                        router.push("/manage/staff/manage-blog/create")
+                        router.push("/manage/staff/manage-request/create")
                       }
                       className="gap-2 rounded-md bg-blue-600 hover:bg-blue-700 text-white"
                     >
                       <Plus className="h-4 w-4" />
-                      Create Blog
+                      Create request
                     </Button>
                   </div>
                 </TableCell>

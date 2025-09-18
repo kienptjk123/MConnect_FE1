@@ -64,9 +64,6 @@ export function getTagColumns(
           </div>
         );
       },
-      size: 80,
-      minSize: 70,
-      maxSize: 120,
     },
   ];
 }

@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { MessageCircle, Paperclip, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { TaskType } from "@/schemaValidations/taskKanban.schema";
+import { TaskType } from "@/schemaValidations/kanban.schema";
 
 interface TaskCardProps {
   task: TaskType;

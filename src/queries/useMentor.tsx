@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import mentorApiRequest from "@/apiRequests/mentor";
 
 export const useMentors = () => {
@@ -36,5 +36,15 @@ export const useMentorCourses = (mentorId: number) => {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     enabled: !!mentorId,
+  });
+};
+
+export const useDeleteMentorMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: mentorApiRequest.deleteMentor,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mentors"] });
+    },
   });
 };
