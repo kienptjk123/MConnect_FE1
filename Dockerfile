@@ -9,7 +9,6 @@ ENV NEXT_PUBLIC_URL=https://mconnect.io.vn/
 ENV NEXT_PUBLIC_SOCKET_URL=https://developgenderhealth.io.vn
 ENV NEXT_PUBLIC_GOOGLE_CLIENT_ID=355941671357-n80rj8ibhat9i0klintrtcuo06go2brd.apps.googleusercontent.com
 ENV NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=https://developgenderhealth.io.vn/users/oauth/google
-ENV CLIENT_REDIRECT_CALLBACK=https://mconnect.io.vn/oauth/callback
 
 # Copy package files
 COPY package.json package-lock.json ./

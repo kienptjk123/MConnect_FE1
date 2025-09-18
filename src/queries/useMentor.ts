@@ -29,7 +29,6 @@ export const useMentorCourses = (mentorId: number) => {
   return useQuery({
     queryKey: ["mentor-courses", mentorId],
     queryFn: () => mentorApiRequest.getMentorCourses(mentorId),
-
     enabled: !!mentorId,
   });
 };
