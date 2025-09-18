@@ -325,6 +325,13 @@ const http = {
   ) {
     return request<Response>("GET", url, options);
   },
+  gets<Response>(
+    url: string,
+    body: any,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("GET", url, { ...options, body });
+  },
   post<Response>(
     url: string,
     body: any,

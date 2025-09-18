@@ -31,6 +31,7 @@ import {
   ShoppingBag,
   User,
   User2,
+  CalendarCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,6 +64,11 @@ const navigationItems = [
     icon: FolderDot,
   },
   {
+    title: "My Schedules",
+    url: "/manage/mentee/my-schedules",
+    icon: CalendarCheck,
+  },
+  {
     title: "Messages",
     url: "/manage/mentee/message",
     icon: MessageCircle,
@@ -74,7 +80,7 @@ export default function MenteeSidebar() {
   const user = useProfileStore();
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="dark:bg-[#080808]">
+      <SidebarHeader className="dark:bg-[#080808] bg-white">
         <div className="flex items-center gap-2 px-3 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-3">
           <Image src="/images/sandboxlogo.png" width={40} height={40} alt="" />
           <span className="truncate font-bold dark:text-white text-gray-900  text-lg group-data-[collapsible=icon]:hidden">

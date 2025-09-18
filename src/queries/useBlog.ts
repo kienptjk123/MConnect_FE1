@@ -1,5 +1,4 @@
 import blogApiRequest from "@/apiRequests/blog";
-import tagApiRequest from "@/apiRequests/tag";
 import { BlogUpdateType } from "@/schemaValidations/blog.schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
