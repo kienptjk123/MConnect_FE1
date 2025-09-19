@@ -24,7 +24,7 @@ export default function OauthPage() {
         refresh_token: refresh_token,
         role: role,
       }).then(() => {
-        router.push("/");
+        router.push("/manage/mentee/dashboard");
       });
     } else {
       toast({
@@ -34,5 +34,5 @@ export default function OauthPage() {
       });
     }
   }, [access_token, refresh_token, setRole, router, mutateAsync]);
-  return null;
+  return <div className="min-h-screen">Loading Oauth...</div>;
 }
