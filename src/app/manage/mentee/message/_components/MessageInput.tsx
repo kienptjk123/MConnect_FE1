@@ -85,8 +85,12 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         </div>
       )}
 
-      <div className="flex items-end justify-center space-x-2">
-        <Button variant="ghost" size="icon" className="flex-shrink-0 mb-1">
+      <div className="flex items-end justify-center space-x-2 py-3 px-2">
+        <Button
+          variant="ghost"
+          size="lg"
+          className="flex-shrink-0 hover:cursor-pointer"
+        >
           <Paperclip className="h-5 w-5" />
         </Button>
 
@@ -114,22 +118,27 @@ export const MessageInput: React.FC<MessageInputProps> = ({
         {/* Send/Voice button */}
         {message.trim() ? (
           <Button
+            size="lg"
             onClick={handleSend}
             disabled={disabled}
-            className="flex-shrink-0 mb-1 bg-blue-500 hover:bg-blue-600"
+            className="flex-shrink-0 bg-blue-500 hover:bg-blue-600 hover:cursor-pointer"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         ) : (
-          <Button variant="ghost" size="icon" className="flex-shrink-0 mb-1">
+          <Button
+            variant="ghost"
+            size="lg"
+            className="flex-shrink-0 hover:cursor-pointer"
+          >
             <Mic className="h-5 w-5" />
           </Button>
         )}
       </div>
 
-      {isTyping && (
+      {/* {isTyping && (
         <div className="mt-2 text-xs text-gray-500">Someone is typing...</div>
-      )}
+      )} */}
     </div>
   );
 };

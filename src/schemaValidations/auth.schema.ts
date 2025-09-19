@@ -30,7 +30,6 @@ export const RegisterBody = z
   })
   .refine(
     (data) => {
-      // Validate that dateOfBirth is a valid date
       const date = new Date(data.dateOfBirth);
       return !isNaN(date.getTime());
     },

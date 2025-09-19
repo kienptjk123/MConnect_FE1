@@ -106,19 +106,6 @@ const request = async <Response>(
 
   const fullUrl = `${baseUrl}/${normalizePath(url)}`;
 
-  if (isClient) {
-    const refreshToken = getRefreshTokenFromLocalStorage();
-    const accessToken = getAccessTokenFromLocalStorage();
-
-    console.log("🔧 [HTTP Request Debug]", {
-      url: fullUrl,
-      method,
-      hasAccessToken: !!accessToken,
-      hasRefreshToken: !!refreshToken,
-      accessTokenLength: accessToken ? accessToken.length : 0,
-    });
-  }
-
   let fetchResponse: globalThis.Response;
   let payload: Response;
 
@@ -198,14 +185,6 @@ const request = async <Response>(
             fullCurrentPath
           )}`;
 
-          console.log(
-            "🔄 [HTTP] Access token expired, redirecting to refresh token page:",
-            {
-              refreshUrl,
-              originalPath: fullCurrentPath,
-            }
-          );
-
           // Use setTimeout to ensure the redirect happens after this function returns
           setTimeout(() => {
             window.location.href = refreshUrl;
@@ -222,9 +201,6 @@ const request = async <Response>(
 
         // No refresh token available or already on refresh page, proceed with logout
         if (!clientLogoutRequest) {
-          console.log(
-            "🚪 [HTTP] No refresh token available or refresh failed, logging out"
-          );
           clientLogoutRequest = fetch("/api/auth/logout", {
             method: "POST",
             body: null, // Logout mình sẽ cho phép luôn luôn thành công

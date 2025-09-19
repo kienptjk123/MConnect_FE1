@@ -39,7 +39,7 @@ export default function MyCourses() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br bg-white">
+      <div className="flex flex-col items-center justify-center bg-gradient-to-br bg-white">
         <div className="flex flex-col items-center justify-center p-8 rounded-2xl shadow-xl bg-white border border-blue-100">
           <div className="mb-6">
             <svg
@@ -79,7 +79,7 @@ export default function MyCourses() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">My Courses</h1>

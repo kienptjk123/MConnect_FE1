@@ -5,8 +5,6 @@ import { FriendsList } from "./FriendsList";
 import { ConversationList } from "./ConversationList";
 import { ChatArea } from "./ChatArea";
 import { MessageSearch } from "./MessageSearch";
-import { MessageTabs } from "./MessageTabs";
-
 import { UserType } from "@/schemaValidations/friends.schema";
 import {
   Conversation,
@@ -520,12 +518,6 @@ export const MessageContainer: React.FC = () => {
           <MessageSearch
             searchValue={searchValue}
             onSearchChange={setSearchValue}
-          />
-          <MessageTabs
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            unreadCount={unreadCount}
-            unresolvedCount={0}
           />
         </div>
 
