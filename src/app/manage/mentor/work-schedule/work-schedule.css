@@ -1,0 +1,43 @@
+.fc .fc-toolbar-title {
+  color: white;
+  font-weight: 600;
+}
+
+.fc .fc-button {
+  background-color: white;
+  color: #155dfc;
+  border: 1px solid #155dfc;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+  background-color: #155dfc;
+  color: white;
+  border: 1px solid #1e40af;
+}
+
+.fc .fc-button:hover {
+  background: #155dfc;
+  color: white;
+}
+
+.fc .fc-daygrid-event {
+  margin-top: 6px;
+  z-index: 6;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 2px 6px;
+  border: none;
+}
+
+.fc .fc-daygrid-event:nth-of-type(12n + 1) {
+  background: #22c55e !important;
+}
+
+.fc-v-event {
+  color: white !important;
+  font-weight: 600;
+  background: #22c55e !important;
+  border: none;
+}

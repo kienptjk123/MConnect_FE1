@@ -23,6 +23,7 @@ import {
   ChevronDown,
   FolderDot,
   LayoutDashboard,
+  List,
   ListChecks,
   ListVideo,
   LogOut,
@@ -53,6 +54,16 @@ const navigationItems = [
     title: "Kanban",
     url: "/manage/mentor/kanban",
     icon: ListChecks,
+  },
+  {
+    title: "Single Sessions",
+    url: "/manage/mentor/single-session",
+    icon: List,
+  },
+  {
+    title: "Work Schedule",
+    url: "/manage/mentor/work-schedule",
+    icon: MonitorPlayIcon,
   },
 ];
 
