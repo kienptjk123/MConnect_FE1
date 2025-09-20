@@ -145,7 +145,7 @@ export const MessageList = forwardRef<MessageListRef, MessageListProps>(
 
     if (messages.length === 0) {
       return (
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center h-full">
           <div className="text-center">
             <div className="text-gray-400 mb-2">
               <svg
@@ -180,13 +180,12 @@ export const MessageList = forwardRef<MessageListRef, MessageListProps>(
 
     return (
       <ScrollArea
-        className="flex-1 px-4 max-h-[590px]"
+        className="flex-1 px-4 h-full  overflow-y-auto"
         ref={scrollRef}
         onWheel={handleWheel}
         onScroll={handleScroll}
       >
         <div className="space-y-2 py-4">
-          {/* Load more indicator */}
           {loadingMore && (
             <div className="flex justify-center py-2">
               <div className="flex items-center space-x-2 text-gray-500">

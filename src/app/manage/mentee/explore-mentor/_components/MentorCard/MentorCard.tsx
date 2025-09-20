@@ -23,7 +23,6 @@ export default function MentorCard({ mentor }: MentorCardProps) {
           />
         )}
 
-        {/* Avatar */}
         <div className="absolute -bottom-8 left-6">
           <div className="w-16 h-16 rounded-full border-4 border-white bg-gray-100 overflow-hidden">
             {mentor?.avatar ? (
@@ -46,15 +45,6 @@ export default function MentorCard({ mentor }: MentorCardProps) {
       </div>
 
       <div className="pt-10 p-6">
-        <div className="flex justify-end mb-3">
-          <Badge
-            variant={mentor.status === "VERIFIED" ? "default" : "secondary"}
-            className="text-xs"
-          >
-            {mentor.status}
-          </Badge>
-        </div>
-
         {/* Mentor Info */}
         <div className="space-y-3">
           <div>

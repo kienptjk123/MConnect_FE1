@@ -95,7 +95,7 @@ export default function ExploreCourses() {
   }
 
   return (
-    <div className="min-h-screen dark:bg-[#080808]">
+    <div className="dark:bg-[#080808]">
       <div className="max-w-7xl mx-auto p-4 sm:p-6">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">

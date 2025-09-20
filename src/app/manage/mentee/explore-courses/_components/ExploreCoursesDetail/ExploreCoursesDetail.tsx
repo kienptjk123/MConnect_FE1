@@ -65,7 +65,7 @@ export default function CourseDetailPage() {
   const video = useCoursePublicStream(lesson?.id as number);
   if (isLoading && loadingCourses) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
       </div>
     );
@@ -73,7 +73,7 @@ export default function CourseDetailPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Error loading course
@@ -91,7 +91,7 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-600 mb-4">
             Course not found
@@ -115,7 +115,7 @@ export default function CourseDetailPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#080808]">
+    <div className="bg-white dark:bg-[#080808]">
       <div className="border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">

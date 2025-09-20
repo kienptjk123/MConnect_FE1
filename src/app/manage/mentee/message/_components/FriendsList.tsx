@@ -22,13 +22,9 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
   const setSelectedFriend = useSetSelectedFriend();
   const selectedFriend = useSelectedFriend();
 
-  // Fetch friends when component mounts
   useEffect(() => {
-    if (friends.length === 0 && !isLoading) {
-      console.log("🚀 [FriendsList] Fetching friends on mount...");
-      fetchFriends();
-    }
-  }, [friends.length, isLoading, fetchFriends]);
+    fetchFriends();
+  }, [fetchFriends]);
 
   const handleSelectFriend = (friend: UserType) => {
     setSelectedFriend(friend);
@@ -100,10 +96,6 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
 
   return (
     <div className="h-full flex flex-col">
-      <div className="p-4 border-b">
-        <h2 className="text-lg font-semibold">Friends ({friends.length})</h2>
-      </div>
-
       <ScrollArea className="flex-1">
         <div className="p-2">
           {friends.map((friend) => (

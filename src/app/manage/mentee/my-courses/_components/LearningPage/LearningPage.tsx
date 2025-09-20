@@ -136,7 +136,7 @@ export default function LearningPage() {
 
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading course...</p>
@@ -147,7 +147,7 @@ export default function LearningPage() {
 
   if (error || !course) {
     return (
-      <div className="h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
             Course not found
@@ -167,7 +167,7 @@ export default function LearningPage() {
   }
 
   return (
-    <div className="h-screen flex flex-col px-4">
+    <div className="flex flex-col px-4">
       <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>

@@ -456,7 +456,7 @@ export default function NotificationDropdown({
             <>
               <Separator />
               <div className="px-4 py-3">
-                <Link href="/manage/mentee/notifications">
+                <Link href="/manage/mentor/notifications">
                   <Button
                     variant="ghost"
                     size="sm"

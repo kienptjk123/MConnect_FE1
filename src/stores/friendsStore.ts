@@ -39,10 +39,6 @@ export const useFriendsStore = create<FriendsState>()(
             isLoading: false,
           });
         } catch (error) {
-          console.error("❌ [FriendsStore] Failed to fetch friends:", {
-            error,
-            message: error instanceof Error ? error.message : "Unknown error",
-          });
           set({ friends: [], isLoading: false });
         }
       },

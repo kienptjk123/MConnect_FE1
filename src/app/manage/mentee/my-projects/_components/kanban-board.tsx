@@ -127,7 +127,7 @@ export function KanbanBoard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -135,7 +135,7 @@ export function KanbanBoard() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center">
         <div className="text-red-500 text-center">
           <h2 className="text-xl font-bold mb-2">Error Loading Tasks</h2>
           <p>{error.message}</p>
@@ -151,7 +151,7 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background">
       <KanbanHeader onSearch={setSearchQuery} onFilterChange={setFilter} />
       <div className="flex gap-6 p-6 overflow-x-auto justify-center">
         <KanbanColumn
