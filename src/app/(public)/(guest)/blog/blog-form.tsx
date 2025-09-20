@@ -280,7 +280,7 @@ export default function BlogForm() {
                       )}
 
                       {/* Title */}
-                      <Link href={`/blog/${blog.id}`}>
+                      <Link href={`/blog/${blog.slug}`}>
                         <h2 className="mb-4 text-2xl font-bold leading-tight text-slate-900 transition-colors hover:text-slate-800 line-clamp-2">
                           {blog.title}
                         </h2>
@@ -288,7 +288,7 @@ export default function BlogForm() {
 
                       {/* CTA */}
                       <Link
-                        href={`/blog/${blog.id}`}
+                        href={`/blog/${blog.slug}`}
                         className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-violet-500 to-indigo-500 px-6 py-3 font-medium text-white shadow-sm hover:shadow-lg transition-shadow"
                       >
                         Read More
@@ -431,7 +431,7 @@ export default function BlogForm() {
                 {blogsData?.data?.slice(0, 5).map((blog) => (
                   <li key={blog.id}>
                     <Link
-                      href={`/blog/${blog.id}`}
+                      href={`/blog/${blog.slug}`}
                       className="flex gap-3 items-center py-4 -mx-2 px-2 hover:bg-gray-50 rounded-xl transition"
                     >
                       <div className="relative h-16 w-16 rounded-xs overflow-hidden ring-1 ring-gray-200 flex-shrink-0">

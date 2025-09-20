@@ -22,7 +22,7 @@ export default function BlogDetailForm() {
   } = useBlogsQuery();
 
   const blog = blogsRes?.payload.data.find(
-    (c) => c.id === parseInt(params.slug as string)
+    (c) => c.slug === (params.slug as string)
   );
 
   const {
@@ -263,7 +263,7 @@ export default function BlogDetailForm() {
                 {blogsData?.data?.slice(0, 5).map((recentBlog) => (
                   <Link
                     key={recentBlog.id}
-                    href={`/blog/${recentBlog.id}`}
+                    href={`/blog/${recentBlog.slug}`}
                     className="flex gap-3 pb-4 border-b border-gray-100 last:border-b-0 block"
                   >
                     <div className="w-16 h-16 relative flex-shrink-0 rounded overflow-hidden">
