@@ -49,17 +49,7 @@ export default function MentorWorkScheduleForm() {
   const [open, setOpen] = useState<"create" | "edit" | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  const profile = useProfile();
-  const fetchProfile = useFetchProfile();
-
-  useEffect(() => {
-    if (!profile) {
-      fetchProfile();
-    }
-  }, [profile, fetchProfile]);
-  const mentorProfileId = profile?.mentor_profile_id;
-
-  const { data, isLoading } = useMentorSchedules(mentorProfileId as number);
+  const { data, isLoading } = useMentorSchedules();
   const createSchedule = useCreateMentorSchedule();
   const updateSchedule = useUpdateMentorSchedule();
 

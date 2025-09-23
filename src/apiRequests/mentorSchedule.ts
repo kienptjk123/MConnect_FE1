@@ -6,10 +6,8 @@ import {
 } from "@/schemaValidations/mentorSchedule.schema";
 
 const mentorScheduleApiRequest = {
-  getAllMentorSchedules: (mentorProfileId: number) =>
-    http.get<MentorScheduleResType>(
-      `/mentor-work-schedules/${mentorProfileId}/available`
-    ),
+  getAllMentorSchedules: () =>
+    http.get<MentorScheduleResType>(`/mentor-work-schedules`),
   createMentorSchedule: (body: MentorScheduleCreateType) =>
     http.post<MentorScheduleResType>(`/mentor-work-schedules`, body),
   updateMentorSchedule: (id: number, body: MentorScheduleUpdateType) =>

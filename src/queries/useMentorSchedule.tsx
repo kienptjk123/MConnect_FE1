@@ -2,12 +2,10 @@ import mentorScheduleApiRequest from "@/apiRequests/mentorSchedule";
 import { MentorScheduleUpdateType } from "@/schemaValidations/mentorSchedule.schema";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useMentorSchedules = (mentorProfileId: number) => {
+export const useMentorSchedules = () => {
   return useQuery({
-    queryKey: ["mentorSchedules", mentorProfileId],
-    queryFn: () =>
-      mentorScheduleApiRequest.getAllMentorSchedules(mentorProfileId),
-    enabled: !!mentorProfileId,
+    queryKey: ["mentorSchedules"],
+    queryFn: () => mentorScheduleApiRequest.getAllMentorSchedules(),
   });
 };
 
