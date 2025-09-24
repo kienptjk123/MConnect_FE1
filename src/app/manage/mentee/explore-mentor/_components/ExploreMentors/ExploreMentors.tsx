@@ -96,14 +96,14 @@ export default function ExploreMentors() {
   }
 
   return (
-    <div className="bg-white">
-      <div className="bg-white z-10">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="bg-white dark:bg-black max-w-7xl mx-auto p-6">
+      <div className="z-10">
+        <div className="">
           <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold light:text-gray-900 mb-2">
               Explore Mentors
             </h1>
-            <p className="text-gray-600 text-sm sm:text-base">
+            <p className="light:text-gray-600 text-sm sm:text-base">
               Discover amazing courses from experienced mentors
             </p>
           </div>
@@ -123,8 +123,8 @@ export default function ExploreMentors() {
             {/* Filters */}
             <div className="flex gap-4 items-center">
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-gray-600" />
-                <span className="text-sm font-medium text-gray-600">
+                <Filter className="h-4 w-4 dark:text-gray-600" />
+                <span className="text-sm font-medium dark:text-gray-600">
                   Status:
                 </span>
                 <Select value={statusFilter} onValueChange={handleStatusChange}>
@@ -140,7 +140,7 @@ export default function ExploreMentors() {
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-600">
+                <span className="text-sm font-medium dark:text-gray-600">
                   Sort by:
                 </span>
                 <Select value={sortBy} onValueChange={handleSortChange}>
@@ -159,7 +159,7 @@ export default function ExploreMentors() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="mt-8">
         {isLoading && (
           <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -173,10 +173,10 @@ export default function ExploreMentors() {
 
         {!isLoading && paginatedMentors.length === 0 && (
           <div className="text-center py-12">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold dark:text-gray-900 mb-2">
               No mentors found
             </h3>
-            <p className="text-gray-600">
+            <p className="dark:text-gray-600">
               Try adjusting your search criteria or filters.
             </p>
           </div>

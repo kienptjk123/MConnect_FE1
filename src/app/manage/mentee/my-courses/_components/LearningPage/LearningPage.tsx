@@ -54,7 +54,7 @@ export default function LearningPage() {
   const currentModule = course?.modules[currentModuleIndex];
   const currentLesson = currentModule?.lessons[currentLessonIndex];
 
-  const { data: streamData } = useLessonStream(currentLesson?.mediaId || 0);
+  const { data: streamData } = useLessonStream(currentLesson?.id || 0);
 
   const handleVideoProgress = useCallback(
     (currentTime: number) => {
@@ -139,7 +139,7 @@ export default function LearningPage() {
       <div className="flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading course...</p>
+          <p className="light:text-gray-600">Loading course...</p>
         </div>
       </div>
     );
@@ -149,10 +149,10 @@ export default function LearningPage() {
     return (
       <div className="flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="text-2xl font-bold light:text-gray-900 mb-2">
             Course not found
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="light:text-gray-600 mb-4">
             The course you're looking for doesn't exist.
           </p>
           <Button asChild>
@@ -168,7 +168,7 @@ export default function LearningPage() {
 
   return (
     <div className="flex flex-col px-4">
-      <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
+      <div className="light:bg-white border-b px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
             <Link href="/manage/mentee/my-courses">
@@ -177,10 +177,12 @@ export default function LearningPage() {
             </Link>
           </Button>
           <div>
-            <h1 className="text-xl font-semibold text-gray-900 truncate max-w-md">
+            <h1 className="text-xl font-semibold light:text-gray-900 truncate max-w-md">
               {course.title}
             </h1>
-            <p className="text-sm text-gray-600">Course ID: {course.id}</p>
+            <p className="text-sm light:text-gray-600">
+              Course ID: {course.id}
+            </p>
           </div>
         </div>
       </div>
@@ -209,7 +211,7 @@ export default function LearningPage() {
             </MediaPlayer>
           </div>
 
-          <div className="bg-white text-gray-900 p-4">
+          <div className="light:bg-white light:text-gray-900 p-4">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h2 className="text-lg font-semibold">
@@ -248,7 +250,7 @@ export default function LearningPage() {
           </div>
         </div>
 
-        <div className="w-96 bg-white border-l flex flex-col">
+        <div className="w-96 light:bg-white border-l flex flex-col">
           <div className="flex-1 overflow-y-auto">
             {course.modules.map((module: any, moduleIndex: number) => (
               <div key={module.id} className="border-b last:border-b-0">
@@ -258,10 +260,10 @@ export default function LearningPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">
+                      <h4 className="font-medium light:text-gray-900 truncate">
                         {module.title}
                       </h4>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-sm light:text-gray-600 mt-1">
                         {module.lessons.length} lessons
                       </p>
                     </div>
@@ -270,9 +272,9 @@ export default function LearningPage() {
                         <Badge variant="secondary">Current</Badge>
                       )}
                       {expandedModules.has(moduleIndex) ? (
-                        <ChevronDown className="w-4 h-4 text-gray-400" />
+                        <ChevronDown className="w-4 h-4 light:text-gray-400" />
                       ) : (
-                        <ChevronRight className="w-4 h-4 text-gray-400" />
+                        <ChevronRight className="w-4 h-4 light:text-gray-400" />
                       )}
                     </div>
                   </div>
@@ -280,7 +282,7 @@ export default function LearningPage() {
 
                 {/* Lessons List */}
                 {expandedModules.has(moduleIndex) && (
-                  <div className="bg-gray-50">
+                  <div className="light:bg-gray-50">
                     {module.lessons.map((lesson: any, lessonIndex: number) => (
                       <button
                         key={lesson.id}
@@ -288,7 +290,7 @@ export default function LearningPage() {
                         className={`w-full p-3 text-left hover:bg-gray-100 transition-colors border-l-2 ${
                           moduleIndex === currentModuleIndex &&
                           lessonIndex === currentLessonIndex
-                            ? "border-blue-500 bg-blue-50"
+                            ? "border-blue-500 light:bg-blue-50 bg-gray-700 hover:bg-gray-900"
                             : "border-transparent"
                         }`}
                       >
@@ -300,17 +302,17 @@ export default function LearningPage() {
                               </div>
                             ) : (
                               <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
-                                <Play className="w-3 h-3 text-gray-600" />
+                                <Play className="w-3 h-3 light:text-gray-600" />
                               </div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-gray-900 truncate">
+                            <p className="text-sm font-medium light:text-gray-900 truncate">
                               {lesson.title}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
-                              <Clock className="w-3 h-3 text-gray-400" />
-                              <span className="text-xs text-gray-600">
+                              <Clock className="w-3 h-3 light:text-gray-400" />
+                              <span className="text-xs light:text-gray-600">
                                 {lesson.durationSec
                                   ? formatDuration(lesson.durationSec)
                                   : "5:00"}
@@ -334,12 +336,12 @@ export default function LearningPage() {
             ))}
           </div>
 
-          <div className="p-4 border-t bg-gray-50">
+          <div className="p-4 border-t light:bg-gray-50">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-700">
+              <span className="text-sm font-medium light:text-gray-700">
                 Course Progress
               </span>
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm font-medium light:text-gray-900">
                 {progressInfo?.progressPercentage || 0}%
               </span>
             </div>
@@ -347,7 +349,7 @@ export default function LearningPage() {
               value={progressInfo?.progressPercentage || 0}
               className="mb-3"
             />
-            <div className="text-xs text-gray-600 mb-3">
+            <div className="text-xs light:text-gray-600 mb-3">
               {progressInfo?.completedLessons || 0} of{" "}
               {progressInfo?.totalLessons || 0} lessons completed
             </div>

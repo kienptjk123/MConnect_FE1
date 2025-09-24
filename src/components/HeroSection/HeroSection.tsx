@@ -64,9 +64,9 @@ export default function HeroSection() {
         <Image
           src="/images/herosection1.png"
           alt="Hero image"
-          className="object-contain"
-          fill
-          priority
+          width={1500}
+          height={700}
+          quality={100}
         />
 
         {/* Main content */}

@@ -45,43 +45,40 @@ export default function MentorCard({ mentor }: MentorCardProps) {
       </div>
 
       <div className="pt-10 p-6">
-        {/* Mentor Info */}
         <div className="space-y-3">
           <div>
-            <h3 className="font-semibold text-lg text-gray-900 mb-1">
+            <h3 className="font-semibold text-lg light:text-gray-900 mb-1">
               {mentor?.name}
             </h3>
-            <p className="text-sm text-gray-600">@{mentor?.username}</p>
+            <p className="text-sm light:text-gray-600">@{mentor?.username}</p>
           </div>
 
-          {/* Location */}
           {mentor.location && (
-            <div className="flex items-center text-gray-600 text-sm">
+            <div className="flex items-center light:text-gray-600 text-sm">
               <MapPin className="h-4 w-4 mr-1" />
               <span>{mentor.location}</span>
             </div>
           )}
 
-          {/* Bio */}
           {mentor.bio && (
-            <p className="text-gray-600 text-sm line-clamp-2">{mentor.bio}</p>
+            <p className="light:text-gray-600 text-sm line-clamp-2">
+              {mentor.bio}
+            </p>
           )}
 
-          {/* Description */}
           {mentor.description && (
-            <p className="text-gray-600 text-sm line-clamp-3">
+            <p className="light:text-gray-600 text-sm line-clamp-3">
               {mentor.description}
             </p>
           )}
 
-          {/* Stats */}
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="flex items-center space-x-4">
-              <div className="flex items-center text-gray-600 text-sm">
+              <div className="flex items-center light:text-gray-600 text-sm">
                 <Star className="h-4 w-4 mr-1 text-yellow-500" />
                 <span>4.8</span>
               </div>
-              <div className="flex items-center text-gray-600 text-sm">
+              <div className="flex items-center light:text-gray-600 text-sm">
                 <Users className="h-4 w-4 mr-1" />
                 <span>254 Students</span>
               </div>

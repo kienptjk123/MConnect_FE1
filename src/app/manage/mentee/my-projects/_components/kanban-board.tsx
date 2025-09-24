@@ -151,9 +151,9 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className="bg-background">
+    <div className="bg-white max-w-7xl mx-auto w-full p-6">
       <KanbanHeader onSearch={setSearchQuery} onFilterChange={setFilter} />
-      <div className="flex gap-6 p-6 overflow-x-auto justify-center">
+      <div className="flex gap-6 overflow-x-auto justify-center">
         <KanbanColumn
           title="To Do"
           count={todoTasks.length}

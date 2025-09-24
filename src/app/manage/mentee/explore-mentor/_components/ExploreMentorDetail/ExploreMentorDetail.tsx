@@ -165,13 +165,13 @@ export default function MentorDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="bg-white border-b">
+    <div className="min-h-screen light:bg-white">
+      <div className="border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <Button variant="ghost" size="sm" asChild>
             <Link
               href="/manage/mentee/explore-mentor"
-              className="flex items-center text-gray-600 hover:text-blue-500"
+              className="flex items-center light:text-gray-600 hover:text-blue-500"
             >
               <ArrowLeft className="h-4 w-4 mr-1" />
               Back to Mentors
@@ -180,7 +180,7 @@ export default function MentorDetailPage() {
         </div>
       </div>
 
-      <div className="relative bg-gradient-to-br from-sky-100 via-white to-blue-200 overflow-hidden">
+      <div className="relative light:bg-gradient-to-br from-sky-100 via-white to-blue-200 overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
@@ -205,7 +205,7 @@ export default function MentorDetailPage() {
             <div className="flex-1">
               <div className="flex flex-col lg:flex-row justify-between items-start gap-6">
                 <div className="flex flex-col gap-2">
-                  <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                  <h1 className="text-4xl lg:text-5xl font-bold light:text-gray-900 leading-tight">
                     {mentor.name}
                   </h1>
                   <p className="text-xl text-blue-600 font-medium">
@@ -214,13 +214,13 @@ export default function MentorDetailPage() {
                   <div className="flex items-center gap-4 mt-2">
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span className="text-sm font-medium text-gray-700">
+                      <span className="text-sm font-medium light:text-gray-700">
                         4.9 (127 reviews)
                       </span>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Users className="w-4 h-4 text-gray-500" />
-                      <span className="text-sm text-gray-600">
+                      <Users className="w-4 h-4 light:text-gray-500" />
+                      <span className="text-sm light:text-gray-600">
                         {fakeStats.sessionsCompleted}+ sessions
                       </span>
                     </div>
@@ -247,55 +247,59 @@ export default function MentorDetailPage() {
                     targetUserName={mentor?.name}
                     size="lg"
                     variant="outline"
-                    className="border-2 border-gray-200 hover:border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-6"
+                    className="border-2 border-gray-200 hover:border-gray-300 light:text-gray-700 hover:bg-gray-50 px-6 py-6"
                   />
                 </div>
               </div>
 
               {/* Stats Cards */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
+                <div className="light:bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl mx-auto mb-3 shadow-lg">
                     <Clock className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                  <div className="text-2xl font-bold light:text-gray-900 mb-1">
                     {fakeStats.totalMentoringTime} mins
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm light:text-gray-600">
                     Total mentoring time
                   </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
+                <div className="light:bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl mx-auto mb-3 shadow-lg">
                     <Star className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                  <div className="text-2xl font-bold light:text-gray-900 mb-1">
                     {fakeStats.sessionsCompleted}
                   </div>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm light:text-gray-600">
                     Sessions completed
                   </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
+                <div className="light:bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl mx-auto mb-3 shadow-lg">
                     <TrendingUp className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                  <div className="text-2xl font-bold light:text-gray-900 mb-1">
                     {fakeStats.successRate}%
                   </div>
-                  <div className="text-sm text-gray-600">Success rate</div>
+                  <div className="text-sm light:text-gray-600">
+                    Success rate
+                  </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
+                <div className="light:bg-white/80 backdrop-blur-sm rounded-xl p-6 text-center shadow-lg border border-white/20 hover:shadow-xl transition-all duration-200">
                   <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl mx-auto mb-3 shadow-lg">
                     <MessageCircle className="w-6 h-6 text-white" />
                   </div>
-                  <div className="text-2xl font-bold text-gray-900 mb-1">
+                  <div className="text-2xl font-bold light:text-gray-900 mb-1">
                     {fakeStats.responseTime}
                   </div>
-                  <div className="text-sm text-gray-600">Response time</div>
+                  <div className="text-sm light:text-gray-600">
+                    Response time
+                  </div>
                 </div>
               </div>
             </div>
@@ -342,12 +346,12 @@ export default function MentorDetailPage() {
                 <Card className="p-6">
                   <h2 className="text-2xl font-semibold mb-4">About Me</h2>
                   <div className="prose max-w-none">
-                    <p className="text-gray-700 leading-relaxed mb-4">
+                    <p className="light:text-gray-700 leading-relaxed mb-4">
                       {mentor.bio ||
                         "With over 15 years of robust experience in software engineering, cloud-native architecture, and AI/ML, I have a proven track record of leading complex transformation projects for esteemed organizations such as JPMorgan Chase, American Honda, and various U.S. Medicaid and Healthcare IT initiatives. Currently, I am expanding my expertise through a Postgraduate Program in Generative AI and Machine Learning at the Illinois Institute of Technology, with a keen focus on responsible AI, agentic..."}
                     </p>
                     {mentor.description && (
-                      <p className="text-gray-700 leading-relaxed">
+                      <p className="light:text-gray-700 leading-relaxed">
                         {mentor.description}
                       </p>
                     )}
@@ -375,24 +379,24 @@ export default function MentorDetailPage() {
 
                   <div className="space-y-6">
                     <div>
-                      <h3 className="font-semibold mb-3 text-gray-600 uppercase text-sm tracking-wide">
+                      <h3 className="font-semibold mb-3 light:text-gray-600 uppercase text-sm tracking-wide">
                         Expertise
                       </h3>
                       <div className="flex flex-wrap gap-2">
-                        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
                           AI
                         </Badge>
                         <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
                           Engineering
                         </Badge>
-                        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
                           +1
                         </Badge>
                       </div>
                     </div>
 
                     <div>
-                      <h3 className="font-semibold mb-3 text-gray-600 uppercase text-sm tracking-wide">
+                      <h3 className="font-semibold mb-3 light:text-gray-600 uppercase text-sm tracking-wide">
                         Disciplines
                       </h3>
                       <div className="flex flex-wrap gap-2">
@@ -403,13 +407,13 @@ export default function MentorDetailPage() {
                     </div>
 
                     <div>
-                      <h3 className="font-semibold mb-3 text-gray-600 uppercase text-sm tracking-wide">
+                      <h3 className="font-semibold mb-3 light:text-gray-600 uppercase text-sm tracking-wide">
                         Fluent in
                       </h3>
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="outline">English</Badge>
                         <Badge variant="outline">Hindi</Badge>
-                        <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200">
+                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
                           +1
                         </Badge>
                       </div>
@@ -432,7 +436,7 @@ export default function MentorDetailPage() {
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
                           <h4 className="font-semibold">{review.name}</h4>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm light:text-gray-500">
                             {review.date}
                           </span>
                         </div>
@@ -443,12 +447,12 @@ export default function MentorDetailPage() {
                               className={`w-4 h-4 ${
                                 i < review.rating
                                   ? "text-yellow-400 fill-current"
-                                  : "text-gray-300"
+                                  : "light:text-gray-300"
                               }`}
                             />
                           ))}
                         </div>
-                        <p className="text-gray-700">{review.comment}</p>
+                        <p className="light:text-gray-700">{review.comment}</p>
                       </div>
                     </div>
                   </Card>
@@ -467,10 +471,10 @@ export default function MentorDetailPage() {
                           <h4 className="font-semibold mb-1">
                             {achievement.title}
                           </h4>
-                          <p className="text-gray-600 text-sm mb-2">
+                          <p className="light:text-gray-600 text-sm mb-2">
                             {achievement.description}
                           </p>
-                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                          <span className="text-xs light:text-gray-500 bg-gray-100 px-2 py-1 rounded">
                             {achievement.date}
                           </span>
                         </div>
@@ -483,7 +487,7 @@ export default function MentorDetailPage() {
               <TabsContent value="sessions">
                 <Card className="p-6">
                   <h2 className="text-xl font-semibold mb-4">Group Sessions</h2>
-                  <p className="text-gray-600">
+                  <p className="light:text-gray-600">
                     No group sessions available at the moment.
                   </p>
                 </Card>
@@ -500,19 +504,19 @@ export default function MentorDetailPage() {
                 </h3>
                 <div className="space-y-3">
                   {mentorData.email && (
-                    <div className="flex items-center gap-3 text-gray-600">
+                    <div className="flex items-center gap-3 light:text-gray-600">
                       <Mail className="w-4 h-4" />
                       <span className="text-sm">{mentorData.email}</span>
                     </div>
                   )}
                   {mentor.phoneNumber && (
-                    <div className="flex items-center gap-3 text-gray-600">
+                    <div className="flex items-center gap-3 light:text-gray-600">
                       <Phone className="w-4 h-4" />
                       <span className="text-sm">{mentor.phoneNumber}</span>
                     </div>
                   )}
                   {mentor.website && (
-                    <div className="flex items-center gap-3 text-gray-600">
+                    <div className="flex items-center gap-3 light:text-gray-600">
                       <Globe className="w-4 h-4" />
                       <a
                         href={mentor.website}
@@ -532,10 +536,10 @@ export default function MentorDetailPage() {
           {courses && courses.length > 0 && (
             <div className="mt-12">
               <div className="mb-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                <h2 className="text-2xl font-bold light:text-gray-900 mb-2">
                   Courses by {mentor?.name}
                 </h2>
-                <p className="text-gray-600">
+                <p className="light:text-gray-600">
                   Explore courses created by this mentor
                 </p>
               </div>

@@ -54,22 +54,13 @@ export default function CourseDetailPage() {
     (c) => c.slug === params.slug
   );
 
-  const {
-    data: courseResponse,
-    isLoading,
-    error,
-  } = useCourseDetail(courses?.id as number);
+  const { data: courseResponse, error } = useCourseDetail(
+    courses?.id as number
+  );
 
   const lesson = courseResponse?.payload?.result?.modules?.[0].lessons?.[0];
   const course = courseResponse?.payload?.result;
   const video = useCoursePublicStream(lesson?.id as number);
-  if (isLoading && loadingCourses) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (

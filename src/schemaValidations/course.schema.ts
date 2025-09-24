@@ -235,3 +235,26 @@ export type CourseWithProgressType = z.TypeOf<typeof CourseWithProgressSchema>;
 export type CoursePublicStreamResponseType = z.TypeOf<
   typeof CoursePublicStreamResponseSchema
 >;
+
+// Course Enrollment Schemas
+export const CourseEnrollmentBodySchema = z.object({
+  courseId: z.number(),
+  amount: z.number(),
+  orderInfo: z.string(),
+});
+
+export const CourseEnrollmentResponseSchema = z.object({
+  message: z.string(),
+  data: z.object({
+    paymentUrl: z.string(),
+    courseId: z.number(),
+    amount: z.number(),
+  }),
+});
+
+export type CourseEnrollmentBodyType = z.TypeOf<
+  typeof CourseEnrollmentBodySchema
+>;
+export type CourseEnrollmentResponseType = z.TypeOf<
+  typeof CourseEnrollmentResponseSchema
+>;
