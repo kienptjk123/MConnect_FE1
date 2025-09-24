@@ -1,7 +1,5 @@
-"use client";
-
+import { MessageContainer } from "@/app/manage/mentee/message/_components/MessageCore/MessageCore";
 import React from "react";
-import { MessageContainer } from "../../mentee/message/_components/MessageContainer";
 
 export default function MentorMessagePage() {
   return <MessageContainer />;

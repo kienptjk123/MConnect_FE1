@@ -20,6 +20,8 @@ export type VideoUploadResponseType = z.TypeOf<
   typeof VideoUploadResponseSchema
 >;
 
+export type VideoUploadRequestType = z.TypeOf<typeof VideoUploadRequestSchema>;
+
 const videoApiRequest = {
   getVideoUploadUrl: (body: VideoUploadRequestType) => {
     return http.post<VideoUploadResponseType>(
