@@ -113,11 +113,11 @@ function BlogActionButtons({
   const router = useRouter();
 
   const handleView = () => {
-    router.push(`/manage/staff/manage-blog/${blog.id}`);
+    router.push(`/manage/admin/manage-blog/${blog.id}`);
   };
 
   const handleEdit = () => {
-    router.push(`/manage/staff/manage-blog/${blog.id}/edit`);
+    router.push(`/manage/admin/manage-blog/${blog.id}/edit`);
   };
 
   return (

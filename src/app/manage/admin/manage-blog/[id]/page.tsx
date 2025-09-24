@@ -1,24 +1,11 @@
 "use client";
 
-import React from "react";
-import { useBlogByIdQuery } from "@/queries/useBlog";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import {
-  ArrowLeft,
-  FileText,
-  Calendar,
-  User,
-  Tag,
-  Edit,
-  ImageIcon,
-  Clock,
-} from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
-import Image from "next/image";
 import { formatDateTimeToLocaleString } from "@/lib/utils";
+import { useBlogByIdQuery } from "@/queries/useBlog";
+import { ArrowLeft, Edit, FileText } from "lucide-react";
+import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
 
 export default function BlogDetailPage() {
   const router = useRouter();
@@ -82,7 +69,7 @@ export default function BlogDetailPage() {
 
         <Button
           onClick={() =>
-            router.push(`/manage/staff/manage-blog/${blog.id}/edit`)
+            router.push(`/manage/admin/manage-blog/${blog.id}/edit`)
           }
           className="flex items-center gap-2 bg-green-500 hover:bg-green-600"
         >

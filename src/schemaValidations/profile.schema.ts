@@ -6,6 +6,7 @@ export const ProfileSchema = z.object({
   role: z.string(),
   status: z.string(),
   mentee_profile_id: z.number(),
+  mentor_profile_id: z.number().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
   name: z.string(),

@@ -1,85 +1,78 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-import { toast } from "@/components/ui/use-toast";
 import {
   formatDateTimeToLocaleString,
   formatDateToLocaleString,
 } from "@/lib/utils";
-import blogApiRequest from "@/apiRequests/blog";
+import { useBlogByIdQuery, useBlogsQuery } from "@/queries/useBlog";
 import { BlogByIdResType, BlogResType } from "@/schemaValidations/blog.schema";
 
 export default function BlogDetailForm() {
   const params = useParams();
-  const blogId = Number(params.id);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [blogData, setBlogData] = useState<BlogByIdResType | null>(null);
-  const [blogsData, setBlogsData] = useState<BlogResType | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchBlogDetail = async () => {
-    try {
-      const response = await blogApiRequest.getBlogById(blogId);
-      setBlogData(response.payload);
-    } catch (err: any) {
-      console.error("Error fetching blog detail:", err);
-      const errorMessage =
-        err?.payload?.message || "Unable to load blog detail";
-      setError(errorMessage);
-      toast({
-        title: "Lỗi tải dữ liệu",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    }
-  };
+  const {
+    data: blogsRes,
+    isLoading: loadingBlogs,
+    isError: isBlogsError,
+    error: blogsError,
+  } = useBlogsQuery();
 
-  const fetchBlogs = async () => {
-    try {
-      const response = await blogApiRequest.getBlogs();
-      setBlogsData(response.payload);
-    } catch (err: any) {
-      console.error("Error fetching blogs:", err);
-      const errorMessage = err?.payload?.message || "Unable to load blog list";
-      toast({
-        title: "Lỗi tải dữ liệu",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    }
-  };
+  const blog = blogsRes?.payload.data.find(
+    (c) => c.slug === (params.slug as string)
+  );
 
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      setError(null);
+  const {
+    data: blogRes,
+    isLoading: loadingBlog,
+    isError: isBlogError,
+    error: blogError,
+  } = useBlogByIdQuery(blog?.id as any, !!blog?.id);
 
-      try {
-        await Promise.all([fetchBlogDetail(), fetchBlogs()]);
-      } catch (err) {
-        console.error("Error loading data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const blogData: BlogByIdResType | null = blogRes?.payload ?? null;
+  const blogsData: BlogResType | null = blogsRes?.payload ?? null;
 
-    if (blogId) {
-      loadData();
-    }
-  }, [blogId]);
+  const loading = loadingBlog || loadingBlogs;
+  const error = isBlogError ? "Không thể tải chi tiết bài viết" : null;
 
-  const handleRetry = () => {
-    setError(null);
-    setLoading(true);
-    Promise.all([fetchBlogDetail(), fetchBlogs()]).finally(() => {
-      setLoading(false);
-    });
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p>Đang tải blog...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !blogData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center py-8">
+          <div className="text-gray-400 mb-4">
+            <svg
+              className="w-16 h-16 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+              />
+            </svg>
+            <p className="text-lg font-semibold">Không tìm thấy bài viết</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
@@ -113,12 +106,6 @@ export default function BlogDetailForm() {
             <p className="text-lg font-semibold">Lỗi</p>
             <p className="text-sm mt-2">{error}</p>
           </div>
-          <button
-            onClick={handleRetry}
-            className="px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-          >
-            Thử lại
-          </button>
         </div>
       </div>
     );
@@ -260,57 +247,13 @@ export default function BlogDetailForm() {
                   className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
                   dangerouslySetInnerHTML={{ __html: blogData.data.content }}
                 />
-                {/* Author Info */}
-                <div className="mt-12 p-6 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 relative rounded-full overflow-hidden">
-                      <Image
-                        src={
-                          blogData.data.staff.avatar || "/default-avatar.jpg"
-                        }
-                        alt={blogData.data.staff.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h4 className="text-lg font-semibold text-gray-800">
-                        {blogData.data.staff.name}
-                      </h4>
-                      <p className="text-gray-600">Tác giả</p>
-                    </div>
-                  </div>
-                </div>
               </div>
             </article>
           </div>
           {/* Sidebar */}
           <div className="space-y-6 lg:col-span-3">
             {/* Search Box */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Tìm kiếm bài viết..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-3 pr-12 border bg-white border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="text-gray-400"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
+
             {/* Recent Posts */}
             <div className="bg-white rounded-lg shadow-sm p-6">
               <h3 className="text-lg font-bold mb-6 text-gray-800">
@@ -320,7 +263,7 @@ export default function BlogDetailForm() {
                 {blogsData?.data?.slice(0, 5).map((recentBlog) => (
                   <Link
                     key={recentBlog.id}
-                    href={`/blog/${recentBlog.id}`}
+                    href={`/blog/${recentBlog.slug}`}
                     className="flex gap-3 pb-4 border-b border-gray-100 last:border-b-0 block"
                   >
                     <div className="w-16 h-16 relative flex-shrink-0 rounded overflow-hidden">

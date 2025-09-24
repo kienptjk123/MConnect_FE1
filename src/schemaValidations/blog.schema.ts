@@ -17,6 +17,7 @@ const BlogTagSchema = z.object({
 
 export const BlogSchema = z.object({
   id: z.number(),
+  slug: z.string(),
   title: z.string(),
   content: z.string(),
   image: z.string(),

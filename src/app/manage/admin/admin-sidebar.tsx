@@ -2,11 +2,6 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -23,20 +18,21 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
   ChevronDown,
+  FolderDot,
   LayoutDashboard,
-  List,
-  ListChecks,
+  ListVideo,
   LogOut,
   MessageCircle,
+  MessageCircleQuestionIcon,
   MonitorPlayIcon,
+  NewspaperIcon,
   Settings,
   ShoppingBag,
   User,
+  User2,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,153 +41,70 @@ import { usePathname } from "next/navigation";
 const navigationItems = [
   {
     title: "Dashboard",
-    url: "/manage/mentor/dashboard",
+    url: "/manage/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
-    title: "Course",
-    url: "/manage/mentor/courses",
-    icon: ListChecks,
-    children: [
-      {
-        title: "Category",
-        url: "/manage/mentor/courses/category",
-        icon: ListChecks,
-      },
-      {
-        title: "Label",
-        url: "/manage/mentor/courses/label",
-        icon: ListChecks,
-      },
-
-      {
-        title: "Course",
-        url: "/manage/mentor/courses/course",
-        icon: ListChecks,
-      },
-    ],
+    title: " Tag Management",
+    url: "/manage/admin/manage-tag",
+    icon: ListVideo,
   },
   {
-    title: "Kanban",
-    url: "/manage/mentor/kanban",
-    icon: ListChecks,
+    title: "Blog Management",
+    url: "/manage/admin/manage-blog",
+    icon: NewspaperIcon,
   },
   {
-    title: "Single Sessions",
-    url: "/manage/mentor/single-session",
-    icon: List,
+    title: "Mentee Management",
+    url: "/manage/admin/manage-mentee",
+    icon: User2,
   },
   {
-    title: "Work Schedule",
-    url: "/manage/mentor/work-schedule",
-    icon: MonitorPlayIcon,
+    title: "Mentor Management",
+    url: "/manage/admin/manage-mentor",
+    icon: User2,
   },
   {
-    title: "Messages",
-    url: "/manage/mentor/message",
-    icon: MessageCircle,
+    title: "Staff Management",
+    url: "/manage/admin/manage-staff",
+    icon: User2,
   },
 ];
-export default function MentorSidebar() {
+
+export default function AdminSidebar() {
   const location = usePathname();
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader className="dark:bg-[#080808]">
+    <Sidebar collapsible="icon" className="">
+      <SidebarHeader className="">
         <div className="flex items-center gap-2 px-3 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-3">
           <Image src="/images/sandboxlogo.png" width={40} height={40} alt="" />
-          <span className="truncate font-bold dark:text-white text-gray-900  text-lg group-data-[collapsible=icon]:hidden">
+          <span className="truncate font-bold text-gray-900 text-lg group-data-[collapsible=icon]:hidden">
             MConnect
           </span>
         </div>
       </SidebarHeader>
 
-      <SidebarContent className=" custom-scrollbar overflow-y-auto dark:bg-[#080808]">
+      <SidebarContent className=" custom-scrollbar overflow-y-auto">
         <SidebarGroup>
           <SidebarGroupContent className="">
             <SidebarMenu className="space-y-1">
               {navigationItems.map((item) => {
                 const isActive = location === item.url;
-                if (item.children) {
-                  return (
-                    <Collapsible
-                      key={item.title}
-                      defaultOpen
-                      className="group/collapsible"
-                    >
-                      <SidebarMenuItem>
-                        <CollapsibleTrigger
-                          className="ml-1 hover:text-white cursor-pointer"
-                          asChild
-                        >
-                          <SidebarMenuButton
-                            isActive={isActive}
-                            className="hover:text-white group relative  h-12 rounded-xl transition-all duration-200 
-                            hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-500 hover:shadow-sm
-                            data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-400 data-[active=true]:to-blue-500 
-                            data-[active=true]:text-white data-[active=true]:shadow-lg 
-                            group-data-[collapsible=icon]:justify-center"
-                            tooltip={item.title}
-                          >
-                            <div className="flex hover:text-white items-center gap-3 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center">
-                              <item.icon className="h-5 w-5" />
-                              <span className="font-medium group-data-[collapsible=icon]:hidden">
-                                {item.title}
-                              </span>
-                            </div>
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-
-                        <CollapsibleContent>
-                          <SidebarMenuSub className="m-0 p-0 border-0">
-                            {item.children.map((child) => {
-                              const isChildActive = location === child.url;
-                              return (
-                                <SidebarMenuSubItem
-                                  key={child.title}
-                                  className="w-[165px]"
-                                >
-                                  <SidebarMenuButton
-                                    asChild
-                                    isActive={isChildActive}
-                                    className="ml-8 h-10 rounded-lg text-sm
-                                hover:bg-blue-50 dark:hover:bg-gray-800 
-                                data-[active=true]:bg-blue-100 dark:data-[active=true]:bg-gray-700"
-                                  >
-                                    <Link
-                                      href={child.url}
-                                      className="flex items-center gap-2 px-2"
-                                    >
-                                      <child.icon className="h-4 w-4" />
-                                      <span>{child.title}</span>
-                                    </Link>
-                                  </SidebarMenuButton>
-                                </SidebarMenuSubItem>
-                              );
-                            })}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                  );
-                }
-
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
                       isActive={isActive}
-                      className="group relative hover:text-white h-12 rounded-xl transition-all duration-200 
-                  hover:bg-gradient-to-r hover:from-blue-400 hover:to-blue-500 hover:shadow-sm 
-                  data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-400 data-[active=true]:to-blue-500 
-                  data-[active=true]:text-white data-[active=true]:shadow-lg 
-                  group-data-[collapsible=icon]:justify-center"
+                      className="group relative h-12 rounded-xl transition-all duration-200 hover:bg-gradient-to-r hover:from-blue-100 hover:to-blue-200 hover:shadow-sm data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-400 data-[active=true]:to-blue-500 data-[active=true]:text-white data-[active=true]:shadow-lg group-data-[collapsible=icon]:justify-center   "
                       tooltip={item.title}
                     >
                       <Link
                         href={item.url}
                         className="flex items-center gap-3 px-3 group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:justify-center"
                       >
-                        <item.icon className="h-5 w-5" />
+                        <div className="relative flex items-center justify-center">
+                          <item.icon className="h-5 w-5 transition-transform " />
+                        </div>
                         <span className="font-medium group-data-[collapsible=icon]:hidden">
                           {item.title}
                         </span>
