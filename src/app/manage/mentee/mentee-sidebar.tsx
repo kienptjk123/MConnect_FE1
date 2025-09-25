@@ -33,7 +33,6 @@ import {
   User,
   User2,
 } from "lucide-react";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -79,10 +78,7 @@ const navigationItems = [
 export default function MenteeSidebar() {
   const location = usePathname();
   const user = useProfileStore();
-  const cookieStore = cookies();
-  const logout = () => {
-    localStorage.clear();
-  };
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="dark:bg-[#080808] bg-white">
