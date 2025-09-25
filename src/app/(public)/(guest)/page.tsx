@@ -1,7 +1,12 @@
+"use client";
+import Blender from "@/app/(public)/(guest)/Blender";
+import NoodleBar from "@/app/(public)/(guest)/Blender";
 import HomepageClient from "@/app/(public)/(guest)/homepageclient";
+import Loading from "@/app/loading";
 import HeroSection from "@/components/HeroSection/HeroSection";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
+import { Suspense, useEffect, useRef } from "react";
 
 export default function Homepage() {
   const carouselItems = [
@@ -22,13 +27,54 @@ export default function Homepage() {
       image: "/images/sandbox2.png",
     },
   ];
+
   return (
     <>
       <div className="container mx-auto">
-        <HeroSection />
+        <div className="flex flex-col md:flex-row h-[700px]">
+          <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 z-10">
+            <div className="text-center space-y-6">
+              <h2 className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl">
+                Connect
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                  Mentors & Mentees
+                </span>
+              </h2>
+
+              <p className="text-xl md:text-2xl text-black drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
+                A modern learning platform where you are guided by experienced
+                mentors, while exploring an interactive 3D sandbox to practice
+                real-world skills in a dynamic and engaging way.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
+                <Button
+                  className="bg-blue-500 hover:bg-blue-400 dark:text-white rounded-3xl"
+                  size="lg"
+                >
+                  {" "}
+                  Join Now
+                </Button>
+
+                <Button
+                  variant="outline"
+                  className="bg-gray-300 hover:bg-gray-400 dark:text-white rounded-3xl"
+                  size="lg"
+                >
+                  View Sandbox Demo
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="w-1/2 h-[700px]">
+            <Blender />
+          </div>
+        </div>
+        {/* <HeroSection /> */}
         <div className="mx-8 py-2">
           <div className="max-w-full">
-            <div className="dark:bg-[#E4F2FF] rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
+            <div className="rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
               <div className="flex items-center justify-around gap-8 md:gap-16">
                 <svg
                   width="156"
