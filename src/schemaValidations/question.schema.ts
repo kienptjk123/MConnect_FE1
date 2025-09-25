@@ -1,0 +1,70 @@
+import z from "zod";
+
+const MenteeProfileSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  avatar: z.string().nullable().optional(),
+  username: z.string().nullable().optional(),
+});
+
+const CountSchema = z.object({
+  replies: z.number(),
+  votes: z.number(),
+});
+
+export const QuestionSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  content: z.string(),
+  image: z.string().nullable().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  menteeProfile: MenteeProfileSchema,
+  _count: CountSchema,
+});
+
+export const QuestionRes = z.object({
+  data: QuestionSchema,
+  message: z.string(),
+});
+
+export const QuestionsListRes = z.object({
+  data: z.array(QuestionSchema),
+  message: z.string(),
+});
+
+export const QuestionCreateBody = z.object({
+  title: z.string().min(1, "Title is required"),
+  content: z.string().min(1, "Content is required"),
+  image: z.instanceof(File).optional(),
+});
+
+export const QuestionUpdateBody = z.object({
+  title: z.string().min(1, "Title is required").optional(),
+  content: z.string().min(1, "Content is required").optional(),
+  image: z.instanceof(File).optional(),
+});
+
+export type QuestionData = {
+  id: number;
+  title: string;
+  content: string;
+  image?: string | null;
+  createdAt: string;
+  updatedAt: string;
+  menteeProfile: {
+    id: number;
+    name: string;
+    avatar?: string | null;
+    username?: string | null;
+  };
+  _count: {
+    replies: number;
+    votes: number;
+  };
+};
+
+export type QuestionResType = z.TypeOf<typeof QuestionRes>;
+export type QuestionsListResType = z.TypeOf<typeof QuestionsListRes>;
+export type QuestionBodyType = z.TypeOf<typeof QuestionCreateBody>;
+export type QuestionUpdateBodyType = z.TypeOf<typeof QuestionUpdateBody>;

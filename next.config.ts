@@ -1,7 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "**" }],
+  },
+  experimental: {
+    optimizeCss: false,
+    esmExternals: true,
+  },
 };
 
 export default nextConfig;
