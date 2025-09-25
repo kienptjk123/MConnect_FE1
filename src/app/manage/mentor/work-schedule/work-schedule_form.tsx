@@ -8,9 +8,9 @@ import {
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { Plus, Save, Trash2 } from "lucide-react";
+import { Plus, Save } from "lucide-react";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import "./work-schedule.css";
 
@@ -30,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
   useCreateMentorSchedule,
-  useDeleteMentorSchedule,
   useMentorSchedules,
   useUpdateMentorSchedule,
 } from "@/queries/useMentorSchedule";
@@ -41,7 +40,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useFetchProfile, useProfile } from "@/stores";
 
 const toInputDate = (iso?: string) => (iso ? iso.slice(0, 10) : "");
 
