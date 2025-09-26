@@ -54,6 +54,11 @@ const navigationItems = [
     icon: User2,
   },
   {
+    title: "Work Experience Packages",
+    url: "/manage/mentee/explore-work-exp-pkg",
+    icon: ShoppingBag,
+  },
+  {
     title: "My Courses",
     url: "/manage/mentee/my-courses",
     icon: ListVideo,

@@ -113,12 +113,15 @@ export default function EditWorkExpPackageFormPage() {
   }, [packageData, form, replace]);
   const onSubmit = async (values: WorkExperiencePackageUpdateInput) => {
     try {
-      const submitData = {
+      const submitData: any = {
         ...values,
         skills,
-        includesCourse:
-          watchPackageType === "SANDBOX_ONLY" ? 0 : values.includesCourse,
       };
+
+      // Only include includesCourse if packageType is COURSE_PLUS_SANDBOX
+      if (watchPackageType === "COURSE_PLUS_SANDBOX" && values.includesCourse) {
+        submitData.includesCourse = values.includesCourse;
+      }
 
       await mutateAsync(submitData);
       toast({

@@ -5,7 +5,7 @@ export const WorkExperiencePackageSchema = z.object({
   mentorProfileId: z.number(),
   title: z.string(),
   description: z.string(),
-  skills: z.string().array().optional(),
+  skills: z.string().array(),
   duration: z.number(),
   price: z.number(),
   packageType: z.enum(["SANDBOX_ONLY", "COURSE_PLUS_SANDBOX"]),
@@ -18,7 +18,7 @@ export const WorkExperiencePackageSchema = z.object({
   mentorProfile: z.object({
     id: z.number(),
     name: z.string(),
-    avatar: z.string().array().optional(),
+    avatar: z.string().optional(),
     major: z.string().nullable().optional(),
     mentorSpecialties: z.string().array().optional(),
   }),
