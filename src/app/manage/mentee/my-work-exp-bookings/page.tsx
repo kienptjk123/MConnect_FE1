@@ -130,7 +130,7 @@ export default function MyWorkExpBookingsPage() {
   const pagedBookings = bookings.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div className="min-w-7xl mx-auto py-8">
+    <div className="min-w-7xl p-4 mx-auto py-8">
       {/* Header */}
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold text-gray-900">
