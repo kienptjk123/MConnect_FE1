@@ -69,6 +69,11 @@ const navigationItems = [
     url: "/manage/admin/manage-staff",
     icon: User2,
   },
+  {
+    title: "Course Management",
+    url: "/manage/admin/manage-course",
+    icon: MonitorPlayIcon,
+  },
 ];
 
 export default function AdminSidebar() {
