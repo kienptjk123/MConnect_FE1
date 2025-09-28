@@ -9,12 +9,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { useLogoutMutation } from "@/queries/useLogout";
 import { ProfileResType } from "@/schemaValidations/profile.schema";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { Search } from "lucide-react";
+import { BookOpen, Briefcase, LogOut, Search, User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -25,6 +26,7 @@ function hasAccessToken() {
 
 export default function Header() {
   const [profile, setProfile] = useState<ProfileResType | null>(null);
+  const logoutMutation = useLogoutMutation();
 
   useEffect(() => {
     if (!hasAccessToken()) {
@@ -197,41 +199,93 @@ export default function Header() {
                       aria-label="Open user menu"
                       className="focus:outline-none"
                     >
-                      <Avatar className="h-10 w-10 ring-1 ring-gray-200 hover:cursor-pointer">
+                      <Avatar className="h-10 w-10 rounded-xl border-2 border-blue-300 hover:ring-2 hover:ring-blue-400 transition">
                         <AvatarImage
-                          src={profile?.result?.avatar || undefined}
+                          src={profile?.result?.avatar || "/placeholder.svg"}
                           alt={profile?.result?.name}
                         />
-                        <AvatarFallback className="bg-blue-600 text-white">
-                          {profile?.result?.name || "U"}
+                        <AvatarFallback className="rounded-xl bg-blue-600 text-white font-semibold">
+                          {profile?.result?.name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
                     </button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel className="space-y-1">
-                      <p className="text-sm font-medium leading-none">
-                        {profile?.result?.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground truncate">
-                        {profile?.result?.email}
-                      </p>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/manage/mentee/profile">My Profile</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/manage/mentee/dashboard">Learning Hub</Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/manage/mentee/mentor-application">
-                        Mentor Application
+
+                  <DropdownMenuContent
+                    align="end"
+                    className="w-56 rounded-xl border border-blue-100 shadow-lg"
+                  >
+                    {/* Header */}
+                    <div className="flex items-center gap-3 p-3 bg-gradient-to-r from-blue-50 to-blue-100 rounded-t-xl">
+                      <Avatar className="h-9 w-9 rounded-lg border border-blue-200">
+                        <AvatarImage
+                          src={profile?.result?.avatar || "/placeholder.svg"}
+                          alt={profile?.result?.name}
+                        />
+                        <AvatarFallback className="rounded-lg bg-blue-500 text-white font-semibold">
+                          {profile?.result?.name?.charAt(0) || "U"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
+                          {profile?.result?.name}
+                        </p>
+                        <p className="text-xs text-blue-600 truncate">
+                          {profile?.result?.email}
+                        </p>
+                      </div>
+                    </div>
+
+                    <DropdownMenuSeparator className="bg-blue-100" />
+
+                    {/* Items */}
+                    <DropdownMenuItem
+                      asChild
+                      className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                    >
+                      <Link
+                        href="/manage/mentee/profile"
+                        className="flex items-center gap-2"
+                      >
+                        <User className="w-4 h-4 text-blue-500" />
+                        <span>My Profile</span>
                       </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-red-600">
-                      Log out
+
+                    <DropdownMenuItem
+                      asChild
+                      className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                    >
+                      <Link
+                        href="/manage/mentee/dashboard"
+                        className="flex items-center gap-2"
+                      >
+                        <BookOpen className="w-4 h-4 text-blue-500" />
+                        <span>Learning Hub</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem
+                      asChild
+                      className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                    >
+                      <Link
+                        href="/manage/mentee/mentor-application"
+                        className="flex items-center gap-2"
+                      >
+                        <Briefcase className="w-4 h-4 text-blue-500" />
+                        <span>Mentor Application</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuSeparator className="bg-blue-100" />
+
+                    <DropdownMenuItem
+                      className="rounded-lg mx-1 my-1 cursor-pointer hover:bg-red-50 text-red-600"
+                      onClick={() => logoutMutation.mutate()}
+                    >
+                      <LogOut className="w-4 h-4 text-red-500 mr-2" />
+                      <span>Log out</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
