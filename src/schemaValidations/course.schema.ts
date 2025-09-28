@@ -224,6 +224,13 @@ export const CourseProgressResponseSchema = z.object({
   }),
 });
 
+export const AdminUpdateCourseSchema = z.object({
+  status: z
+    .enum(["PUBLISHED", "DRAFT", "PENDING_REVIEW", "ARCHIVED"])
+    .optional(),
+  note: z.string().optional(),
+});
+
 export type CourseType = z.TypeOf<typeof CourseSchema>;
 export type CourseDetailType = z.TypeOf<typeof CourseDetailSchema>;
 export type CourseDetailSchema = z.TypeOf<typeof CourseDetailResponseSchema>;
@@ -235,6 +242,7 @@ export type CourseWithProgressType = z.TypeOf<typeof CourseWithProgressSchema>;
 export type CoursePublicStreamResponseType = z.TypeOf<
   typeof CoursePublicStreamResponseSchema
 >;
+export type AdminUpdateCourseType = z.TypeOf<typeof AdminUpdateCourseSchema>;
 
 // Course Enrollment Schemas
 export const CourseEnrollmentBodySchema = z.object({
