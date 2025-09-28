@@ -195,6 +195,7 @@ const request = async <Response>(
 
         // No refresh token available or already on refresh page, proceed with logout
         if (!clientLogoutRequest) {
+          console.log("🔓 [HTTP] Starting logout request");
           clientLogoutRequest = fetch("/api/auth/logout", {
             method: "POST",
             body: null, // Logout mình sẽ cho phép luôn luôn thành công
@@ -203,8 +204,10 @@ const request = async <Response>(
             } as any,
           });
           try {
-            await clientLogoutRequest;
+            const response = await clientLogoutRequest;
+            console.log("🔓 [HTTP] Logout response:", response.status);
           } catch (error) {
+            console.warn("🔓 [HTTP] Logout request failed:", error);
           } finally {
             removeTokensFromLocalStorage();
             clientLogoutRequest = null;

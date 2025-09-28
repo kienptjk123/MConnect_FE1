@@ -96,7 +96,7 @@ export default function ExploreMentors() {
   }
 
   return (
-    <div className="bg-white dark:bg-black max-w-7xl mx-auto p-6">
+    <div className="bg-white dark:bg-black max-w-7xl mx-auto p-6 w-full">
       <div className="z-10">
         <div className="">
           <div className="mb-6 sm:mb-8">

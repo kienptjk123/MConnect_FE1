@@ -19,6 +19,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useLogoutMutation } from "@/queries/useLogout";
 import { useProfileStore } from "@/stores";
 import {
   CalendarCheck,
@@ -83,6 +84,7 @@ const navigationItems = [
 export default function MenteeSidebar() {
   const location = usePathname();
   const user = useProfileStore();
+  const logoutMutation = useLogoutMutation();
 
   return (
     <Sidebar collapsible="icon">
@@ -208,9 +210,11 @@ export default function MenteeSidebar() {
                     <span>Orders</span>
                   </Link>
                 </DropdownMenuItem>
-
                 <DropdownMenuSeparator className="bg-blue-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 cursor-pointer my-1  hover:bg-red-50 hover:text-blue-600 ">
+                <DropdownMenuItem
+                  className="rounded-lg mx-1 cursor-pointer my-1  hover:bg-red-50 hover:text-blue-600 "
+                  onClick={() => logoutMutation.mutate()}
+                >
                   <LogOut className="mr-3 h-4 w-4 text-blue-500" />
                   <span>Log out</span>
                 </DropdownMenuItem>

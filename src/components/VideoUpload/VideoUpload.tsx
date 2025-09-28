@@ -73,7 +73,7 @@ export function VideoUpload({
 
     if (!lessonId) {
       toast({
-        title: "Lesson not created",
+        title: "Lesson not saved",
         description: "Please save the lesson first before uploading video",
         variant: "destructive",
       });

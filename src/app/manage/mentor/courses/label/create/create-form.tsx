@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { useCreateCategoryMutation } from "@/queries/useCategories";
+import { useCreateLabelMutation } from "@/queries/useLabel";
 import {
   CategoryCreateSchema,
   type CategoryCreateType,
@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 
 export default function CreateCategoryForm() {
   const router = useRouter();
-  const { mutateAsync, isPending } = useCreateCategoryMutation();
+  const { mutateAsync, isPending } = useCreateLabelMutation();
 
   const form = useForm<CategoryCreateType>({
     resolver: zodResolver(CategoryCreateSchema),
@@ -33,7 +33,7 @@ export default function CreateCategoryForm() {
         title: "Category created",
         description: `"${values.name}" was created successfully.`,
       });
-      router.push("/manage/staff/manage-categories");
+      router.push("/manage/mentor/courses/label");
     } catch (error: any) {
       toast({
         title: "Failed to create category",
@@ -96,8 +96,8 @@ export default function CreateCategoryForm() {
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isPending}
                 className="bg-blue-600 hover:bg-blue-700"
               >

@@ -33,7 +33,17 @@ export const useWebRTC = ({
       { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun1.l.google.com:19302" },
       {
-        urls: "turn:your.turn.host:3478",
+        urls: "turn:turn.developgenderhealth.com:3478?transport=udp",
+        username: "turnuser",
+        credential: "turnpass",
+      },
+      {
+        urls: "turn:turn.developgenderhealth.com:3478?transport=tcp",
+        username: "turnuser",
+        credential: "turnpass",
+      },
+      {
+        urls: "turns:turn.developgenderhealth.com:5349?transport=tcp", // nếu bật TLS
         username: "turnuser",
         credential: "turnpass",
       },
@@ -82,6 +92,7 @@ export const useWebRTC = ({
 
     pc.onicecandidate = (event) => {
       if (event.candidate && callId) {
+        console.log("📡 New ICE candidate:", event.candidate.candidate);
         sendWebRTCSignal(callId, "ice-candidate", event.candidate);
       }
     };

@@ -5,7 +5,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
-import { useCategoryQuery, useUpdateCategoryMutation } from "@/queries/useCategories";
+import {
+  useCategoryQuery,
+  useUpdateCategoryMutation,
+} from "@/queries/useCategories";
 import {
   CategoryUpdateSchema,
   type CategoryUpdateType,
@@ -15,14 +18,15 @@ import { ArrowLeft, FolderOpen, Save } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import { useLabelQuery, useUpdateLabelMutation } from "@/queries/useLabel";
 
 export default function EditCategoryForm() {
   const router = useRouter();
   const params = useParams();
-  const categoryId = parseInt(params.id as string);
-  
-  const { data: categoryData, isLoading } = useCategoryQuery(categoryId);
-  const { mutateAsync, isPending } = useUpdateCategoryMutation();
+  const labelId = parseInt(params.id as string);
+
+  const { data: labelData, isLoading } = useLabelQuery(labelId);
+  const { mutateAsync, isPending } = useUpdateLabelMutation();
 
   const form = useForm<CategoryUpdateType>({
     resolver: zodResolver(CategoryUpdateSchema),
@@ -33,21 +37,21 @@ export default function EditCategoryForm() {
 
   // Update form when data is loaded
   useEffect(() => {
-    if (categoryData?.payload?.data) {
+    if (labelData?.payload?.data) {
       form.reset({
-        name: categoryData.payload.data.name,
+        name: labelData.payload.data.name,
       });
     }
-  }, [categoryData, form]);
+  }, [labelData, form]);
 
   const onSubmit = async (values: CategoryUpdateType) => {
     try {
-      await mutateAsync({ id: categoryId, body: values });
+      await mutateAsync({ id: labelId, body: values });
       toast({
-        title: "Category updated",
+        title: "Label updated",
         description: `"${values.name}" was updated successfully.`,
       });
-      router.push("/manage/staff/manage-categories");
+      router.push("/manage/mentor/courses/label");
     } catch (error: any) {
       toast({
         title: "Failed to update category",
@@ -63,20 +67,18 @@ export default function EditCategoryForm() {
         <div className="flex items-center justify-center py-16">
           <div className="flex items-center gap-3 text-gray-600">
             <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-400 border-t-transparent"></div>
-            Loading category...
+            Loading label...
           </div>
         </div>
       </div>
     );
   }
 
-  if (!categoryData?.payload?.data) {
+  if (!labelData?.payload?.data) {
     return (
       <div className="container mx-auto p-6 max-w-2xl">
         <div className="flex items-center justify-center py-16">
-          <div className="text-center text-red-600">
-            Category not found
-          </div>
+          <div className="text-center text-red-600">Label not found</div>
         </div>
       </div>
     );
@@ -103,7 +105,7 @@ export default function EditCategoryForm() {
               <FolderOpen className="h-5 w-5 text-blue-600" />
             </div>
             <CardTitle className="text-lg font-semibold text-gray-800">
-              Edit Category
+              Edit Label
             </CardTitle>
           </div>
         </CardHeader>
@@ -135,8 +137,8 @@ export default function EditCategoryForm() {
               >
                 Cancel
               </Button>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 disabled={isPending}
                 className="bg-blue-600 hover:bg-blue-700"
               >
