@@ -44,7 +44,6 @@ export default function BookingModal({
     useState<MentorWorkScheduleType | null>(null);
   const [step, setStep] = useState<"topic" | "schedule" | "confirm">("topic");
 
-  // API calls - lazy load khi cần
   const { data: topicsResponse, isLoading: topicsLoading } =
     useSingleSessionTopics(mentorId, { enabled: isOpen && step === "topic" });
 
@@ -53,12 +52,8 @@ export default function BookingModal({
       enabled: isOpen && step === "schedule",
     });
 
-  console.log("Topics Response:", topicsResponse);
-  console.log("Schedules Response:", schedulesResponse);
-
   const createBookingMutation = useCreateBookingWithPayment();
 
-  // API trả về array trực tiếp trong payload
   const topics = (topicsResponse?.payload || []) as SingleSessionTopicType[];
   const schedules = (schedulesResponse?.payload?.data ||
     []) as MentorWorkScheduleType[];
@@ -86,7 +81,6 @@ export default function BookingModal({
       });
 
       setIsOpen(false);
-      // Reset state
       setSelectedTopic(null);
       setSelectedSchedule(null);
       setStep("topic");

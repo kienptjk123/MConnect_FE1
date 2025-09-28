@@ -81,7 +81,6 @@ export default function NotificationItem({
     (friend) => friend.sender.id === notification.relatedUserId
   );
 
-  console.log("👥 [NotificationItem] Friend request found:", friends);
   return (
     <Card
       className={`p-4 cursor-pointer transition-all hover:shadow-md ${

@@ -49,11 +49,6 @@ export const CallManager: React.FC = () => {
     });
 
     const unsubscribeAccepted = onCallAccepted((data) => {
-      console.log("📞 [CallManager] Call accepted event received:", data);
-      console.log(
-        "📞 [CallManager] Current call state before update:",
-        currentCall
-      );
       if (data.call) {
         const updatedCall = { ...data.call, status: "ACCEPTED" };
         console.log("📞 [CallManager] Setting current call to:", updatedCall);
@@ -67,7 +62,6 @@ export const CallManager: React.FC = () => {
     const unsubscribeDeclined = onCallDeclined((data) => {
       console.log("📞 [Call] Call declined:", data);
       if (data.call) {
-        setCurrentCall({ ...data.call, status: "DECLINED" });
         setTimeout(() => {
           setCurrentCall(null);
           setIncomingCall(null);
@@ -83,8 +77,6 @@ export const CallManager: React.FC = () => {
     });
 
     const unsubscribeEnded = onCallEnded((data) => {
-      console.log("📞 [Call] Call ended:", data);
-      // Update call status before clearing
       if (data.call) {
         setCurrentCall({ ...data.call, status: "ENDED" });
         setTimeout(() => {
@@ -102,7 +94,6 @@ export const CallManager: React.FC = () => {
     });
 
     const unsubscribeMissed = onCallMissed((data) => {
-      console.log("📞 [Call] Call missed:", data);
       setCurrentCall(null);
       setIncomingCall(null);
       setOutgoingCall(null);
@@ -138,9 +129,6 @@ export const CallManager: React.FC = () => {
   };
 
   const handleEndCall = async () => {
-    console.log("📞 [CallManager] Handling end call");
-
-    // Call API to end call if there's a current call
     if (currentCall) {
       try {
         await endCallMutation.mutateAsync({
@@ -166,7 +154,6 @@ export const CallManager: React.FC = () => {
     setCallState("active");
   };
 
-  // Watch for call status changes to auto-end call
   useEffect(() => {
     if (
       currentCall &&
@@ -174,21 +161,14 @@ export const CallManager: React.FC = () => {
         currentCall.status === "DECLINED" ||
         currentCall.status === "MISSED")
     ) {
-      console.log(
-        "📞 [Call] Auto-ending call due to status:",
-        currentCall.status
-      );
       handleEndCall();
     }
   }, [currentCall?.status]);
 
   const initiateOutgoingCall = (call: CallType) => {
-    console.log(
-      "📞 [CallManager] Initiating outgoing call, going directly to CallScreen"
-    );
     setOutgoingCall(call);
     setCurrentCall(call);
-    setCallState("active"); // Go directly to active call screen instead of outgoing
+    setCallState("active");
   };
 
   // Expose method to window for access from other components
@@ -204,7 +184,6 @@ export const CallManager: React.FC = () => {
 
   return (
     <AnimatePresence>
-      {/* Incoming Call Modal */}
       {callState === "incoming" && incomingCall && (
         <IncomingCallModal
           call={incomingCall}
@@ -213,7 +192,6 @@ export const CallManager: React.FC = () => {
         />
       )}
 
-      {/* Outgoing Call Screen */}
       {(callState === "outgoing" || callState === "ringing") &&
         outgoingCall && (
           <OutgoingCallScreen
@@ -225,7 +203,6 @@ export const CallManager: React.FC = () => {
           />
         )}
 
-      {/* Active Call Screen */}
       {(callState === "active" || callState === "minimized") && currentCall && (
         <CallScreen
           call={currentCall}

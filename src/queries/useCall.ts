@@ -56,11 +56,9 @@ export const useAcceptCallMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (callId: number) => {
-      console.log("📞 [API] Accepting call:", callId);
       return callApiRequest.acceptCall(callId);
     },
     onSuccess: (data) => {
-      console.log("📞 [API] Accept call success:", data);
       queryClient.invalidateQueries({ queryKey: ["calls"] });
       toast.success("Đã chấp nhận cuộc gọi");
     },

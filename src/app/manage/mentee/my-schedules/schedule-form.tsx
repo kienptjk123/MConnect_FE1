@@ -112,8 +112,6 @@ export default function ScheduleForm() {
             }),
         }
       );
-
-      console.log("update", editingId, values);
     }
   };
 

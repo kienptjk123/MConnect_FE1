@@ -848,7 +848,6 @@ export const MessageContainer = () => {
     let socketCleanup: (() => void) | null = null;
     if (socket) {
       const handleNewMessage = (data: any) => {
-        console.log("🆕 [Socket] Direct new_message event:", data);
         refetchConversations();
 
         if (data.conversationId === selectedConversationId && data.message) {
@@ -872,10 +871,6 @@ export const MessageContainer = () => {
               return updated;
             }
 
-            console.log(
-              "➕ [Socket] Adding new direct real-time message:",
-              data.message.id
-            );
             return [...prev, data.message];
           });
         }
@@ -888,12 +883,9 @@ export const MessageContainer = () => {
       };
     }
 
-    const unsubscribeMessageRead = onMessageRead((data: any) => {
-      console.log("👁️ [Socket] Message read:", data);
-    });
+    const unsubscribeMessageRead = onMessageRead((data: any) => {});
 
     const unsubscribeTypingStart = onTypingStart((data: any) => {
-      console.log("✏️ [Socket] User started typing:", data);
       if (
         data.conversationId === selectedConversationId &&
         data.userId !== currentUserId
@@ -903,7 +895,6 @@ export const MessageContainer = () => {
     });
 
     const unsubscribeTypingStop = onTypingStop((data: any) => {
-      console.log("✏️ [Socket] User stopped typing:", data);
       if (
         data.conversationId === selectedConversationId &&
         data.userId !== currentUserId

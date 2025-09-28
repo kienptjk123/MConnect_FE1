@@ -34,7 +34,6 @@ const PRIVATE_PATHS = Object.values(ROLE_PATHS)
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware cho các path đặc biệt
   if (
     pathname.startsWith("/api/") ||
     pathname.startsWith("/_next/") ||
@@ -43,13 +42,6 @@ export function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
-
-  // Add debug logging
-  console.log("🔍 [Middleware] Processing request:", {
-    pathname,
-    hasAccessToken: !!request.cookies.get("accessToken")?.value,
-    hasRefreshToken: !!request.cookies.get("refreshToken")?.value,
-  });
 
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;

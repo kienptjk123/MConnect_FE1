@@ -71,12 +71,10 @@ export const useWebRTC = ({
   const initializePeerConnection = useCallback(async () => {
     if (!callId || peerConnectionRef.current) return peerConnectionRef.current;
 
-    console.log("🔊 [WebRTC] Initializing RTCPeerConnection...");
     const pc = new RTCPeerConnection(configuration);
     peerConnectionRef.current = pc;
 
     pc.ontrack = (event) => {
-      console.log("🔊 [WebRTC] Remote stream received");
       setRemoteStream(event.streams[0]);
       if (remoteVideoRef.current)
         remoteVideoRef.current.srcObject = event.streams[0];
@@ -84,13 +82,11 @@ export const useWebRTC = ({
 
     pc.onicecandidate = (event) => {
       if (event.candidate && callId) {
-        console.log("📤 [WebRTC] Sending ICE candidate");
         sendWebRTCSignal(callId, "ice-candidate", event.candidate);
       }
     };
 
     pc.onconnectionstatechange = () => {
-      console.log("🔊 [WebRTC] Connection state:", pc.connectionState);
       setIsConnected(pc.connectionState === "connected");
       if (pc.connectionState === "connected") setIsConnecting(false);
 
@@ -103,13 +99,11 @@ export const useWebRTC = ({
     return pc;
   }, [callId, sendWebRTCSignal, onCallEnd]);
 
-  // Caller: create offer
   const createOffer = useCallback(async () => {
     const pc = peerConnectionRef.current;
     if (!pc || !callId || isCallInitializedRef.current) return;
 
     try {
-      console.log("📞 [WebRTC] Creating offer...");
       isCallInitializedRef.current = true;
       setIsConnecting(true);
 
@@ -117,23 +111,18 @@ export const useWebRTC = ({
       await pc.setLocalDescription(offer);
 
       sendWebRTCSignal(callId, "offer", offer);
-      console.log("📤 [WebRTC] Offer sent");
     } catch (err: any) {
       setError(`Không thể tạo offer: ${err.message}`);
       isCallInitializedRef.current = false;
     }
   }, [callId, sendWebRTCSignal]);
 
-  // Callee: create answer
   const createAnswer = useCallback(
     async (offer: RTCSessionDescriptionInit) => {
       const pc = peerConnectionRef.current;
       if (!pc || !callId) return;
 
       try {
-        console.log("📞 [WebRTC] Creating answer...");
-        console.log("PC Signaling state before answer:", pc.signalingState);
-
         if (pc.signalingState !== "stable" || pc.remoteDescription) {
           console.warn(
             "⚠️ Cannot apply offer, current state:",
@@ -147,7 +136,6 @@ export const useWebRTC = ({
         await pc.setLocalDescription(answer);
 
         sendWebRTCSignal(callId, "answer", answer);
-        console.log("📤 [WebRTC] Answer sent");
 
         // Flush queued ICE
         for (const c of pendingCandidates.current) {
@@ -188,7 +176,6 @@ export const useWebRTC = ({
                 new RTCSessionDescription(data.data)
               );
               setIsConnecting(false);
-              console.log("✅ [WebRTC] Answer applied");
             } else {
               console.log(
                 "⚠️ [WebRTC] Ignored duplicate answer, state:",
@@ -230,7 +217,6 @@ export const useWebRTC = ({
   // Start call
   const startCall = useCallback(async () => {
     if (isCallInitializedRef.current) {
-      console.log("🔁 [WebRTC] Already initialized, skipping...");
       return true;
     }
 

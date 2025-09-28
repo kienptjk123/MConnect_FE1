@@ -145,23 +145,17 @@ export default function NotificationDropdown({
       fetchUnreadCount(userProfile.id);
     });
 
-    // Listen for friend request received (specific event)
     const unsubscribeFriendRequestReceived = onFriendRequestReceived((data) => {
-      console.log("👥 [Socket] Friend request received:", data);
-
-      // Add notification to store if provided
       if (data.notification) {
         addNotification(data.notification);
       }
 
-      // Show specific friend request toast
       toast({
         title: "Friend Request Received",
         description: `${data.requester || "Someone"} sent you a friend request`,
         duration: 5000,
       });
 
-      // Refresh unread count
       fetchUnreadCount(userProfile.id);
     });
 
@@ -451,7 +445,6 @@ export default function NotificationDropdown({
             )}
           </ScrollArea>
 
-          {/* Footer */}
           {notifications.length > 0 && (
             <>
               <Separator />

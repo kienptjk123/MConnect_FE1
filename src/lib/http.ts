@@ -152,12 +152,6 @@ const request = async <Response>(
       );
     } else if (fetchResponse.status === AUTHENTICATION_ERROR_STATUS) {
       if (isClient) {
-        console.log("🚨 [HTTP] 401 Error detected:", {
-          url: fullUrl,
-          method,
-        });
-
-        // Check if we have a refresh token before logging out
         const refreshToken = getRefreshTokenFromLocalStorage();
         const currentPath = window.location.pathname;
 
