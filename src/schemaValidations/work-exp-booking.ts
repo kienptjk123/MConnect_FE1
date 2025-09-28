@@ -91,7 +91,7 @@ export const WorkBookingsResSchema = z.object({
 export const WorkBookingCreateSchema = z.object({
   workExperiencePackageId: z.number(),
   menteeProfileId: z.number(),
-  startDate: z.string(), // today + 3 days
+  startDate: z.date(), // today + 3 days
   price: z.string(), // price from price in package
 });
 
