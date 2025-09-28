@@ -33,17 +33,17 @@ export const useWebRTC = ({
       { urls: "stun:stun.l.google.com:19302" },
       { urls: "stun:stun1.l.google.com:19302" },
       {
-        urls: "turn:turn.developgenderhealth.com:3478?transport=udp",
+        urls: "turn:turn.developgenderhealth.io.vn:3478?transport=udp",
         username: "turnuser",
         credential: "turnpass",
       },
       {
-        urls: "turn:turn.developgenderhealth.com:3478?transport=tcp",
+        urls: "turn:turn.developgenderhealth.io.vn:3478?transport=tcp",
         username: "turnuser",
         credential: "turnpass",
       },
       {
-        urls: "turns:turn.developgenderhealth.com:5349?transport=tcp", // nếu bật TLS
+        urls: "turns:turn.developgenderhealth.io.vn:5349?transport=tcp", // nếu bật TLS
         username: "turnuser",
         credential: "turnpass",
       },
