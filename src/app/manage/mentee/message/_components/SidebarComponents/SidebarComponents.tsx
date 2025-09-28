@@ -266,8 +266,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   };
 
   const truncateMessage = (content: string, maxLength: number = 50) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + "...";
+    if (content?.length <= maxLength) return content;
+    return content?.substring(0, maxLength) + "...";
   };
 
   return (
