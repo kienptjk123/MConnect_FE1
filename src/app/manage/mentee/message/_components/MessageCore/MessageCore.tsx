@@ -1,37 +1,18 @@
 "use client";
 
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
-import { UserType } from "@/schemaValidations/friends.schema";
+import chatApiRequest from "@/apiRequests/chat";
+import { AddMembersDialog } from "@/app/manage/mentee/message/_components/AddMemberDialog/AddMembersDialog";
+import { ChatArea } from "@/app/manage/mentee/message/_components/ChatComponents/ChatComponents";
+import { CreateGroupDialog } from "@/app/manage/mentee/message/_components/CreateGroupDialog/CreateGroupDialog";
 import {
-  Conversation,
-  Message,
-  SendMessageBody,
-} from "@/schemaValidations/chat.schema";
-import {
-  useGetConversations,
-  useGetMessages,
-  useGetInfiniteMessages,
-  useSendMessage,
-  useCreateConversation,
-} from "@/queries/useChat";
+  ConversationList,
+  FriendsList,
+  MessageSearch,
+} from "@/app/manage/mentee/message/_components/SidebarComponents/SidebarComponents";
 import { useSocket } from "@/components/SocketProvider";
-import {
-  useProfile,
-  useFetchProfile,
-  useProfileLoading,
-} from "@/stores/profileStore";
-import { useSelectedFriend } from "@/stores/friendsStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Check, CheckCheck, MoreHorizontal } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,19 +20,53 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  ConversationList,
-  FriendsList,
-  MessageSearch,
-} from "@/app/manage/mentee/message/_components/SidebarComponents/SidebarComponents";
-import { ChatArea } from "@/app/manage/mentee/message/_components/ChatComponents/ChatComponents";
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  useCreateConversation,
+  useGetConversations,
+  useGetInfiniteMessages,
+  useSendMessage,
+} from "@/queries/useChat";
+import {
+  CreateConversationBody,
+  Message,
+  SendMessageBody,
+} from "@/schemaValidations/chat.schema";
+import { UserType } from "@/schemaValidations/friends.schema";
+import { useSelectedFriend } from "@/stores/friendsStore";
+import {
+  useFetchProfile,
+  useProfile,
+  useProfileLoading,
+} from "@/stores/profileStore";
+import { MoreHorizontal, UserPlus } from "lucide-react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 // MessageItem Component
 interface MessageItemProps {
   message: Message;
   currentUserId: number;
   isOwnMessage: boolean;
+  isGroupChat?: boolean;
   onEdit?: (messageId: number) => void;
   onDelete?: (messageId: number) => void;
+  editingMessage?: {
+    id: number;
+    content: string;
+  } | null;
+  onSaveEdit?: (newContent: string) => void;
+  onCancelEdit?: () => void;
   onReply?: (messageId: number) => void;
 }
 
@@ -59,10 +74,29 @@ const MessageItem: React.FC<MessageItemProps> = ({
   message,
   currentUserId,
   isOwnMessage,
+  isGroupChat = false,
   onEdit,
   onDelete,
+  editingMessage,
+  onSaveEdit,
+  onCancelEdit,
   onReply,
 }) => {
+  const [editContent, setEditContent] = useState("");
+  const isEditing = editingMessage?.id === message.id;
+
+  useEffect(() => {
+    if (isEditing && editingMessage) {
+      setEditContent(editingMessage.content);
+    }
+  }, [isEditing, editingMessage]);
+
+  const handleSaveEdit = () => {
+    if (editContent.trim() && onSaveEdit) {
+      onSaveEdit(editContent.trim());
+    }
+  };
+
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleTimeString("vi-VN", {
@@ -76,6 +110,27 @@ const MessageItem: React.FC<MessageItemProps> = ({
     return name.charAt(0).toUpperCase();
   };
 
+  const getSenderName = () => {
+    if (!message?.sender) return "Unknown User";
+
+    // Check different profile types for the sender name
+    if (message.sender.menteeProfiles?.name) {
+      return message.sender.menteeProfiles.name;
+    }
+    if (message.sender.mentorProfiles?.name) {
+      return message.sender.mentorProfiles.name;
+    }
+    if (message.sender.adminProfiles?.name) {
+      return message.sender.adminProfiles.name;
+    }
+    if (message.sender.StaffProfile?.name) {
+      return message.sender.StaffProfile.name;
+    }
+
+    // Fallback to email username
+    return message.sender.email?.split("@")[0] || "Unknown User";
+  };
+
   const isRead =
     message.readReceipts?.some(
       (receipt) => receipt.userId !== message.senderId
@@ -85,7 +140,7 @@ const MessageItem: React.FC<MessageItemProps> = ({
 
   return (
     <div
-      className={`flex gap-3 p-2 group hover:bg-gray-50 rounded-lg ${
+      className={`flex gap-3 p-2 items-center  group hover:bg-gray-50 rounded-lg ${
         isOwnMessage ? "flex-row-reverse" : "flex-row"
       }`}
     >
@@ -113,69 +168,130 @@ const MessageItem: React.FC<MessageItemProps> = ({
           </div>
         )}
 
-        <div
-          className={`relative group/message p-3 rounded-lg max-w-full break-words ${
-            isOwnMessage
-              ? "bg-blue-500 text-white rounded-br-sm"
-              : "bg-white border border-gray-200 rounded-bl-sm"
-          }`}
-        >
-          {message.content}
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={`absolute top-1 right-1 h-6 w-6 opacity-0 group-hover/message:opacity-100 transition-opacity ${
-                  isOwnMessage
-                    ? "text-white hover:bg-blue-600"
-                    : "light:text-gray-400 hover:bg-gray-100"
-                }`}
-              >
-                <MoreHorizontal className="h-3 w-3" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onReply?.(message.id)}>
-                Reply
-              </DropdownMenuItem>
-              {isOwnMessage && (
-                <>
-                  <DropdownMenuItem onClick={() => onEdit?.(message.id)}>
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => onDelete?.(message.id)}
-                    className="text-red-600"
+        {!isOwnMessage ? (
+          <>
+            {isGroupChat && (
+              <div className="text-xs font-medium text-gray-600 mb-1 ml-1">
+                {getSenderName()}
+              </div>
+            )}
+            <div className="flex group/message items-center">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="p-3 rounded-lg max-w-full break-words bg-white border border-gray-200 rounded-bl-sm">
+                      {message.content}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className="bg-white text-gray-800 border border-gray-200 shadow-md rounded px-2 py-1"
+                    side="left"
                   >
-                    Delete
+                    <p className="text-xs  text-gray-800">
+                      {formatTime(message.createdAt)}
+                      {message.editedAt && " (edited)"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 mr-2 opacity-0 group-hover/message:opacity-100 transition-opacity light:text-gray-400 hover:bg-gray-100"
+                  >
+                    <MoreHorizontal className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onReply?.(message.id)}>
+                    Reply
                   </DropdownMenuItem>
-                </>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        <div
-          className={`flex items-center gap-1 mt-1 text-xs light:text-gray-500 ${
-            isOwnMessage ? "flex-row-reverse" : "flex-row"
-          }`}
-        >
-          <span>{formatTime(message.createdAt)}</span>
-          {message.editedAt && <span className="italic">(edited)</span>}
-          {isOwnMessage && (
-            <div className="flex items-center">
-              {isRead ? (
-                <CheckCheck className="h-3 w-3 text-blue-500" />
-              ) : isDelivered ? (
-                <CheckCheck className="h-3 w-3" />
-              ) : (
-                <Check className="h-3 w-3" />
-              )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          )}
-        </div>
+          </>
+        ) : (
+          <>
+            <div className="flex group/message items-center">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-6 w-6 opacity-0 group-hover/message:opacity-100 transition-opacity light:text-gray-400 hover:bg-gray-100"
+                  >
+                    <MoreHorizontal className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => onReply?.(message.id)}>
+                    Reply
+                  </DropdownMenuItem>
+                  <>
+                    <DropdownMenuItem onClick={() => onEdit?.(message.id)}>
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => onDelete?.(message.id)}
+                      className="text-red-600"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    {isEditing ? (
+                      <div className="p-3 rounded-lg max-w-full bg-blue-500 text-white rounded-br-sm">
+                        <Textarea
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className="min-h-[60px] bg-blue-400 border-blue-300 text-white placeholder-blue-200 resize-none"
+                          placeholder="Edit your message..."
+                        />
+                        <div className="flex gap-2 mt-2">
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={handleSaveEdit}
+                            className="bg-white text-blue-500 hover:bg-gray-100"
+                          >
+                            Save
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={onCancelEdit}
+                            className="text-white hover:bg-blue-400"
+                          >
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-3 rounded-lg max-w-full break-words bg-blue-500 text-white rounded-br-sm">
+                        {message.content}
+                      </div>
+                    )}
+                  </TooltipTrigger>
+                  <TooltipContent
+                    className="bg-white text-gray-800 border border-gray-200 shadow-md rounded px-2 py-1"
+                    side="bottom"
+                  >
+                    <p className="text-xs  text-gray-800">
+                      {formatTime(message.createdAt)}
+                      {message.editedAt && " (edited)"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -185,9 +301,16 @@ const MessageItem: React.FC<MessageItemProps> = ({
 interface MessageListProps {
   messages: Message[];
   currentUserId: number;
+  isGroupChat?: boolean;
   loading?: boolean;
   onEdit?: (messageId: number) => void;
   onDelete?: (messageId: number) => void;
+  editingMessage?: {
+    id: number;
+    content: string;
+  } | null;
+  onSaveEdit?: (newContent: string) => void;
+  onCancelEdit?: () => void;
   onReply?: (messageId: number) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
@@ -203,9 +326,13 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>(
     {
       messages,
       currentUserId,
+      isGroupChat = false,
       loading = false,
       onEdit,
       onDelete,
+      editingMessage,
+      onSaveEdit,
+      onCancelEdit,
       onReply,
       onLoadMore,
       hasMore = false,
@@ -274,6 +401,22 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>(
       );
     }
 
+    const shouldShowTimestamp = (current: Date, previous?: Date) => {
+      if (!previous) return true;
+      const diff = current.getTime() - previous.getTime();
+      const diffMinutes = diff / (1000 * 60);
+      return diffMinutes >= 30;
+    };
+
+    const isDifferentDay = (current: Date, previous?: Date) => {
+      if (!previous) return true;
+      return (
+        current.getFullYear() !== previous.getFullYear() ||
+        current.getMonth() !== previous.getMonth() ||
+        current.getDate() !== previous.getDate()
+      );
+    };
+
     return (
       <div
         ref={scrollRef}
@@ -309,17 +452,51 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>(
             <p className="light:text-gray-500">Start the conversation!</p>
           </div>
         ) : (
-          messages.map((message, index) => (
-            <MessageItem
-              key={`${message.id}-${index}`}
-              message={message}
-              currentUserId={currentUserId}
-              isOwnMessage={message.senderId === currentUserId}
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onReply={onReply}
-            />
-          ))
+          messages.map((msg, index) => {
+            const prevMsg = index > 0 ? messages[index - 1] : undefined;
+            const currentDate = new Date(msg.updatedAt);
+            const prevDate = prevMsg ? new Date(prevMsg.updatedAt) : undefined;
+
+            const showDateDivider = isDifferentDay(currentDate, prevDate);
+            const showTime = shouldShowTimestamp(currentDate, prevDate);
+
+            return (
+              <div key={msg.id} className="flex flex-col">
+                {showDateDivider && (
+                  <div className="text-center text-xs text-gray-500 my-4">
+                    {currentDate.toLocaleDateString("vi-VN", {
+                      weekday: "short",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
+                  </div>
+                )}
+
+                {showTime && !showDateDivider && (
+                  <div className="text-xs text-gray-400 text-center mt-1">
+                    {currentDate.toLocaleTimeString("vi-VN", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </div>
+                )}
+
+                <MessageItem
+                  message={msg}
+                  currentUserId={currentUserId}
+                  isOwnMessage={msg.senderId === currentUserId}
+                  isGroupChat={isGroupChat}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  editingMessage={editingMessage}
+                  onSaveEdit={onSaveEdit}
+                  onCancelEdit={onCancelEdit}
+                  onReply={onReply}
+                />
+              </div>
+            );
+          })
         )}
       </div>
     );
@@ -328,7 +505,6 @@ const MessageList = forwardRef<MessageListRef, MessageListProps>(
 
 MessageList.displayName = "MessageList";
 
-// Main MessageContainer Component
 export const MessageContainer = () => {
   const [searchValue, setSearchValue] = useState("");
   const [activeTab, setActiveTab] = useState<"All" | "Unread" | "Unresolved">(
@@ -348,13 +524,22 @@ export const MessageContainer = () => {
   );
   const [profileError, setProfileError] = useState<string | null>(null);
 
+  // Dialog states
+  const [createGroupDialogOpen, setCreateGroupDialogOpen] = useState(false);
+  const [addMembersDialogOpen, setAddMembersDialogOpen] = useState(false);
+
+  // Edit message state
+  const [editingMessage, setEditingMessage] = useState<{
+    id: number;
+    content: string;
+  } | null>(null);
+
   const profile = useProfile();
   const fetchProfile = useFetchProfile();
   const isProfileLoading = useProfileLoading();
   const currentUserId = profile?.id || 0;
   const selectedFriend = useSelectedFriend();
 
-  // Fetch profile when component mounts
   useEffect(() => {
     if (!profile && !isProfileLoading) {
       setProfileError(null);
@@ -411,6 +596,7 @@ export const MessageContainer = () => {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch: refetchMessages,
     error: messagesError,
   } = useGetInfiniteMessages(selectedConversationId || 0, 20);
 
@@ -542,6 +728,85 @@ export const MessageContainer = () => {
 
   const handleCancelReply = () => setReplyToMessage(undefined);
 
+  // Edit and Delete handlers
+  const handleEditMessage = (messageId: number) => {
+    const message = allMessages.find((m: any) => m.id === messageId);
+    if (message) {
+      setEditingMessage({
+        id: messageId,
+        content: message.content,
+      });
+    }
+  };
+
+  const handleSaveEdit = async (newContent: string) => {
+    if (!editingMessage || !selectedConversationId) return;
+
+    try {
+      await chatApiRequest.editMessage(
+        selectedConversationId,
+        editingMessage.id,
+        { content: newContent }
+      );
+      refetchMessages(); // Refetch messages to update the UI
+      setEditingMessage(null); // Clear editing state
+    } catch (error) {
+      console.error("Failed to edit message:", error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
+  };
+
+  const handleDeleteMessage = async (messageId: number) => {
+    if (!selectedConversationId) return;
+
+    try {
+      await chatApiRequest.deleteMessage(selectedConversationId, messageId);
+      refetchMessages(); // Refetch messages to update the UI
+    } catch (error) {
+      console.error("Failed to delete message:", error);
+    }
+  };
+
+  // Dialog handlers
+  const handleCreateGroup = () => {
+    setCreateGroupDialogOpen(true);
+  };
+
+  const handleAddMembers = () => {
+    setAddMembersDialogOpen(true);
+  };
+
+  const handleCreateGroupSubmit = (data: CreateConversationBody) => {
+    createConversationMutation.mutate(data, {
+      onSuccess: (response) => {
+        setCreateGroupDialogOpen(false);
+        refetchConversations();
+        // Auto-select the new conversation
+        if (response.payload.result?.id) {
+          setSelectedConversationId(response.payload.result.id);
+        }
+      },
+    });
+  };
+
+  const handleAddMembersSubmit = (memberIds: number[]) => {
+    if (!selectedConversationId) return;
+
+    // We need to use the API directly here since we can't call hooks inside handlers
+    chatApiRequest
+      .addMembers(selectedConversationId, memberIds)
+      .then(() => {
+        setAddMembersDialogOpen(false);
+        refetchConversations();
+      })
+      .catch((error: any) => {
+        console.error("Failed to add members:", error);
+      });
+  };
+
   useEffect(() => {
     setRealTimeMessages([]);
   }, [selectedConversationId]);
@@ -668,9 +933,6 @@ export const MessageContainer = () => {
 
   const handleSendMessageSocket = (messageBody: SendMessageBody) => {
     if (!selectedConversationId || !connected) return;
-
-    console.log("📤 [Socket] Sending message via socket:", messageBody);
-
     sendSocketMessage(
       selectedConversationId,
       messageBody.content,
@@ -763,9 +1025,27 @@ export const MessageContainer = () => {
     <div className="flex light:bg-gray-50 overflow-hidden h-full">
       <div className="w-80 light:bg-white border-r border-gray-200 flex flex-col">
         <div className="p-4 border-b">
-          <h1 className="text-xl font-bold light:text-gray-900 mb-4">
-            Messages
-          </h1>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-xl font-bold light:text-gray-900">Messages</h1>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-9 w-9 hover:bg-blue-50 hover:text-blue-600"
+                    onClick={handleCreateGroup}
+                    title="Create New Group"
+                  >
+                    <UserPlus size={20} />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Create New Group</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <div className="flex gap-2 mb-4">
             <button
               onClick={() => setShowFriends(true)}
@@ -825,12 +1105,17 @@ export const MessageContainer = () => {
             onSendMessage={
               connected ? handleSendMessageSocket : handleSendMessage
             }
+            onCreateGroup={handleCreateGroup}
+            onAddMembers={handleAddMembers}
             loading={messagesLoading || sendMessageMutation.isPending}
             replyToMessage={replyToMessage}
             onCancelReply={handleCancelReply}
             onReply={handleReply}
-            onEdit={(id: number) => console.log("Edit message:", id)}
-            onDelete={(id: number) => console.log("Delete message:", id)}
+            onEdit={handleEditMessage}
+            onDelete={handleDeleteMessage}
+            editingMessage={editingMessage}
+            onSaveEdit={handleSaveEdit}
+            onCancelEdit={handleCancelEdit}
             typingUsers={typingUsers}
             onStartTyping={() =>
               selectedConversationId && startTyping(selectedConversationId)
@@ -870,9 +1155,27 @@ export const MessageContainer = () => {
           </div>
         )}
       </div>
+
+      {/* Dialogs */}
+      <CreateGroupDialog
+        open={createGroupDialogOpen}
+        onOpenChange={setCreateGroupDialogOpen}
+        onCreateGroup={handleCreateGroupSubmit}
+        isLoading={createConversationMutation.isPending}
+      />
+
+      {selectedConversation && (
+        <AddMembersDialog
+          open={addMembersDialogOpen}
+          onOpenChange={setAddMembersDialogOpen}
+          conversation={selectedConversation as any}
+          onAddMembers={handleAddMembersSubmit}
+          isLoading={false}
+        />
+      )}
     </div>
   );
 };
 
 // Export MessageList for use in ChatComponents
-export { MessageList, MessageItem };
+export { MessageItem, MessageList };

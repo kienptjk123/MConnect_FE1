@@ -203,3 +203,10 @@
   outline: 1.5px dashed #d1d5db; /* var(--light) => màu xám Tailwind */
   border-radius: 10px;
 }
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+.z-\[100000\] {
+  z-index: 100000 !important;
+}

@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import SmoothScrollProvider from "@/components/smooth-scroll-provider";
+import { CallManager } from "@/components/CallManager";
+import { CallTest } from "@/components/CallTest";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,6 +45,7 @@ export default function RootLayout({
           <SmoothScrollProvider>
             <AppProviders>
               <main>{children}</main>
+              <CallManager />
             </AppProviders>
           </SmoothScrollProvider>
         </ThemeProvider>

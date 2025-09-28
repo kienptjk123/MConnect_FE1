@@ -67,35 +67,22 @@ export function useGetInfiniteMessages(
           page: pageParam,
           limit: limit,
         });
-        console.log("📡 [useGetInfiniteMessages] API Response:", response);
         return response;
       } catch (error) {
-        console.error("❌ [useGetInfiniteMessages] API Error:", error);
         throw error;
       }
     },
     getNextPageParam: (lastPage: any) => {
-      console.log("🔍 [useGetInfiniteMessages] Checking lastPage:", lastPage);
-
       try {
-        // Handle different response structures safely
         const result = lastPage?.payload?.result || lastPage?.result;
-        console.log("📦 [useGetInfiniteMessages] Result structure:", result);
 
         if (!result) {
-          console.warn(
-            "⚠️ [useGetInfiniteMessages] No result found in response"
-          );
           return undefined;
         }
 
         const pagination = result.pagination;
-        console.log("📄 [useGetInfiniteMessages] Pagination info:", pagination);
 
         if (!pagination) {
-          console.warn(
-            "⚠️ [useGetInfiniteMessages] No pagination found in result"
-          );
           return undefined;
         }
 
@@ -108,31 +95,14 @@ export function useGetInfiniteMessages(
         const hasNextPage = currentPage < totalPages;
         const nextPage = hasNextPage ? currentPage + 1 : undefined;
 
-        console.log("➡️ [useGetInfiniteMessages] Next page:", {
-          currentPage,
-          totalPages,
-          hasNextPage,
-          nextPage,
-        });
-
         return nextPage;
       } catch (error) {
-        console.error(
-          "❌ [useGetInfiniteMessages] Error in getNextPageParam:",
-          error
-        );
         return undefined;
       }
     },
     initialPageParam: 1,
     enabled: !!conversationId,
     retry: (failureCount, error) => {
-      console.log(
-        "🔄 [useGetInfiniteMessages] Retry attempt:",
-        failureCount,
-        error
-      );
-      // Retry up to 2 times for network errors
       if (
         failureCount < 2 &&
         error instanceof Error &&
@@ -146,7 +116,6 @@ export function useGetInfiniteMessages(
   });
 }
 
-// Hook để tạo cuộc hội thoại mới
 export function useCreateConversation() {
   const queryClient = useQueryClient();
   const profile = useProfile();
@@ -154,7 +123,6 @@ export function useCreateConversation() {
   return useMutation({
     mutationFn: chatApiRequest.createConversation,
     onSuccess: (data) => {
-      // Invalidate conversations list
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversations(),
       });
@@ -197,7 +165,6 @@ export function useCreateDirectConversation() {
       return chatApiRequest.createConversation(body);
     },
     onSuccess: (data) => {
-      // Invalidate conversations list
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversations(),
       });
@@ -219,7 +186,6 @@ export function useCreateDirectConversation() {
   });
 }
 
-// Hook để gửi tin nhắn
 export function useSendMessage(
   conversationId: number,
   onMessageSent?: () => void
@@ -231,20 +197,16 @@ export function useSendMessage(
     mutationFn: (body: SendMessageBody) =>
       chatApiRequest.sendMessage(conversationId, body),
     onSuccess: (data) => {
-      // Invalidate messages list
       queryClient.invalidateQueries({
         queryKey: chatKeys.messages(conversationId),
       });
-      // Invalidate conversations list để cập nhật lastMessage
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversations(),
       });
-      // Invalidate conversation detail
       queryClient.invalidateQueries({
         queryKey: chatKeys.conversation(conversationId),
       });
 
-      // Trigger scroll to bottom after sending message
       onMessageSent?.();
     },
     onError: (error: any) => {
@@ -266,7 +228,6 @@ export function useEditMessage(conversationId: number, messageId: number) {
     mutationFn: (body: EditMessageBody) =>
       chatApiRequest.editMessage(conversationId, messageId, body),
     onSuccess: () => {
-      // Invalidate messages list
       queryClient.invalidateQueries({
         queryKey: chatKeys.messages(conversationId),
       });
@@ -293,7 +254,6 @@ export function useDeleteMessage(conversationId: number, messageId: number) {
   return useMutation({
     mutationFn: () => chatApiRequest.deleteMessage(conversationId, messageId),
     onSuccess: () => {
-      // Invalidate messages list
       queryClient.invalidateQueries({
         queryKey: chatKeys.messages(conversationId),
       });

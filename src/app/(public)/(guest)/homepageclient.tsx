@@ -3,7 +3,10 @@
 import dynamic from "next/dynamic";
 
 const AnimatedSVGSection = dynamic(
-  () => import("@/components/AnimatedSVGSection/AnimatedSVGSection"),
+  () =>
+    import(
+      "@/app/(public)/(guest)/_components/AnimatedSVGSection/AnimatedSVGSection"
+    ),
   { ssr: false }
 );
 

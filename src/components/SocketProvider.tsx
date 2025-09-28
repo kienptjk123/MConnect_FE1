@@ -36,6 +36,29 @@ interface SocketContextType {
   onNewFriendAdded: (callback: (data: any) => void) => () => void;
   onNotificationUpdate: (callback: (data: any) => void) => () => void;
   onNotification: (callback: (data: any) => void) => () => void;
+  initiateCall: (
+    receiverId: number,
+    callType: "VOICE" | "VIDEO",
+    conversationId?: number
+  ) => void;
+  respondToCall: (
+    callId: number,
+    action: "accept" | "decline",
+    reason?: string
+  ) => void;
+  endCall: (callId: number, reason?: string) => void;
+  sendWebRTCSignal: (
+    callId: number,
+    type: "offer" | "answer" | "ice-candidate",
+    data: any
+  ) => void;
+
+  onIncomingCall: (callback: (data: any) => void) => () => void;
+  onCallAccepted: (callback: (data: any) => void) => () => void;
+  onCallDeclined: (callback: (data: any) => void) => () => void;
+  onCallEnded: (callback: (data: any) => void) => () => void;
+  onCallMissed: (callback: (data: any) => void) => () => void;
+  onWebRTCSignaling: (callback: (data: any) => void) => () => void;
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined);
@@ -105,10 +128,15 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     socketRef.current = socket;
 
     socket.on("connect", () => {
-      console.log("Socket Successfully connected!");
       setConnected(true);
       setConnectionStatus("connected");
       setLastError(null);
+
+      // Debug: Listen to ALL socket events
+      socket.onAny((eventName, ...args) => {
+        if (eventName.includes("call")) {
+        }
+      });
     });
 
     socket.on("disconnect", (reason) => {
@@ -127,88 +155,52 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       setConnectionStatus("error");
       setLastError(`Connection error: ${error.message || error}`);
     });
-
-    socket.on("reconnect", (attemptNumber) => {
-      console.log("🔄 [Socket] Reconnected after", attemptNumber, "attempts");
-    });
-
-    socket.on("reconnect_attempt", (attemptNumber) => {
-      console.log("🔄 [Socket] Reconnection attempt #", attemptNumber);
-    });
-
-    socket.on("reconnect_error", (error) => {
-      console.error("❌ [Socket] Reconnection error:", error);
-    });
-
-    socket.on("reconnect_failed", () => {
-      console.error("❌ [Socket] Reconnection failed - all attempts exhausted");
-    });
     return socket;
   };
 
   const reinitializeSocket = () => {
-    console.log("🔄 [Socket] Manual reinitialize requested");
     initializeSocket();
   };
 
   useEffect(() => {
-    console.log("🔌 [Socket] useEffect triggered, profile state:", {
-      hasProfile: !!profile,
-      profileId: profile?.id,
-      timestamp: new Date().toISOString(),
-    });
-
     initializeSocket();
-
     return () => {
-      console.log("🔌 [Socket] Cleanup - disconnecting socket");
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current = null;
       }
     };
-  }, [profile?.id]); // Chỉ init khi profile.id thay đổi
+  }, [profile?.id]);
 
   const sendFriendRequest = (receiverId: number, message: string) => {
     if (socketRef.current && connected) {
       socketRef.current.emit("send_friend_request", { receiverId, message });
-      console.log(`Sending friend request to user: ${receiverId}`);
     }
   };
 
   const acceptFriendRequest = (requestId: number) => {
     if (socketRef.current && connected) {
       socketRef.current.emit("accept_friend_request", { requestId });
-      console.log(`Accepting friend request: ${requestId}`);
     }
   };
 
   const declineFriendRequest = (requestId: number) => {
     if (socketRef.current && connected) {
       socketRef.current.emit("decline_friend_request", { requestId });
-      console.log(`Declining friend request: ${requestId}`);
     }
   };
 
   const joinConversation = (conversationId: number) => {
-    console.log("💬 [Socket] Joining conversation:", conversationId, {
-      connected,
-    });
     if (socketRef.current && connected) {
       socketRef.current.emit("join_conversation", { conversationId });
-      console.log("✅ [Socket] Join conversation event emitted");
     } else {
       console.warn("⚠️ [Socket] Cannot join conversation - not connected");
     }
   };
 
   const leaveConversation = (conversationId: number) => {
-    console.log("💬 [Socket] Leaving conversation:", conversationId, {
-      connected,
-    });
     if (socketRef.current && connected) {
       socketRef.current.emit("leave_conversation", { conversationId });
-      console.log("✅ [Socket] Leave conversation event emitted");
     } else {
       console.warn("⚠️ [Socket] Cannot leave conversation - not connected");
     }
@@ -219,15 +211,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     content: string,
     type: string = "TEXT"
   ) => {
-    console.log("💬 [Socket] Sending message:", {
-      conversationId,
-      content,
-      type,
-      connected,
-    });
     if (socketRef.current && connected) {
       socketRef.current.emit("send_message", { conversationId, content, type });
-      console.log("✅ [Socket] Send message event emitted");
     } else {
       console.warn("⚠️ [Socket] Cannot send message - not connected");
     }
@@ -239,29 +224,25 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
         conversationId,
         messageId,
       });
-      console.log(`Marking message as read: ${messageId}`);
     }
   };
 
   const startTyping = (conversationId: number) => {
     if (socketRef.current && connected) {
-      socketRef.current.emit("start_typing", { conversationId });
+      socketRef.current.emit("typing_start", { conversationId }); // ✅
     }
   };
-
   const stopTyping = (conversationId: number) => {
     if (socketRef.current && connected) {
-      socketRef.current.emit("stop_typing", { conversationId });
+      socketRef.current.emit("typing_stop", { conversationId }); // ✅
     }
   };
 
   // Event listeners
   const onMessageReceived = (callback: (data: any) => void) => {
     if (socketRef.current) {
-      socketRef.current.on("message_received", callback);
-      return () => {
-        socketRef.current?.off("message_received", callback);
-      };
+      socketRef.current.on("new_message", callback); // ✅ đúng với server
+      return () => socketRef.current?.off("new_message", callback);
     }
     return () => {};
   };
@@ -393,6 +374,115 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     onNewFriendAdded,
     onNotificationUpdate,
     onNotification,
+    initiateCall: (
+      receiverId: number,
+      callType: "VOICE" | "VIDEO",
+      conversationId?: number
+    ) => {
+      if (socketRef.current && connected) {
+        socketRef.current.emit("call_initiate", {
+          receiverId,
+          callType,
+          conversationId,
+        });
+      }
+    },
+
+    respondToCall: (
+      callId: number,
+      action: "accept" | "decline",
+      reason?: string
+    ) => {
+      if (socketRef.current && connected) {
+        socketRef.current.emit("call_response", { callId, action, reason });
+      }
+    },
+
+    endCall: (callId: number, reason?: string) => {
+      if (socketRef.current && connected) {
+        socketRef.current.emit("call_end", { callId, reason });
+      }
+    },
+
+    sendWebRTCSignal: (callId, type, data) => {
+      if (socketRef.current && connected) {
+        socketRef.current.emit("webrtc_signaling", { callId, type, data });
+      }
+    },
+
+    // Call event listeners
+    onIncomingCall: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("incoming_call", (data) => {
+          callback(data);
+        });
+        return () => {
+          socketRef.current?.off("incoming_call", callback);
+        };
+      }
+      return () => {};
+    },
+
+    onCallAccepted: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("call_accepted", (data) => {
+          callback(data);
+        });
+        return () => {
+          socketRef.current?.off("call_accepted", callback);
+        };
+      }
+      return () => {};
+    },
+
+    onCallDeclined: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("call_declined", callback);
+        return () => {
+          socketRef.current?.off("call_declined", callback);
+        };
+      }
+      return () => {};
+    },
+
+    onCallEnded: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("call_ended", callback);
+        return () => {
+          socketRef.current?.off("call_ended", callback);
+        };
+      }
+      return () => {};
+    },
+
+    onCallMissed: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("call_missed", callback);
+        return () => {
+          socketRef.current?.off("call_missed", callback);
+        };
+      }
+      return () => {};
+    },
+
+    onWebRTCSignaling: (callback: (data: any) => void) => {
+      if (socketRef.current) {
+        socketRef.current.on("webrtc_signaling", callback);
+        socketRef.current.on("webrtc_offer", (d) =>
+          console.log("⬅️ webrtc_offer", d)
+        );
+        socketRef.current.on("webrtc_answer", (d) =>
+          console.log("⬅️ webrtc_answer", d)
+        );
+        socketRef.current.on("webrtc_ice_candidate", (d) =>
+          console.log("⬅️ webrtc_ice_candidate", d)
+        );
+        return () => {
+          socketRef.current?.off("webrtc_signaling", callback);
+        };
+      }
+      return () => {};
+    },
   };
 
   return (

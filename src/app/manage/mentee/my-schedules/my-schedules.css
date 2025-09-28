@@ -41,3 +41,12 @@
   background: #22c55e !important;
   border: none;
 }
+.swal-custom-zindex {
+  z-index: 2000 !important; /* cao hơn Dialog */
+}
+
+.swal2-container,
+.swal2-confirm,
+.swal2-cancel {
+  z-index: 2000 !important; /* cao hơn Dialog */
+}

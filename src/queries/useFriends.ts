@@ -7,7 +7,6 @@ import { useProfile } from "@/stores/profileStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-// Hook for sending friend request
 export const useSendFriendRequest = () => {
   const queryClient = useQueryClient();
   const profile = useProfile();
@@ -20,11 +19,7 @@ export const useSendFriendRequest = () => {
     },
     onSuccess: (data, variables) => {
       toast.success("Friend request sent successfully!");
-
-      // Emit socket event
       socketSendFriendRequest(variables.receiverId, variables.message);
-
-      // Send notification via API
       if (profile?.id) {
         notificationsApiRequest
           .sendFriendRequestNotification({
@@ -35,7 +30,6 @@ export const useSendFriendRequest = () => {
           .catch(console.error);
       }
 
-      // Invalidate related queries
       queryClient.invalidateQueries({ queryKey: ["friendRequests"] });
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
@@ -46,7 +40,6 @@ export const useSendFriendRequest = () => {
   });
 };
 
-// Hook for handling friend request (accept/decline)
 export const useHandleFriendRequest = () => {
   const queryClient = useQueryClient();
   const { acceptFriendRequest, declineFriendRequest } = useSocket();
@@ -85,7 +78,6 @@ export const useHandleFriendRequest = () => {
   });
 };
 
-// Hook for getting user notifications
 export const useNotifications = (limit = 20, offset = 0) => {
   const profile = useProfile();
 
@@ -136,21 +128,17 @@ export const useFriendActions = () => {
   };
 
   return {
-    // Data
     notifications: notifications.data,
     notificationsLoading: notifications.isLoading,
     notificationsError: notifications.error,
 
-    // Actions
     sendRequest,
     acceptRequest,
     declineRequest,
 
-    // Loading states
     isSending: sendFriendRequest.isPending,
     isHandling: handleFriendRequest.isPending,
 
-    // Refetch
     refetchNotifications: notifications.refetch,
   };
 };
