@@ -41,28 +41,8 @@ export const IncomingCallModal: React.FC<IncomingCallModalProps> = ({
 
   const handleAccept = async () => {
     try {
-      console.log("📞 [IncomingCallModal] Call details:", {
-        callerId: call.callerId,
-        receiverId: call.receiverId,
-        status: call.status,
-      });
       const result = await acceptCallMutation.mutateAsync(call.id);
-      console.log(
-        "📞 [IncomingCallModal] Backend should emit to callerId:",
-        result.payload?.result.callerId
-      );
-
-      // Call onAccept immediately - don't wait for socket event
-      // The socket event should update the call status later
       onAccept();
-
-      // Also emit a manual event as backup
-      setTimeout(() => {
-        console.log(
-          "📞 [IncomingCallModal] Manual backup - notifying call accepted"
-        );
-        // This will be handled by CallManager
-      }, 100);
     } catch (error) {
       console.error("Failed to accept call:", error);
     }

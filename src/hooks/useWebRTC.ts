@@ -31,7 +31,6 @@ export const useWebRTC = ({
   const configuration: RTCConfiguration = {
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
-      { urls: "stun:stun1.l.google.com:19302" },
       {
         urls: "turn:turn.developgenderhealth.io.vn:3478?transport=udp",
         username: "turnuser",
@@ -39,11 +38,6 @@ export const useWebRTC = ({
       },
       {
         urls: "turn:turn.developgenderhealth.io.vn:3478?transport=tcp",
-        username: "turnuser",
-        credential: "turnpass",
-      },
-      {
-        urls: "turns:turn.developgenderhealth.io.vn:5349?transport=tcp", // nếu bật TLS
         username: "turnuser",
         credential: "turnpass",
       },
@@ -134,12 +128,11 @@ export const useWebRTC = ({
       if (!pc || !callId) return;
 
       try {
-        if (pc.signalingState !== "stable" || pc.remoteDescription) {
-          console.warn(
-            "⚠️ Cannot apply offer, current state:",
-            pc.signalingState
-          );
-          return;
+        if (!pc.remoteDescription) {
+          await pc.setRemoteDescription(new RTCSessionDescription(offer));
+          const answer = await pc.createAnswer();
+          await pc.setLocalDescription(answer);
+          sendWebRTCSignal(callId, "answer", answer);
         }
 
         await pc.setRemoteDescription(new RTCSessionDescription(offer));
