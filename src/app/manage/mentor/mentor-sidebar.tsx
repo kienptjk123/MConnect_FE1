@@ -91,6 +91,11 @@ const navigationItems = [
     url: "/manage/mentor/message",
     icon: MessageCircle,
   },
+  {
+    title: "Work Experience Packages",
+    url: "/manage/mentor/work-experience-package",
+    icon: MessageCircle,
+  },
 ];
 export default function MentorSidebar() {
   const location = usePathname();
