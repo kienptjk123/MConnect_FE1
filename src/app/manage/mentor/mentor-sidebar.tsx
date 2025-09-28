@@ -26,6 +26,8 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
+import { useLogoutMutation } from "@/queries/useLogout";
+import { useProfileStore } from "@/stores";
 import {
   ChevronDown,
   LayoutDashboard,
@@ -99,6 +101,9 @@ const navigationItems = [
 ];
 export default function MentorSidebar() {
   const location = usePathname();
+  const logoutMutation = useLogoutMutation();
+  const user = useProfileStore();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="dark:bg-[#080808]">
@@ -221,19 +226,22 @@ export default function MentorSidebar() {
                 >
                   <Avatar className="h-9 w-9 rounded-xl border-2 border-pink-200 transition-all duration-300">
                     <AvatarImage
-                      src="/placeholder.svg?height=36&width=36"
+                      src={
+                        user?.profile?.avatar ||
+                        "/placeholder.svg?height=32&width=32"
+                      }
                       alt="User"
                     />
                     <AvatarFallback className="rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 text-white font-semibold text-sm">
-                      HH
+                      {user?.profile?.name.charAt(2)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                     <span className="truncate font-semibold text-gray-900">
-                      User
+                      {user?.profile?.name}
                     </span>
                     <span className="truncate text-xs text-blue-600">
-                      kien@example.com
+                      {user?.profile?.email}
                     </span>
                   </div>
                   <ChevronDown className="ml-auto size-4 text-blue-500 group-data-[collapsible=icon]:hidden" />
@@ -248,16 +256,25 @@ export default function MentorSidebar() {
                 <div className="flex items-center justify-start gap-2 p-3 bg-gradient-to-r from-pink-50 to-rose-50">
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
+                      src={
+                        user?.profile?.avatar ||
+                        "/placeholder.svg?height=32&width=32"
+                      }
                       alt="User"
                     />
                     <AvatarFallback className="rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 text-white text-sm">
-                      JD
+                      {user?.profile?.name.charAt(2)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-semibold text-gray-900">User</p>
-                    <p className="text-xs text-blue-600">kien@example.com</p>
+                    <p className="font-semibold text-gray-900">
+                      {" "}
+                      {user?.profile?.name}
+                    </p>
+                    <p className="text-xs text-blue-600">
+                      {" "}
+                      {user?.profile?.email}
+                    </p>
                   </div>
                 </div>
                 <DropdownMenuSeparator className="bg-pink-100" />
@@ -274,7 +291,10 @@ export default function MentorSidebar() {
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-pink-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 cursor-pointer my-1 text-red-600 hover:bg-red-50 hover:text-red-700 ">
+                <DropdownMenuItem
+                  onClick={() => logoutMutation.mutate()}
+                  className="rounded-lg mx-1 cursor-pointer my-1 text-red-600 hover:bg-red-50 hover:text-red-700 "
+                >
                   <LogOut className="mr-3 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>

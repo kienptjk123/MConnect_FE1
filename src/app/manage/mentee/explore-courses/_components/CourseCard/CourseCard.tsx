@@ -3,6 +3,8 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
+import { useCourseEnrollment } from "@/queries/useCourse";
 import { CourseType } from "@/schemaValidations/course.schema";
 import {
   BookOpen,
@@ -20,15 +22,45 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course }: CourseCardProps) {
+  const enrollMutation = useCourseEnrollment();
   const getStatusColor = (status: string) => {
     switch (status) {
       case "PUBLISHED":
         return "bg-green-100 text-green-800";
       case "DRAFT":
         return "bg-yellow-100 text-yellow-800";
-        return "bg-gray-100 text-gray-800";
       default:
         return "bg-blue-100 text-blue-800";
+    }
+  };
+
+  const handleEnrollNow = async () => {
+    try {
+      const enrollmentData = {
+        courseId: course.id,
+        amount: parseFloat(course.price),
+        orderInfo: "a",
+      };
+
+      const result = await enrollMutation.mutateAsync({
+        id: course.id.toString(),
+        body: enrollmentData,
+      });
+
+      if (result.payload?.data?.paymentUrl) {
+        window.location.href = result.payload.data.paymentUrl;
+      } else {
+        toast({
+          title: "Success",
+          description: "Course enrollment initiated successfully!",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error?.message || "Failed to enroll in course",
+        variant: "destructive",
+      });
     }
   };
 
@@ -81,12 +113,12 @@ export default function CourseCard({ course }: CourseCardProps) {
           </div>
           <Link
             href={`/manage/mentee/explore-courses/${course.slug}`}
-            className="mt-3 font-bold text-xl line-clamp-2 text-gray-900 dark:text-white mb-3
+            className="mt-3 font-bold text-xl text-gray-900 dark:text-white mb-3
              relative w-fit transition-colors duration-400 
              hover:text-blue-500
              after:content-[''] after:absolute after:left-0 after:bottom-0
              after:w-0 after:h-[2px] after:bg-blue-500 after:transition-all 
-             after:duration-400 hover:after:w-full"
+             after:duration-400 hover:after:w-full line-clamp-1"
           >
             {course.title}
           </Link>
@@ -106,13 +138,19 @@ export default function CourseCard({ course }: CourseCardProps) {
             </div>
           </div>
 
-          <div className="flex mt-3 mb-3 items-center justify-between font-semibold dark:text-white text-gray-500">
-            <div className="">${Number(course.price).toFixed(2)}</div>
+          <div className="flex mt-3 mb-3 items-center justify-between font-semibold dark:text-white">
+            <div className="text-xl font-bold">
+              {Number(course.price).toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}{" "}
+              đ
+            </div>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className={`w-3 h-3 ${
+                  className={`w-4 h-4 ${
                     star <= course.avgRating
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300"
@@ -143,13 +181,13 @@ export default function CourseCard({ course }: CourseCardProps) {
               </div>
             </div>
 
-            <Link
-              href={`/manage/mentee/enroll/${course.id}`}
+            <div
+              onClick={handleEnrollNow}
               className="flex items-center justify-center gap-2 text-gray-700 dark:text-white font-semibold hover:text-blue-500 transition-colors duration-300"
             >
               <span className="text-base">Enroll Now</span>
               <MoveRight className="w-5 h-5 text-gray-700 hover:text-blue-500" />
-            </Link>
+            </div>
           </div>
         </CardContent>
       </div>

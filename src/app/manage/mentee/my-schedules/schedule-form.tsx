@@ -41,6 +41,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import Swal from "sweetalert2";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const toInputDate = (iso?: string) => (iso ? iso.slice(0, 10) : "");
 const toInputTime = (iso?: string) => (iso ? iso.substring(11, 16) : "");
@@ -148,7 +160,7 @@ export default function ScheduleForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title</FormLabel>
-                    <FormControl>
+                    <FormControl className="mt-2">
                       <Input {...field} required />
                     </FormControl>
                   </FormItem>
@@ -160,7 +172,7 @@ export default function ScheduleForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Description</FormLabel>
-                    <FormControl>
+                    <FormControl className="mt-2">
                       <Textarea {...field} required />
                     </FormControl>
                   </FormItem>
@@ -172,7 +184,7 @@ export default function ScheduleForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <FormControl>
+                    <FormControl className="mt-2">
                       <Input {...field} />
                     </FormControl>
                   </FormItem>
@@ -184,8 +196,13 @@ export default function ScheduleForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} required />
+                    <FormControl className="mt-2">
+                      <Input
+                        type="date"
+                        {...field}
+                        required
+                        min={new Date().toISOString().slice(0, 10)}
+                      />
                     </FormControl>
                   </FormItem>
                 )}
@@ -197,7 +214,7 @@ export default function ScheduleForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Start</FormLabel>
-                      <FormControl>
+                      <FormControl className="mt-2">
                         <Input type="time" {...field} required />
                       </FormControl>
                     </FormItem>
@@ -209,7 +226,7 @@ export default function ScheduleForm() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>End</FormLabel>
-                      <FormControl>
+                      <FormControl className="mt-2">
                         <Input type="time" {...field} required />
                       </FormControl>
                     </FormItem>
@@ -219,23 +236,47 @@ export default function ScheduleForm() {
 
               <div className="flex justify-between pt-4">
                 {open === "edit" && (
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => {
-                      if (!editingId) return;
-                      if (!confirm("Delete this schedule?")) return;
-                      deleteSchedule.mutate(editingId, {
-                        onSuccess: () => {
-                          toast({ title: "Xóa thành công" });
-                          setOpen(null);
-                          setEditingId(null);
-                        },
-                      });
-                    }}
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" /> Delete
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button type="button" variant="destructive">
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. The schedule will be
+                          permanently deleted.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-600 text-white hover:bg-red-700"
+                          onClick={() => {
+                            if (!editingId) return;
+                            deleteSchedule.mutate(editingId, {
+                              onSuccess: () => {
+                                toast({ title: "Deleted successfully" });
+                                setOpen(null);
+                                setEditingId(null);
+                              },
+                              onError: () => {
+                                toast({
+                                  title: "Error",
+                                  description: "Could not delete schedule.",
+                                  variant: "destructive",
+                                });
+                              },
+                            });
+                          }}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 )}
                 <div className="flex gap-2 ml-auto">
                   <Button

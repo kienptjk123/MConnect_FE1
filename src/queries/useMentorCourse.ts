@@ -9,14 +9,12 @@ import {
   UpdateLessonType,
 } from "@/schemaValidations/mentorCourse.schema";
 
-// Query Keys
 export const MENTOR_COURSES_QUERY_KEY = ["mentor-courses"];
 export const MENTOR_COURSE_DETAIL_QUERY_KEY = (id: number) => [
   "mentor-course-detail",
   id,
 ];
 
-// Course Queries
 export const useMentorCourseDetail = (id: number) => {
   return useQuery({
     queryKey: MENTOR_COURSE_DETAIL_QUERY_KEY(id),
@@ -25,13 +23,22 @@ export const useMentorCourseDetail = (id: number) => {
   });
 };
 
-// Course Mutations
 export const useMentorCreateCourseMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (body: MentorCreateCourseType) =>
       mentorCourseApiRequest.createCourse(body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: MENTOR_COURSES_QUERY_KEY });
+    },
+  });
+};
+
+export const useMentorDeleteCourseMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => mentorCourseApiRequest.deleteCourse(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: MENTOR_COURSES_QUERY_KEY });
     },
@@ -50,10 +57,8 @@ export const useMentorUpdateCourseMutation = () => {
   });
 };
 
-// Module Mutations
 export const useCreateModuleMutation = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       courseId,
@@ -70,7 +75,6 @@ export const useCreateModuleMutation = () => {
 
 export const useUpdateModuleMutation = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       moduleId,
@@ -85,10 +89,8 @@ export const useUpdateModuleMutation = () => {
   });
 };
 
-// Lesson Mutations
 export const useCreateLessonMutation = () => {
   const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: ({
       moduleId,

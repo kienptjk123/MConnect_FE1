@@ -30,7 +30,12 @@ const mentorCourseApiRequest = {
     );
   },
 
-  // Module Operations
+  deleteCourse: (id: number) => {
+    return http.delete<{ message: string; result: CourseType }>(
+      `/courses/mentor/${id}`
+    );
+  },
+
   createModule: (courseId: number, body: CreateModuleType) => {
     return http.post<ModuleResponseType>(
       `/courses/mentor/${courseId}/modules`,
@@ -45,7 +50,6 @@ const mentorCourseApiRequest = {
     );
   },
 
-  // Lesson Operations
   createLesson: (moduleId: number, body: CreateLessonType) => {
     return http.post<LessonResponseType>(
       `/courses/mentor/modules/${moduleId}/lessons`,
@@ -60,7 +64,6 @@ const mentorCourseApiRequest = {
     );
   },
 
-  // Bulk operations for drag and drop
   updateModuleOrder: (
     courseId: number,
     modules: { id: number; order: number }[]

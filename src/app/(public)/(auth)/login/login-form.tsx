@@ -84,12 +84,6 @@ export default function LoginForm() {
       };
 
       const redirectUrl = dashboardRoutes[userRole] || "/";
-      console.log(
-        "🔐 [LoginForm] Redirecting to:",
-        redirectUrl,
-        "for role:",
-        userRole
-      );
 
       router.push(redirectUrl);
     } catch (error) {

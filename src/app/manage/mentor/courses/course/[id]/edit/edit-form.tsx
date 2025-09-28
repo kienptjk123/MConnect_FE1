@@ -48,6 +48,7 @@ import {
 import { CategoryMultiSelect } from "@/components/ui/category-multi-select";
 import { LabelMultiSelect } from "@/components/ui/label-multi-select";
 import { VideoUpload } from "@/components/VideoUpload/VideoUpload";
+import RichTextEditor from "@/components/RichTextEditor";
 import {
   DndContext,
   closestCenter,
@@ -375,7 +376,11 @@ function SortableLesson({
             }
             onUploadSuccess={(videoKey) => {
               console.log(`Video uploaded for lesson ${lesson.id}:`, videoKey);
-              // Optionally refresh lesson data or update local state
+              // Refresh course data to show updated video
+              toast({
+                title: "Video uploaded successfully",
+                description: "The video has been uploaded and processed.",
+              });
             }}
             onUploadError={(error) => {
               console.error(
@@ -392,7 +397,12 @@ function SortableLesson({
 
 export default function EditForm({ courseId }: EditFormProps) {
   const router = useRouter();
-  const { data: course, isLoading, isError } = useMentorCourseDetail(courseId);
+  const {
+    data: course,
+    isLoading,
+    isError,
+    refetch,
+  } = useMentorCourseDetail(courseId);
   const [modules, setModules] = useState<ModuleForm[]>([]);
 
   const form = useForm<CourseFormData>({
@@ -738,10 +748,10 @@ export default function EditForm({ courseId }: EditFormProps) {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea
+                      <RichTextEditor
+                        content={field.value || ""}
+                        onChange={field.onChange}
                         placeholder="Enter course description..."
-                        rows={4}
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage />
@@ -794,14 +804,12 @@ export default function EditForm({ courseId }: EditFormProps) {
                 name="needToLearn"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      What students will learn (one per line)
-                    </FormLabel>
+                    <FormLabel>What students will learn</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Enter each learning outcome on a new line..."
-                        rows={4}
-                        {...field}
+                      <RichTextEditor
+                        content={field.value || ""}
+                        onChange={field.onChange}
+                        placeholder="Enter what students will learn from this course..."
                       />
                     </FormControl>
                     <FormMessage />

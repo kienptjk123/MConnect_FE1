@@ -1,26 +1,21 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { CourseDetailType } from "@/schemaValidations/course.schema";
-import { useCourseEnrollment } from "@/queries/useCourse";
 import { toast } from "@/components/ui/use-toast";
+import { useCourseEnrollment } from "@/queries/useCourse";
+import { CourseDetailType } from "@/schemaValidations/course.schema";
 import {
   Bookmark,
   BookOpen,
-  CarTaxiFront,
   Clock,
   Globe,
   Heart,
-  Play,
   ShieldCheck,
   ShoppingCart,
-  Star,
   Stars,
   Users,
 } from "lucide-react";
-import Image from "next/image";
 
 interface CourseInfoPanelProps {
   course: CourseDetailType;
@@ -83,7 +78,11 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-3xl font-bold  light:text-gray-900">
-              {Number(course.price).toLocaleString("vi-VN")} VND
+              {Number(course.price).toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}{" "}
+              đ
             </span>
           </div>
         </div>

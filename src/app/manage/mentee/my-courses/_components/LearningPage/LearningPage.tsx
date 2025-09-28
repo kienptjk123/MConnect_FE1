@@ -167,7 +167,7 @@ export default function LearningPage() {
   }
 
   return (
-    <div className="flex flex-col px-4">
+    <div className="flex flex-col px-4 h-full">
       <div className="light:bg-white border-b px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="sm" asChild>
@@ -176,14 +176,6 @@ export default function LearningPage() {
               My Courses
             </Link>
           </Button>
-          <div>
-            <h1 className="text-xl font-semibold light:text-gray-900 truncate max-w-md">
-              {course.title}
-            </h1>
-            <p className="text-sm light:text-gray-600">
-              Course ID: {course.id}
-            </p>
-          </div>
         </div>
       </div>
 
@@ -211,7 +203,7 @@ export default function LearningPage() {
             </MediaPlayer>
           </div>
 
-          <div className="light:bg-white light:text-gray-900 p-4">
+          <div className="dark:bg-black bg-white light:text-gray-900 p-4">
             <div className="flex items-center justify-between mb-3">
               <div>
                 <h2 className="text-lg font-semibold">
@@ -287,10 +279,10 @@ export default function LearningPage() {
                       <button
                         key={lesson.id}
                         onClick={() => selectLesson(moduleIndex, lessonIndex)}
-                        className={`w-full p-3 text-left hover:bg-gray-100 transition-colors border-l-2 ${
+                        className={`w-full p-3 text-left hover:bg-gray-100 transition-colors border-l-2 cursor-pointer ${
                           moduleIndex === currentModuleIndex &&
                           lessonIndex === currentLessonIndex
-                            ? "border-blue-500 light:bg-blue-50 bg-gray-700 hover:bg-gray-900"
+                            ? "border-blue-500 light:bg-blue-50 light:bg-gray-700 light:hover:bg-gray-900 light:bg-gray-100"
                             : "border-transparent"
                         }`}
                       >
@@ -336,7 +328,7 @@ export default function LearningPage() {
             ))}
           </div>
 
-          <div className="p-4 border-t light:bg-gray-50">
+          <div className="py-2 px-4 border-t light:bg-gray-50">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium light:text-gray-700">
                 Course Progress
@@ -349,7 +341,7 @@ export default function LearningPage() {
               value={progressInfo?.progressPercentage || 0}
               className="mb-3"
             />
-            <div className="text-xs light:text-gray-600 mb-3">
+            <div className="text-xs light:text-gray-600">
               {progressInfo?.completedLessons || 0} of{" "}
               {progressInfo?.totalLessons || 0} lessons completed
             </div>

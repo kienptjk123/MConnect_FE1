@@ -79,7 +79,7 @@ export default function VerifyEmailForm() {
       console.log(error);
       toast.error("Xác thực thất bại. Vui lòng thử lại.");
     } finally {
-      console.log("🏁 VERIFY EMAIL ATTEMPT END");
+      console.log("VERIFY EMAIL ATTEMPT END");
     }
   }
 

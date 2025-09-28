@@ -88,7 +88,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="dark:border border dark:rounded-full rounded-full dark:bg-white min-w-full mx-auto w-full my-2">
+    <header className="dark:border dark:bg-white min-w-full mx-auto w-full my-2">
       <div className="max-w-7xl mx-auto px-2">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -128,7 +128,7 @@ export default function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8 z-20">
             <Link
               href="/"
               className="text-gray-700 hover:text-blue-600 font-medium"

@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { UserType } from "@/schemaValidations/friends.schema";
 import { Conversation } from "@/schemaValidations/chat.schema";
 import { formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
+import { fr, vi } from "date-fns/locale";
 import {
   useFriends,
   useFriendsLoading,
@@ -64,19 +64,26 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
   };
 
   const getFriendName = (friend: UserType) => {
-    return (
-      friend.menteeProfiles?.name ||
-      friend.mentorProfiles?.name ||
-      "Unknown User"
-    );
+    if (friend.id === friend.menteeProfiles?.userId)
+      return friend.menteeProfiles?.name || "Unknown User";
+    if (friend.id === friend.mentorProfiles?.userId)
+      return friend.mentorProfiles?.name || "Unknown User";
+    if (friend.id === friend.adminProfiles?.userId)
+      return friend.adminProfiles?.name || "Unknown User";
+    if (friend.id === friend.StaffProfile?.userId)
+      return friend.StaffProfile?.name || "Unknown User";
   };
 
   const getFriendAvatar = (friend: UserType) => {
-    return (
-      friend.menteeProfiles?.avatar || friend.mentorProfiles?.avatar || null
-    );
+    if (friend.id === friend.menteeProfiles?.userId)
+      return friend.menteeProfiles?.avatar || null;
+    if (friend.id === friend.mentorProfiles?.userId)
+      return friend.mentorProfiles?.avatar || null;
+    if (friend.id === friend.adminProfiles?.userId)
+      return friend.adminProfiles?.avatar || null;
+    if (friend.id === friend.StaffProfile?.userId)
+      return friend.StaffProfile?.avatar || null;
   };
-
   const getFriendRole = (friend: UserType) => {
     return friend.role?.toLowerCase() || "user";
   };
@@ -128,12 +135,12 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
 
   return (
     <div className="h-full flex flex-col">
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex">
         <div className="p-2">
           {friends.map((friend) => (
             <div
-              key={friend.id}
-              className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 ${
+              key={`${friend.role}-${friend.id}`}
+              className={`flex items-center p-3 mb-2 rounded-lg cursor-pointer transition-colors hover:bg-gray-100 ${
                 selectedFriend?.id === friend.id
                   ? "bg-blue-50 border border-blue-200"
                   : ""
@@ -143,7 +150,7 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
               <Avatar className="h-12 w-12">
                 <AvatarImage src={getFriendAvatar(friend) || undefined} />
                 <AvatarFallback className="bg-blue-500 text-white">
-                  {getFriendName(friend).slice(0, 2).toUpperCase()}
+                  {getFriendName(friend)?.slice(0, 1).toUpperCase() || "??"}
                 </AvatarFallback>
               </Avatar>
 
@@ -153,26 +160,11 @@ export const FriendsList: React.FC<FriendsListProps> = ({ onSelectFriend }) => {
                     {getFriendName(friend)}
                   </h3>
                   <Badge
-                    variant={
-                      getFriendRole(friend) === "mentor"
-                        ? "default"
-                        : "secondary"
-                    }
-                    className="text-xs"
+                    variant={friend.role === "mentor" ? "default" : "secondary"}
+                    className="text-xs capitalize bg-blue-500 text-white"
                   >
                     {getFriendRole(friend)}
                   </Badge>
-                </div>
-
-                <p className="text-xs text-gray-500 truncate mt-1">
-                  {friend.mentorProfiles?.bio ||
-                    friend.menteeProfiles?.bio ||
-                    "No bio available"}
-                </p>
-
-                <div className="flex items-center mt-2">
-                  <div className="h-2 w-2 bg-green-400 rounded-full mr-1"></div>
-                  <span className="text-xs text-gray-400">Online</span>
                 </div>
               </div>
             </div>
@@ -274,8 +266,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   };
 
   const truncateMessage = (content: string, maxLength: number = 50) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength) + "...";
+    if (content?.length <= maxLength) return content;
+    return content?.substring(0, maxLength) + "...";
   };
 
   return (
@@ -300,14 +292,6 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
             <h3 className="text-sm font-semibold text-gray-900 truncate">
               {getDisplayName()}
             </h3>
-            {getUserRole() && (
-              <Badge
-                variant={getUserRole() === "MENTOR" ? "default" : "secondary"}
-                className="text-xs px-1 py-0"
-              >
-                {getUserRole()?.toLowerCase()}
-              </Badge>
-            )}
           </div>
           <span className="text-xs text-gray-500 flex-shrink-0">
             {conversation.lastMessageAt &&
@@ -325,21 +309,12 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
                 : "No messages yet"}
             </p>
           </div>
-          {unreadCount > 0 && (
-            <Badge
-              variant="destructive"
-              className="ml-2 h-5 w-5 p-0 flex items-center justify-center text-xs"
-            >
-              {unreadCount > 99 ? "99+" : unreadCount}
-            </Badge>
-          )}
         </div>
       </div>
     </div>
   );
 };
 
-// ConversationList Component
 interface ConversationListProps {
   conversations: Conversation[];
   selectedConversationId?: number;
