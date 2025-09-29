@@ -1,5 +1,11 @@
-import React from "react";
+import Loading from "@/app/loading";
+import { KanbanMentor } from "./_components/kanban-mentor";
+import { Suspense } from "react";
 
 export default function Kanban() {
-  return <div>Kanban Board</div>;
+  return (
+    <Suspense fallback={<Loading />}>
+      <KanbanMentor />
+    </Suspense>
+  );
 }

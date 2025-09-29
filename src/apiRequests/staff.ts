@@ -1,5 +1,6 @@
 import http from "@/lib/http";
 import {
+  CreateStaffFormType,
   StaffResponseType,
   UpdateStaffProfileType,
 } from "@/schemaValidations/staff.schema";
@@ -11,13 +12,7 @@ const staffApiRequest = {
   getStaffById: (id: number) => {
     return http.get<StaffResponseType>(`/users/staff/${id}`);
   },
-  registerStaff: (data: {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    dateOfBirth: string;
-  }) => {
+  registerStaff: (data: CreateStaffFormType) => {
     return http.post("/users/staff/register", data);
   },
   updateStaff: (id: number, data: UpdateStaffProfileType) => {

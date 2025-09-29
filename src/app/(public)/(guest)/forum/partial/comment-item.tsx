@@ -63,7 +63,7 @@ export default function CommentItem({
   const handleLike = async () => {
     if (!currentUser) {
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Please login to like comments",
         variant: "destructive",
       });
@@ -95,7 +95,7 @@ export default function CommentItem({
     } catch (error) {
       console.error("Error handling like:", error);
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Cannot perform action",
         variant: "destructive",
       });
@@ -173,7 +173,7 @@ export default function CommentItem({
     const content = replyContent.trim();
     if (!content) {
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Please enter reply content",
         variant: "destructive",
       });
@@ -182,7 +182,7 @@ export default function CommentItem({
 
     if (!currentUser) {
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Please login to reply",
         variant: "destructive",
       });

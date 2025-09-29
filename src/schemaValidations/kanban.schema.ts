@@ -1,23 +1,19 @@
 import z from "zod";
 
-// Enum schemas
 export const PriorityEnum = z.enum(["LOW", "HIGH"]);
 export const StatusEnum = z.enum(["TODO", "PROGRESS", "DONE"]);
 
-// Assignee schema
 export const AssigneeSchema = z.object({
   id: z.number(),
   name: z.string(),
   avatar: z.string().nullable().optional(),
 });
 
-// Count schema for _count field
 export const CountSchema = z.object({
   comments: z.number(),
   files: z.number(),
 });
 
-// Task schema
 export const TaskSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -35,7 +31,6 @@ export const TaskSchema = z.object({
   files: z.number().default(0),
 });
 
-// Pagination schema
 export const PaginationSchema = z.object({
   page: z.number(),
   limit: z.number(),
@@ -43,7 +38,6 @@ export const PaginationSchema = z.object({
   totalPages: z.number(),
 });
 
-// Updated response schema to match your API response structure
 export const TaskResponseSchema = z.object({
   message: z.string(),
   result: z.object({
