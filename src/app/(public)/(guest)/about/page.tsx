@@ -1,11 +1,21 @@
-import BlogForm from "@/app/(public)/(guest)/blog/blog-form";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowRight,
+  BookOpen,
+  Users,
+  Target,
+  Lightbulb,
+  Star,
+  Quote,
+} from "lucide-react";
 import BreadcrumbTitle from "@/components/BreadCrumb/BreadcrumbTitle";
-import React from "react";
 
-export default function BlogPage() {
+export default function AboutPage() {
   return (
     <>
-      <div className="relative ">
+      <div className="relative">
         <svg
           className="w-full block "
           viewBox="0 0 1440 230"
@@ -140,7 +150,356 @@ export default function BlogPage() {
           <BreadcrumbTitle />
         </div>
       </div>
-      <BlogForm />
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden py-20 px-4">
+          <div className="absolute inset-0 " />
+          <div className="relative max-w-7xl mx-auto text-center">
+            <div className="animate-fade-in-up">
+              <Badge variant="secondary" className="mb-6 text-sm font-medium">
+                🌟 Learn by Doing, Guided by Mentors
+              </Badge>
+              <h1 className="text-5xl md:text-7xl font-bold text-balance mb-8 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+                About Us
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto text-pretty leading-relaxed">
+                {
+                  "At LearnHub, we believe real learning happens when knowledge meets action. That's why we built a platform where mentees dive into real-world sandbox projects, guided every step of the way by experienced mentors."
+                }
+              </p>
+            </div>
+
+            {/* Floating Elements */}
+            <div className="absolute top-20 left-10 animate-float">
+              <div className="w-20 h-20 rounded-full bg-violet-200/30 glass-effect" />
+            </div>
+            <div
+              className="absolute top-40 right-20 animate-float"
+              style={{ animationDelay: "2s" }}
+            >
+              <div className="w-16 h-16 rounded-full bg-indigo-200/40 glass-effect" />
+            </div>
+            <div
+              className="absolute bottom-20 left-1/4 animate-float"
+              style={{ animationDelay: "4s" }}
+            >
+              <div className="w-12 h-12 rounded-full bg-purple-200/50 glass-effect" />
+            </div>
+          </div>
+        </section>
+
+        {/* Story Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="space-y-8">
+                <div className="flex items-center gap-3">
+                  <BookOpen className="w-8 h-8 text-violet-600" />
+                  <h2 className="text-4xl font-bold text-balance">Our Story</h2>
+                </div>
+                <div className="space-y-6 text-lg leading-relaxed text-muted-foreground">
+                  <p>
+                    {
+                      "Education has long focused on theory — but too often, learners walk away with knowledge they can't confidently apply. We saw the gap: students were graduating with certificates, but without the practical skills and problem-solving experience employers are looking for."
+                    }
+                  </p>
+                  <p>
+                    {
+                      "That's when we asked ourselves: What if learning didn't stop at lectures? What if learners could practice, fail safely, and grow under the guidance of mentors?"
+                    }
+                  </p>
+                  <p className="text-foreground font-medium">
+                    {
+                      "Our answer was to create a space where theory turns into practice: a sandbox for growth, powered by mentorship."
+                    }
+                  </p>
+                </div>
+              </div>
+              <div className="relative">
+                <Card className="glass-effect border-2 border-violet-200 p-8">
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center">
+                        <Lightbulb className="w-6 h-6 text-violet-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Innovation</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Bridging theory and practice
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <Users className="w-6 h-6 text-indigo-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Community</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Mentors and learners together
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                        <Target className="w-6 h-6 text-purple-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg">Results</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Career-ready skills
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="py-20 px-4 bg-muted/30">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 text-balance">
+                🎯 Our Mission & Vision
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card className="border-2 border-violet-200 hover:border-violet-400 transition-colors">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-4 text-violet-600">
+                    Mission
+                  </h3>
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    To empower mentees with practical skills by combining
+                    structured learning, sandbox experimentation, and mentor
+                    guidance.
+                  </p>
+                </CardContent>
+              </Card>
+              <Card className="border-2 border-indigo-200 hover:border-indigo-400 transition-colors">
+                <CardContent className="p-8">
+                  <h3 className="text-2xl font-bold mb-4 text-indigo-600">
+                    Vision
+                  </h3>
+                  <p className="text-lg leading-relaxed text-muted-foreground">
+                    {
+                      "A future where every learner can step confidently into their career, backed by real experience and the support of those who've walked the path before them."
+                    }
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 text-balance">
+                🔑 How It Works
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto text-pretty">
+                Our proven 4-step process transforms theoretical knowledge into
+                practical expertise
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                {
+                  step: "01",
+                  title: "Learn the Fundamentals",
+                  description:
+                    "Start with structured lessons that build a strong foundation.",
+                  icon: BookOpen,
+                  color: "primary",
+                },
+                {
+                  step: "02",
+                  title: "Apply in Sandbox Projects",
+                  description:
+                    "Test your knowledge in realistic, risk-free environments.",
+                  icon: Target,
+                  color: "primary",
+                },
+                {
+                  step: "03",
+                  title: "Grow with Mentor Guidance",
+                  description:
+                    "Receive feedback, insights, and encouragement from industry mentors.",
+                  icon: Users,
+                  color: "primary",
+                },
+                {
+                  step: "04",
+                  title: "Build Career Confidence",
+                  description:
+                    "Graduate with not just knowledge, but experience and results you can showcase.",
+                  icon: Star,
+                  color: "primary",
+                },
+              ].map((item, index) => (
+                <Card
+                  key={index}
+                  className="relative overflow-hidden border-2 hover:border-violet-400 transition-all duration-300 hover:shadow-lg"
+                >
+                  <CardContent className="p-6">
+                    <div className="text-6xl font-bold text-muted/20 absolute -top-4 -right-4">
+                      {item.step}
+                    </div>
+                    <div
+                      className={`w-12 h-12 rounded-full bg-${item.color}/20 flex items-center justify-center mb-4`}
+                    >
+                      <item.icon className={`w-6 h-6 text-${item.color}`} />
+                    </div>
+                    <h3 className="font-bold text-lg mb-3 text-balance">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us */}
+        <section className="py-20 px-4 bg-gradient-to-br from-violet-50 via-indigo-50 to-purple-50">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 text-balance">
+                🚀 Why Choose Us?
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  title: "Hands-On Sandbox Learning",
+                  description:
+                    "Learn by tackling real-world challenges, not just slides.",
+                  icon: "🛠️",
+                },
+                {
+                  title: "Mentor-Led Guidance",
+                  description:
+                    "Work alongside professionals who share industry insights.",
+                  icon: "👩‍🏫",
+                },
+                {
+                  title: "Collaborative Growth",
+                  description:
+                    "Join a vibrant community of learners and mentors.",
+                  icon: "🤝",
+                },
+                {
+                  title: "Career-Ready Portfolio",
+                  description:
+                    "Leave with projects and experiences that prove your skills.",
+                  icon: "📁",
+                },
+              ].map((item, index) => (
+                <Card
+                  key={index}
+                  className="glass-effect border-2 border-violet-200/60 hover:border-violet-400 transition-all duration-300"
+                >
+                  <CardContent className="p-8">
+                    <div className="text-4xl mb-4">{item.icon}</div>
+                    <h3 className="text-xl font-bold mb-3 text-balance">
+                      {item.title}
+                    </h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {item.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials */}
+        <section className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-4 text-balance">
+                💬 What Our Community Says
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card className="border-2 border-violet-200 relative">
+                <CardContent className="p-8">
+                  <Quote className="w-8 h-8 text-violet-400 mb-4" />
+                  <p className="text-lg leading-relaxed mb-6 italic">
+                    {
+                      "The sandbox projects gave me the confidence to apply for jobs. I could finally show what I was capable of, not just what I studied."
+                    }
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center">
+                      <span className="font-bold text-violet-600">A</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold">Anna</p>
+                      <p className="text-sm text-muted-foreground">Mentee</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border-2 border-indigo-200 relative">
+                <CardContent className="p-8">
+                  <Quote className="w-8 h-8 text-indigo-400 mb-4" />
+                  <p className="text-lg leading-relaxed mb-6 italic">
+                    {
+                      "Being a mentor here is rewarding. Watching mentees grow through challenges reminds me of my own career journey."
+                    }
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
+                      <span className="font-bold text-indigo-600">D</span>
+                    </div>
+                    <div>
+                      <p className="font-semibold">David</p>
+                      <p className="text-sm text-muted-foreground">Mentor</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 px-4 bg-gradient-to-r from-violet-600 via-indigo-600 to-violet-600">
+          <div className="max-w-4xl mx-auto text-center text-primary-foreground">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
+              🌍 Join Us
+            </h2>
+            <p className="text-xl md:text-2xl mb-8 text-pretty leading-relaxed opacity-90">
+              {
+                "At LearnHub, learning isn't about memorizing. It's about creating, experimenting, failing safely, and growing stronger."
+              }
+            </p>
+            <p className="text-lg mb-8 opacity-80">
+              {
+                "With the support of mentors and the power of real-world practice, you're not just preparing for the future — you're building it."
+              }
+            </p>
+            <Button
+              size="lg"
+              variant="secondary"
+              className="text-lg px-8 py-6 hover:scale-105 transition-transform"
+            >
+              👉 Are you ready to learn by doing?
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Button>
+          </div>
+        </section>
+      </div>
     </>
   );
 }

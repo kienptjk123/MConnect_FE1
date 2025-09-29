@@ -6,7 +6,7 @@ import React, { Suspense } from "react";
 export default function page() {
   return (
     <Suspense fallback={<Loading />}>
-      <div className="relative w-screen ">
+      <div className="relative ">
         <svg
           className="w-full block "
           viewBox="0 0 1440 230"

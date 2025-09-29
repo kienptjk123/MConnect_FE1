@@ -4,15 +4,16 @@ import { KanbanDetailPage } from "@/app/manage/mentor/kanban/[id]/_components/ka
 import { Suspense } from "react";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function KanbanDetailPageRoute({ params }: PageProps) {
+export default async function KanbanDetailPageRoute({ params }: PageProps) {
+  const { id } = await params;
   return (
     <Suspense fallback={<Loading />}>
-      <KanbanDetailPage kanbanId={params.id} />
+      <KanbanDetailPage kanbanId={id} />
     </Suspense>
   );
 }
