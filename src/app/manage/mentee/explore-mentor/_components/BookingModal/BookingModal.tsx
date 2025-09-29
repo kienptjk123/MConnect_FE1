@@ -216,8 +216,11 @@ export default function BookingModal({
                             variant="secondary"
                             className="flex items-center gap-1"
                           >
-                            <DollarSign className="w-3 h-3" />
-                            {parseInt(topic.price).toLocaleString()} VND
+                            {Number(topic.price).toLocaleString("en-US", {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            })}{" "}
+                            đ
                           </Badge>
                         </div>
                         <p className="text-sm light:text-gray-600 mb-2">

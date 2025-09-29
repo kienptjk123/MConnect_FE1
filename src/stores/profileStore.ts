@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { UserProfile } from "@/schemaValidations/profile.schema";
 import profileApiRequest from "@/apiRequests/profile";
 
@@ -15,74 +15,61 @@ interface ProfileState {
 
 export const useProfileStore = create<ProfileState>()(
   devtools(
-    (set) => ({
-      profile: null,
-      isLoading: false,
+    persist(
+      (set) => ({
+        profile: null,
+        isLoading: false,
 
-      fetchProfile: async () => {
-        set({ isLoading: true });
+        fetchProfile: async () => {
+          set({ isLoading: true });
 
-        try {
-          console.log("🔄 [ProfileStore] Starting profile fetch...");
-          const response = await profileApiRequest.getProfile();
+          try {
+            console.log("🔄 [ProfileStore] Starting profile fetch...");
+            const response = await profileApiRequest.getProfile();
 
-          console.log("📡 [ProfileStore] API Response:", {
-            status: response.status,
-            payload: response.payload,
-            result: response.payload?.result,
-          });
+            console.log("📡 [ProfileStore] API Response:", {
+              status: response.status,
+              payload: response.payload,
+              result: response.payload?.result,
+            });
 
-          const profileData = response.payload.result;
+            const profileData = response.payload.result;
 
-          if (!profileData) {
+            if (!profileData) {
+              set({ profile: null, isLoading: false });
+              return;
+            }
+
+            set({ profile: profileData, isLoading: false });
+          } catch (error) {
+            console.error("❌ [ProfileStore] Failed to fetch profile:", {
+              error,
+              message: error instanceof Error ? error.message : "Unknown error",
+              status:
+                error instanceof Error && "status" in error
+                  ? (error as any).status
+                  : "No status",
+            });
+
             set({ profile: null, isLoading: false });
-            return;
           }
-          set({ profile: profileData, isLoading: false });
-        } catch (error) {
-          console.error("❌ [ProfileStore] Failed to fetch profile:", {
-            error,
-            message: error instanceof Error ? error.message : "Unknown error",
-            status:
-              error instanceof Error && "status" in error
-                ? (error as any).status
-                : "No status",
-          });
+        },
 
-          // Provide helpful debugging information
-          if (
-            error instanceof Error &&
-            error.message.includes("Failed to fetch")
-          ) {
-            console.error("🔧 [ProfileStore] Troubleshooting tips:");
-            console.error("  1. Check if the backend API server is running");
-            console.error(
-              "  2. Verify API endpoint:",
-              process.env.NEXT_PUBLIC_API_ENDPOINT
-            );
-            console.error("  3. Check network connectivity");
-            console.error("  4. Verify CORS configuration on the backend");
-          }
+        setProfile: (profile: UserProfile | null) => {
+          console.log("📝 [ProfileStore] Setting profile:", profile);
+          set({ profile });
+        },
 
+        clearProfile: () => {
+          console.log("🗑️ [ProfileStore] Clearing profile");
           set({ profile: null, isLoading: false });
-        }
-      },
-
-      // Set profile directly
-      setProfile: (profile: UserProfile | null) => {
-        console.log("📝 [ProfileStore] Setting profile:", profile);
-        set({ profile });
-      },
-
-      // Clear profile
-      clearProfile: () => {
-        console.log("🗑️ [ProfileStore] Clearing profile");
-        set({ profile: null, isLoading: false });
-      },
-    }),
-    {
-      name: "profile-store", // Name for devtools
-    }
+        },
+      }),
+      {
+        name: "profile-storage", // tên key trong localStorage
+      }
+    ),
+    { name: "profile-store-devtools" } // name cho devtools
   )
 );
 

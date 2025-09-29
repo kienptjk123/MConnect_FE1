@@ -6,7 +6,7 @@ import { Suspense } from "react";
 export default function ExploreCoursesPag() {
   return (
     <Suspense fallback={<Loading />}>
-      <div className="relative ">
+      <div className="relative">
         <svg
           className="w-full block "
           viewBox="0 0 1440 230"

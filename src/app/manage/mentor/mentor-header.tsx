@@ -1,4 +1,4 @@
-import NotificationDropdown from "@/app/manage/mentee/notifications/_components/NotificationDropdown/NotificationDropdown";
+import NotificationDropdown from "@/app/manage/mentor/notifications/_components/NotificationDropdown/NotificationDropdown";
 import { ModeToggle } from "@/components/ModeToggle/ModeToggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 

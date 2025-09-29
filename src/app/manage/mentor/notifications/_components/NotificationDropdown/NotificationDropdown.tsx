@@ -170,7 +170,7 @@ export default function NotificationDropdown({
 
     const unsubscribeNotificationUpdate = onNotificationUpdate((data) => {
       if (data.type === "read" && data.notificationId) {
-        updateNotificationStatus(data.notificationId, "read");
+        updateNotificationStatus(data.notificationId, "READ");
       } else if (data.type === "new" && data.notification) {
         addNotification(data.notification);
 
@@ -432,7 +432,6 @@ export default function NotificationDropdown({
             )}
           </ScrollArea>
 
-          {/* Footer */}
           {notifications.length > 0 && (
             <>
               <Separator />

@@ -5,7 +5,7 @@ import React from "react";
 export default function BlogPage() {
   return (
     <>
-      <div className="relative ">
+      <div className="relative">
         <svg
           className="w-full block "
           viewBox="0 0 1440 230"

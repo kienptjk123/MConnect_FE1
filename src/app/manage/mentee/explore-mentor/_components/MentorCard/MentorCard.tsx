@@ -17,8 +17,7 @@ export default function MentorCard({ mentor }: MentorCardProps) {
           <Image
             src={mentor?.coverPhoto}
             alt="Cover"
-            width={76}
-            height={76}
+            fill
             className="object-cover"
           />
         )}
@@ -44,18 +43,16 @@ export default function MentorCard({ mentor }: MentorCardProps) {
         </div>
       </div>
 
-      <div className="pt-10 p-6">
-        <div className="space-y-3">
+      <div className="pt-8 px-6 pb-4">
+        <div className="space-y-3 mt-2">
           <div>
-            <h3 className="font-semibold text-lg light:text-gray-900 mb-1">
+            {mentor.major && (
+              <p className="light:text-gray-600 text-base">{mentor.major}</p>
+            )}
+            <h3 className="font-bold text-xl light:text-gray-900 mb-1 mt-2">
               {mentor?.name}
             </h3>
           </div>
-          {mentor.description && (
-            <p className="light:text-gray-600 text-sm line-clamp-3">
-              {mentor.description}
-            </p>
-          )}
         </div>
       </div>
     </Card>

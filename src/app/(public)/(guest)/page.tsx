@@ -26,7 +26,7 @@ export default function Homepage() {
 
   return (
     <>
-      <div className="container mx-auto">
+      <div className="container mx-auto px-10">
         <Blender />
         <div className="mx-9 py-2">
           <div className="max-w-full">
@@ -199,9 +199,9 @@ export default function Homepage() {
           </div>
         </div>
         <HomepageClient carouselItems={carouselItems} />
-        <div className="">
+        {/* <div className="">
           <ScrollyCourses />
-        </div>
+        </div> */}
         {/* <MentorPage /> */}
         {/* <TestimonialSection /> */}
       </div>

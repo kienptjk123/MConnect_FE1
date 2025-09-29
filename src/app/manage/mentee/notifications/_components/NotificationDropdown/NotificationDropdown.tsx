@@ -141,7 +141,6 @@ export default function NotificationDropdown({
         });
       }
 
-      // Refresh unread count
       fetchUnreadCount(userProfile.id);
     });
 
@@ -159,11 +158,7 @@ export default function NotificationDropdown({
       fetchUnreadCount(userProfile.id);
     });
 
-    // Listen for friend request sent confirmation
     const unsubscribeFriendRequestSent = onFriendRequestSent((data) => {
-      console.log("📤 [Socket] Friend request sent:", data);
-
-      // Show success toast
       toast({
         title: "Friend Request Sent",
         description: `Friend request sent successfully to ${
@@ -173,13 +168,9 @@ export default function NotificationDropdown({
       });
     });
 
-    // Listen for general notification updates
     const unsubscribeNotificationUpdate = onNotificationUpdate((data) => {
-      console.log("🔔 [Socket] Notification update:", data);
-
-      if (data.type === "read" && data.notificationId) {
-        // Update notification status locally
-        updateNotificationStatus(data.notificationId, "read");
+      if (data.type === "READ" && data.notificationId) {
+        updateNotificationStatus(data.notificationId, "READ");
       } else if (data.type === "new" && data.notification) {
         // Add new notification
         addNotification(data.notification);

@@ -124,7 +124,7 @@ export default function NotificationsPage() {
 
     const unsubscribeNotificationUpdate = onNotificationUpdate((data) => {
       if (data.type === "read" && data.notificationId) {
-        updateNotificationStatus(data.notificationId, "read");
+        updateNotificationStatus(data.notificationId, "READ");
       }
       fetchUnreadCount(userProfile.id);
     });

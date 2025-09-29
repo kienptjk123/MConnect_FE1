@@ -7,14 +7,7 @@ export const useLogoutMutation = () => {
     onSuccess: () => {
       console.log("🔓 [Frontend] Logout successful, clearing localStorage");
 
-      // Xóa localStorage client
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("role");
-      localStorage.removeItem("user_id");
-      localStorage.removeItem("verify");
-
-      // Use location.replace instead of href to prevent back button issues
+      localStorage.clear();
       window.location.replace("/login");
     },
     onError: (error) => {

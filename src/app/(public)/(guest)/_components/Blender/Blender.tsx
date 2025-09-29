@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -105,20 +106,20 @@ export default function Blender() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row h-[700px]">
+    <div className="flex justify-between items-center h-[700px] w-full">
       <div
         ref={overlayTextRef}
         className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 z-10"
       >
         <div className="text-center space-y-6">
-          <h2 className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl">
+          <h2 className="text-4xl md:text-5xl font-bold drop-shadow-2xl block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
             Connect
             <span className="animate-text block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
               Mentors & Mentees
             </span>
           </h2>
 
-          <p className="animate-text text-xl md:text-2xl text-black drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="animate-text text-xl text-black drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
             A modern learning platform where you are guided by experienced
             mentors, while exploring an interactive 3D sandbox to practice
             real-world skills in a dynamic and engaging way.
@@ -133,13 +134,13 @@ export default function Blender() {
               Join Now
             </Button>
 
-            <Button
-              variant="outline"
-              className="bg-gray-300 hover:bg-gray-400 dark:text-white rounded-3xl"
-              size="lg"
+            <Link
+              href="http://sandbox-mconnect.s3-website-ap-southeast-1.amazonaws.com"
+              target="_blank"
+              className="bg-gray-300 hover:bg-gray-400 dark:text-white rounded-3xl px-4 py-2"
             >
               View Sandbox Demo
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -161,9 +162,9 @@ export default function Blender() {
             }}
           />
 
-          <div className="absolute top-0 left-0 w-full h-14 bg-[#E3EFFB] z-20"></div>
+          <div className="absolute top-0 left-0 w-full h-14 bg-white z-20"></div>
 
-          <div className="absolute bottom-0 left-0 w-full h-20 bg-[#E3EFFB] z-20"></div>
+          <div className="absolute bottom-0 left-0 w-full h-20 bg-white z-20"></div>
         </div>{" "}
       </div>
     </div>
