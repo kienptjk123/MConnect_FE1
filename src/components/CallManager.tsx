@@ -22,13 +22,6 @@ export const CallManager: React.FC = () => {
     connected,
   } = useSocket();
 
-  console.log(
-    "📞 [CallManager] Socket connected:",
-    connected,
-    "Profile:",
-    profile?.id
-  );
-
   const [currentCall, setCurrentCall] = useState<CallType | null>(null);
   const [incomingCall, setIncomingCall] = useState<CallType | null>(null);
   const [outgoingCall, setOutgoingCall] = useState<CallType | null>(null);
@@ -38,10 +31,7 @@ export const CallManager: React.FC = () => {
 
   // Listen for incoming calls
   useEffect(() => {
-    console.log("📞 [CallManager] Setting up socket listeners...");
-
     const unsubscribeIncoming = onIncomingCall((data) => {
-      console.log("📞 [Call] Incoming call:", data);
       if (data.call) {
         setIncomingCall(data.call);
         setCallState("incoming");
