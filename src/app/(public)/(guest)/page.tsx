@@ -28,7 +28,7 @@ export default function Homepage() {
     <>
       <div className="container mx-auto">
         <Blender />
-        <div className="mx-8 py-2">
+        <div className="mx-9 py-2">
           <div className="max-w-full">
             <div className="rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
               <div className="flex items-center justify-around gap-8 md:gap-16">
