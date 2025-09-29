@@ -89,13 +89,13 @@ const navigationItems = [
     icon: MonitorPlayIcon,
   },
   {
-    title: "Messages",
-    url: "/manage/mentor/message",
+    title: "Work Experience Packages",
+    url: "/manage/mentor/work-experience-package",
     icon: MessageCircle,
   },
   {
-    title: "Work Experience Packages",
-    url: "/manage/mentor/work-experience-package",
+    title: "Messages",
+    url: "/manage/mentor/message",
     icon: MessageCircle,
   },
 ];

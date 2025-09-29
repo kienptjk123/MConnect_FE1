@@ -3,7 +3,6 @@ import HomepageClient from "@/app/(public)/(guest)/homepageclient";
 import MentorPage from "@/app/(public)/(guest)/_components/MentorPage/MentorPage";
 import { Button } from "@/components/ui/button";
 import ScrollyCourses from "@/app/(public)/(guest)/_components/Course/Course";
-
 export default function Homepage() {
   const carouselItems = [
     {
@@ -31,7 +30,7 @@ export default function Homepage() {
         <div className="mx-9 py-2">
           <div className="max-w-full">
             <div className="rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
-              <div className="flex items-center justify-around gap-8 md:gap-16">
+              <div className="flex justify-around items-center gap-8">
                 <svg
                   width="156"
                   height="33"
@@ -186,25 +185,25 @@ export default function Homepage() {
                 </svg>
               </div>
             </div>
-            <div className="text-center">
-              <div className="inline-block">
-                <Button
-                  variant="outline"
-                  className="bg-white border-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-12 py-8 rounded-full text-2xl font-bold shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                >
-                  How It Work?
-                </Button>
-              </div>
+          </div>
+          <div className="text-center">
+            <div className="inline-block">
+              <Button
+                variant="outline"
+                className="bg-white border-2 border-blue-200 text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-12 py-8 rounded-full text-2xl font-bold shadow-2xl hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+              >
+                How It Work?
+              </Button>
             </div>
           </div>
         </div>
-        <HomepageClient carouselItems={carouselItems} />
-        {/* <div className="">
+      </div>
+      <HomepageClient carouselItems={carouselItems} />
+      {/* <div className="">
           <ScrollyCourses />
         </div> */}
-        {/* <MentorPage /> */}
-        {/* <TestimonialSection /> */}
-      </div>
+      {/* <MentorPage /> */}
+      {/* <TestimonialSection /> */}
     </>
   );
 }

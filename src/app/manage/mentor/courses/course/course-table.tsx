@@ -12,8 +12,6 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useMentorDeleteCourseMutation } from "@/queries/useMentorCourse";
 import { CourseType } from "@/schemaValidations/course.schema";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
 import { Edit, Eye, Star, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -57,7 +55,7 @@ export default function CourseTable({ data }: CourseTableProps) {
   };
 
   const handleView = (slug: string) => {
-    router.push(`/courses/${slug}`);
+    router.push(`/manage/mentor/courses/course/view/${slug}`);
   };
 
   const handleDelete = async (id: number) => {

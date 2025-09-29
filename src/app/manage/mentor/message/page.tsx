@@ -1,6 +1,11 @@
+import { Suspense } from "react";
+import Loading from "@/app/loading";
 import { MessageContainer } from "@/app/manage/mentee/message/_components/MessageCore/MessageCore";
-import React from "react";
 
-export default function MentorMessagePage() {
-  return <MessageContainer />;
+export default function MessagePage() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <MessageContainer />
+    </Suspense>
+  );
 }
