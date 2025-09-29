@@ -141,35 +141,24 @@ export default function NotificationDropdown({
         });
       }
 
-      // Refresh unread count
       fetchUnreadCount(userProfile.id);
     });
 
-    // Listen for friend request received (specific event)
     const unsubscribeFriendRequestReceived = onFriendRequestReceived((data) => {
-      console.log("👥 [Socket] Friend request received:", data);
-
-      // Add notification to store if provided
       if (data.notification) {
         addNotification(data.notification);
       }
 
-      // Show specific friend request toast
       toast({
         title: "Friend Request Received",
         description: `${data.requester || "Someone"} sent you a friend request`,
         duration: 5000,
       });
 
-      // Refresh unread count
       fetchUnreadCount(userProfile.id);
     });
 
-    // Listen for friend request sent confirmation
     const unsubscribeFriendRequestSent = onFriendRequestSent((data) => {
-      console.log("📤 [Socket] Friend request sent:", data);
-
-      // Show success toast
       toast({
         title: "Friend Request Sent",
         description: `Friend request sent successfully to ${
@@ -179,13 +168,9 @@ export default function NotificationDropdown({
       });
     });
 
-    // Listen for general notification updates
     const unsubscribeNotificationUpdate = onNotificationUpdate((data) => {
-      console.log("🔔 [Socket] Notification update:", data);
-
-      if (data.type === "read" && data.notificationId) {
-        // Update notification status locally
-        updateNotificationStatus(data.notificationId, "read");
+      if (data.type === "READ" && data.notificationId) {
+        updateNotificationStatus(data.notificationId, "READ");
       } else if (data.type === "new" && data.notification) {
         // Add new notification
         addNotification(data.notification);
@@ -451,7 +436,6 @@ export default function NotificationDropdown({
             )}
           </ScrollArea>
 
-          {/* Footer */}
           {notifications.length > 0 && (
             <>
               <Separator />

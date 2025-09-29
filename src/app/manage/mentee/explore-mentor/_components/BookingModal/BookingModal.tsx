@@ -44,7 +44,6 @@ export default function BookingModal({
     useState<MentorWorkScheduleType | null>(null);
   const [step, setStep] = useState<"topic" | "schedule" | "confirm">("topic");
 
-  // API calls - lazy load khi cần
   const { data: topicsResponse, isLoading: topicsLoading } =
     useSingleSessionTopics(mentorId, { enabled: isOpen && step === "topic" });
 
@@ -53,12 +52,8 @@ export default function BookingModal({
       enabled: isOpen && step === "schedule",
     });
 
-  console.log("Topics Response:", topicsResponse);
-  console.log("Schedules Response:", schedulesResponse);
-
   const createBookingMutation = useCreateBookingWithPayment();
 
-  // API trả về array trực tiếp trong payload
   const topics = (topicsResponse?.payload || []) as SingleSessionTopicType[];
   const schedules = (schedulesResponse?.payload?.data ||
     []) as MentorWorkScheduleType[];
@@ -86,7 +81,6 @@ export default function BookingModal({
       });
 
       setIsOpen(false);
-      // Reset state
       setSelectedTopic(null);
       setSelectedSchedule(null);
       setStep("topic");
@@ -143,7 +137,7 @@ export default function BookingModal({
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   step === "topic"
                     ? "bg-blue-600 text-white"
-                    : "rounded-full bg-gray-700 light:bg-gray-200"
+                    : "rounded-full dark:bg-gray-700 bg-gray-300 light:bg-gray-200"
                 }`}
               >
                 1
@@ -160,7 +154,7 @@ export default function BookingModal({
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   step === "schedule"
                     ? "bg-blue-600 text-white"
-                    : "rounded-full bg-gray-700 light:bg-gray-200"
+                    : "rounded-full dark:bg-gray-700 bg-gray-300 light:bg-gray-200"
                 }`}
               >
                 2
@@ -177,7 +171,7 @@ export default function BookingModal({
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                   step === "confirm"
                     ? "bg-blue-600 text-white"
-                    : "rounded-full bg-gray-700 light:bg-gray-200"
+                    : "rounded-full dark:bg-gray-700 bg-gray-300 light:bg-gray-200"
                 }`}
               >
                 3
@@ -186,7 +180,6 @@ export default function BookingModal({
             </div>
           </div>
 
-          {/* Step 1: Select Topic */}
           {step === "topic" && (
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Select a Session Topic</h3>
@@ -223,8 +216,11 @@ export default function BookingModal({
                             variant="secondary"
                             className="flex items-center gap-1"
                           >
-                            <DollarSign className="w-3 h-3" />
-                            {parseInt(topic.price).toLocaleString()} VND
+                            {Number(topic.price).toLocaleString("en-US", {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            })}{" "}
+                            đ
                           </Badge>
                         </div>
                         <p className="text-sm light:text-gray-600 mb-2">
@@ -241,7 +237,6 @@ export default function BookingModal({
             </div>
           )}
 
-          {/* Step 2: Select Schedule */}
           {step === "schedule" && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -291,6 +286,7 @@ export default function BookingModal({
                             {schedule.title}
                           </h4>
                           <Badge
+                            className="bg-blue-500"
                             variant={
                               schedule.status === "AVAILABLE"
                                 ? "default"
@@ -371,7 +367,11 @@ export default function BookingModal({
                           Total Price:
                         </span>
                         <span className="font-bold text-lg text-blue-600">
-                          {parseInt(selectedTopic.price).toLocaleString()} VND
+                          {Number(selectedTopic.price).toLocaleString("en-US", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          })}{" "}
+                          đ
                         </span>
                       </div>
                     </div>

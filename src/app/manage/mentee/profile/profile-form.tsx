@@ -209,11 +209,11 @@ export default function ProfileForm() {
           hasChanges = true;
         }
         if (data.location !== userProfile?.location) {
-          updateData.location = data.location;
+          updateData.location = data.location || null;
           hasChanges = true;
         }
         if (data.bio !== userProfile?.bio) {
-          updateData.bio = data.bio;
+          updateData.bio = data.bio || null;
           hasChanges = true;
         }
         if (data.date_of_birth !== userProfile?.date_of_birth) {
@@ -225,7 +225,7 @@ export default function ProfileForm() {
           hasChanges = true;
         }
         if (data.website !== userProfile?.website) {
-          updateData.website = data.website;
+          updateData.website = data.website || null;
           hasChanges = true;
         }
         if (data.description !== userProfile?.description) {
@@ -234,7 +234,15 @@ export default function ProfileForm() {
         }
 
         if (hasChanges) {
-          await profileApiRequest.updateProfile(updateData);
+          // Convert undefined values to null to match the expected type
+          const sanitizedUpdateData = Object.fromEntries(
+            Object.entries(updateData).map(([key, value]) => [
+              key,
+              value === undefined ? null : value,
+            ])
+          ) as UpdateProfile;
+
+          await profileApiRequest.updateProfile(sanitizedUpdateData);
           const fetchedProfile = await profileApiRequest.getProfile();
           setUserProfile(fetchedProfile.payload.result);
 

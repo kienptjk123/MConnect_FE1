@@ -82,7 +82,6 @@ export default function RegisterForm() {
         confirm_password: values.confirm_password,
         date_of_birth: dateObj.toISOString(),
       };
-      console.log("zxczxc", formattedValues);
       const res = await registerMutation.mutateAsync(formattedValues);
       console.log("REGISTER SUCCESS:", res);
       toast.success(

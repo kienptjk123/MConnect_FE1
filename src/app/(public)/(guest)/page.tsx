@@ -1,7 +1,8 @@
+import Blender from "@/app/(public)/(guest)/_components/Blender/Blender";
 import HomepageClient from "@/app/(public)/(guest)/homepageclient";
-import HeroSection from "@/components/HeroSection/HeroSection";
+import MentorPage from "@/app/(public)/(guest)/_components/MentorPage/MentorPage";
 import { Button } from "@/components/ui/button";
-import dynamic from "next/dynamic";
+import ScrollyCourses from "@/app/(public)/(guest)/_components/Course/Course";
 
 export default function Homepage() {
   const carouselItems = [
@@ -22,13 +23,14 @@ export default function Homepage() {
       image: "/images/sandbox2.png",
     },
   ];
+
   return (
     <>
-      <div className="container mx-auto">
-        <HeroSection />
-        <div className="mx-8 py-2">
+      <div className="container mx-auto px-10">
+        <Blender />
+        <div className="mx-9 py-2">
           <div className="max-w-full">
-            <div className="dark:bg-[#E4F2FF] rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
+            <div className="rounded-full border-[#E4F2FF] border-1 shadow-2xl py-4 px-12 mb-8 ">
               <div className="flex items-center justify-around gap-8 md:gap-16">
                 <svg
                   width="156"
@@ -184,7 +186,6 @@ export default function Homepage() {
                 </svg>
               </div>
             </div>
-            {/* how it works  */}
             <div className="text-center">
               <div className="inline-block">
                 <Button
@@ -198,6 +199,11 @@ export default function Homepage() {
           </div>
         </div>
         <HomepageClient carouselItems={carouselItems} />
+        {/* <div className="">
+          <ScrollyCourses />
+        </div> */}
+        {/* <MentorPage /> */}
+        {/* <TestimonialSection /> */}
       </div>
     </>
   );

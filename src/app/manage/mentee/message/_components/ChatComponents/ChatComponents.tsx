@@ -4,6 +4,7 @@ import React, {
   useRef,
   useState,
   KeyboardEvent,
+  useEffect,
 } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
   Smile,
   Mic,
   X,
+  UserPlus,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -33,12 +35,18 @@ import {
   MessageList,
   MessageListRef,
 } from "@/app/manage/mentee/message/_components/MessageCore/MessageCore";
+import { useSocket } from "@/components/SocketProvider";
+import { useInitiateCallMutation } from "@/queries/useCall";
+import { useProfile } from "@/hooks/useProfile";
+import { toast } from "sonner";
 
 interface ChatHeaderProps {
   conversation: Conversation;
   currentUserId: number;
   onArchive?: () => void;
   onLeave?: () => void;
+  onCreateGroup?: () => void;
+  onAddMembers?: () => void;
 }
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({
@@ -46,28 +54,102 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   currentUserId,
   onArchive,
   onLeave,
+  onCreateGroup,
+  onAddMembers,
 }) => {
+  const profile = useProfile();
+  const { initiateCall } = useSocket();
+  const initiateCallMutation = useInitiateCallMutation();
+
   const otherMember = conversation.members.find(
     (member) => member.userId !== currentUserId
   );
-
-  const getDisplayName = () => {
-    if (conversation.type === "DIRECT" && otherMember) {
-      return otherMember?.user?.email?.split("@")[0] || "Unknown";
+  const getFriendName = () => {
+    if (conversation.type === "GROUP") {
+      return conversation.title || "Group Chat";
     }
-    return conversation.title;
+    if (otherMember?.user.id === otherMember?.user.menteeProfiles?.userId)
+      return otherMember?.user.menteeProfiles?.name || "Unknown User";
+    if (otherMember?.user.id === otherMember?.user.mentorProfiles?.userId)
+      return otherMember?.user.mentorProfiles?.name || "Unknown User";
+    if (otherMember?.user.id === otherMember?.user.adminProfiles?.userId)
+      return otherMember?.user.adminProfiles?.name || "Unknown User";
+    if (otherMember?.user.id === otherMember?.user.StaffProfile?.userId)
+      return otherMember?.user.StaffProfile?.name || "Unknown User";
   };
 
   const getAvatarFallback = () => {
-    const name = getDisplayName();
-    return name.charAt(0).toUpperCase();
+    const name = getFriendName();
+    return name?.charAt(0).toUpperCase() || "G";
   };
 
-  const getLastSeen = () => {
-    if (conversation.type === "DIRECT" && otherMember) {
-      return "Last seen 7h ago";
+  const getMemberCount = () => {
+    if (conversation.type === "GROUP") {
+      return `${conversation.members.length} members`;
     }
-    return `${conversation.members.length} members`;
+    return "";
+  };
+
+  const handleVoiceCall = async () => {
+    if (!otherMember || conversation.type === "GROUP") {
+      toast.error("Không thể thực hiện cuộc gọi thoại trong nhóm");
+      return;
+    }
+
+    try {
+      const response = await initiateCallMutation.mutateAsync({
+        receiverId: otherMember.userId,
+        callType: "VOICE",
+        conversationId: conversation.id,
+      });
+
+      // Use socket to initiate call
+      initiateCall(otherMember.userId, "VOICE", conversation.id);
+
+      // Show outgoing call screen
+      if ((window as any).callManager && response.payload?.result) {
+        (window as any).callManager.initiateOutgoingCall(
+          response.payload.result
+        );
+      }
+
+      toast.success("Đang khởi tạo cuộc gọi thoại...");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Không thể khởi tạo cuộc gọi"
+      );
+    }
+  };
+
+  const handleVideoCall = async () => {
+    if (!otherMember || conversation.type === "GROUP") {
+      toast.error("Không thể thực hiện cuộc gọi video trong nhóm");
+      return;
+    }
+
+    try {
+      const response = await initiateCallMutation.mutateAsync({
+        receiverId: otherMember.userId,
+        callType: "VIDEO",
+        conversationId: conversation.id,
+      });
+
+      // Use socket to initiate call
+      initiateCall(otherMember.userId, "VIDEO", conversation.id);
+
+      // Show outgoing call screen
+      if ((window as any).callManager && response.payload?.result) {
+        (window as any).callManager.initiateOutgoingCall(
+          response.payload.result
+        );
+      }
+
+      toast.success("Đang khởi tạo cuộc gọi video...");
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Không thể khởi tạo cuộc gọi"
+      );
+    }
   };
 
   return (
@@ -81,19 +163,51 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
         </Avatar>
 
         <div>
-          <h2 className="font-semibold text-gray-900">{getDisplayName()}</h2>
-          <p className="text-sm text-gray-500">{getLastSeen()}</p>
+          <h2 className="font-semibold text-gray-900">{getFriendName()}</h2>
+          {conversation.type === "GROUP" && (
+            <p className="text-sm text-gray-500">{getMemberCount()}</p>
+          )}
         </div>
       </div>
 
       <div className="flex items-center space-x-2">
-        <Button variant="ghost" size="icon" className="h-9 w-9">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9"
+          onClick={handleVoiceCall}
+          disabled={
+            conversation.type === "GROUP" || initiateCallMutation.isPending
+          }
+          title="Cuộc gọi thoại"
+        >
           <Phone className="h-4 w-4" />
         </Button>
 
-        <Button variant="ghost" size="icon" className="h-9 w-9">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9"
+          onClick={handleVideoCall}
+          disabled={
+            conversation.type === "GROUP" || initiateCallMutation.isPending
+          }
+          title="Cuộc gọi video"
+        >
           <Video className="h-4 w-4" />
         </Button>
+
+        {conversation.type === "GROUP" && onAddMembers && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-9 w-9"
+            onClick={onAddMembers}
+            title="Add Members"
+          >
+            <UserPlus className="h-4 w-4" />
+          </Button>
+        )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -102,9 +216,6 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={onArchive}>
-              {conversation.isArchived ? "Unarchive" : "Archive"} conversation
-            </DropdownMenuItem>
             {conversation.type === "GROUP" && (
               <DropdownMenuItem onClick={onLeave} className="text-red-600">
                 Leave conversation
@@ -142,6 +253,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
 }) => {
   const [message, setMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
 
   const handleSend = () => {
     if (message.trim() && !disabled) {
@@ -186,6 +299,56 @@ const MessageInput: React.FC<MessageInputProps> = ({
     return () => clearTimeout(timeout);
   }, [message, isTyping, onStopTyping]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition =
+        (window as any).SpeechRecognition ||
+        (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recog = new SpeechRecognition();
+        recog.continuous = false;
+        recog.interimResults = true;
+        recog.lang = "vi-VN";
+        setRecognition(recog);
+      }
+    }
+  }, []);
+
+  const handleMicClick = () => {
+    if (!recognition) {
+      toast.error("Trình duyệt không hỗ trợ nhận diện giọng nói");
+      return;
+    }
+
+    if (!isRecording) {
+      recognition.start();
+      setIsRecording(true);
+
+      recognition.onresult = (event: any) => {
+        const transcript = Array.from(event.results)
+          .map((r: any) => r[0].transcript)
+          .join("");
+        setMessage(transcript);
+      };
+
+      recognition.onerror = (e: any) => {
+        console.error("Speech error:", e);
+        toast.error("Lỗi nhận diện giọng nói");
+        setIsRecording(false);
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+        if (message.trim()) {
+          handleSend();
+        }
+      };
+    } else {
+      recognition.stop();
+      setIsRecording(false);
+    }
+  };
+
   return (
     <div className="p-4 bg-white border-t">
       {replyToMessage && (
@@ -219,7 +382,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
             disabled={disabled}
-            className="min-h-[44px] max-h-32 resize-none border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+            className="min-h-[44px] pt-3 max-h-32 resize-none border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             rows={1}
             style={{
               height: "auto",
@@ -262,10 +425,11 @@ const MessageInput: React.FC<MessageInputProps> = ({
             </Button>
           ) : (
             <Button
-              variant="ghost"
+              variant={isRecording ? "destructive" : "ghost"}
               size="icon"
-              className="h-10 w-10 text-gray-400 hover:text-gray-600"
+              className="h-10 w-10"
               disabled={disabled}
+              onClick={handleMicClick}
             >
               <Mic className="h-4 w-4" />
             </Button>
@@ -283,6 +447,8 @@ interface ChatAreaProps {
   onSendMessage: (message: SendMessageBody) => void;
   onArchive?: () => void;
   onLeave?: () => void;
+  onCreateGroup?: () => void;
+  onAddMembers?: () => void;
   loading?: boolean;
   replyToMessage?: {
     id: number;
@@ -293,6 +459,12 @@ interface ChatAreaProps {
   onReply?: (messageId: number) => void;
   onEdit?: (messageId: number) => void;
   onDelete?: (messageId: number) => void;
+  editingMessage?: {
+    id: number;
+    content: string;
+  } | null;
+  onSaveEdit?: (newContent: string) => void;
+  onCancelEdit?: () => void;
   typingUsers?: { [key: number]: boolean };
   onStartTyping?: () => void;
   onStopTyping?: () => void;
@@ -314,12 +486,17 @@ export const ChatArea = forwardRef<ChatAreaRef, ChatAreaProps>(
       onSendMessage,
       onArchive,
       onLeave,
+      onCreateGroup,
+      onAddMembers,
       loading = false,
       replyToMessage,
       onCancelReply,
       onReply,
       onEdit,
       onDelete,
+      editingMessage,
+      onSaveEdit,
+      onCancelEdit,
       typingUsers,
       onStartTyping,
       onStopTyping,
@@ -379,6 +556,7 @@ export const ChatArea = forwardRef<ChatAreaRef, ChatAreaProps>(
           conversation={conversation}
           currentUserId={currentUserId}
           onArchive={onArchive}
+          onAddMembers={onAddMembers}
           onLeave={onLeave}
         />
 
@@ -386,9 +564,13 @@ export const ChatArea = forwardRef<ChatAreaRef, ChatAreaProps>(
           ref={messageListRef}
           messages={messages}
           currentUserId={currentUserId}
+          isGroupChat={conversation?.type === "GROUP"}
           loading={loading}
           onEdit={onEdit}
           onDelete={onDelete}
+          editingMessage={editingMessage}
+          onSaveEdit={onSaveEdit}
+          onCancelEdit={onCancelEdit}
           onReply={onReply}
           onLoadMore={onLoadMore}
           hasMore={hasMore}

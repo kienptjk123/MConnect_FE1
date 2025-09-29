@@ -52,10 +52,11 @@ const authApiRequest = {
   sRefreshToken: (body: RefreshTokenBodyType) =>
     http.post<RefreshTokenResType>("/users/refresh-token", body),
 
+  sLogout: (body: { refresh_token: string }) =>
+    http.post<{ message: string }>("/users/logout", body),
+
   logout: () =>
-    http.post("/api/auth/logout", null, {
-      baseUrl: "",
-    }),
+    http.post<{ message: string }>("/api/auth/logout", {}, { baseUrl: "" }),
 
   async refreshToken() {
     if (this.refreshTokenRequest) {

@@ -43,7 +43,7 @@ export default function Forum() {
     } catch (error) {
       console.error("Error fetching user profile:", error);
       toast({
-        title: "Error",
+        title: "Please login to interact with posts",
         description: "Cannot load user information",
         variant: "destructive",
       });
@@ -106,7 +106,7 @@ export default function Forum() {
   const handleLike = async (questionId: number) => {
     if (!currentUser) {
       toast({
-        title: "Error",
+        title: "Please login to like posts",
         description: "Please login to like posts",
         variant: "destructive",
       });
@@ -161,7 +161,7 @@ export default function Forum() {
     } catch (error) {
       console.error("Error handling like:", error);
       toast({
-        title: "Error",
+        title: "Please login to interact with posts",
         description: "Cannot perform action",
         variant: "destructive",
       });
@@ -171,7 +171,7 @@ export default function Forum() {
   const handleCreateQuestion = async (formData: FormData) => {
     if (!currentUser) {
       toast({
-        title: "Error",
+        title: "Please login to interact with posts",
         description: "Please login to create post",
         variant: "destructive",
       });
@@ -191,7 +191,7 @@ export default function Forum() {
     } catch (error) {
       console.error("Error creating question:", error);
       toast({
-        title: "Error",
+        title: "Please login to interact with posts",
         description: "Cannot create post",
         variant: "destructive",
       });

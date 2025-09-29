@@ -83,7 +83,11 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
         <div className="flex items-center justify-between mb-4">
           <div>
             <span className="text-3xl font-bold  light:text-gray-900">
-              {Number(course.price).toLocaleString("vi-VN")} VND
+              {Number(course.price).toLocaleString("en-US", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}{" "}
+              đ
             </span>
           </div>
         </div>

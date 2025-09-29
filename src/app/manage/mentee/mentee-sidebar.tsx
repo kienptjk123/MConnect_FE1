@@ -19,8 +19,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useLogoutMutation } from "@/queries/useLogout";
 import { useProfileStore } from "@/stores";
 import {
+  CalendarCheck,
   ChevronDown,
   FolderDot,
   LayoutDashboard,
@@ -31,7 +33,6 @@ import {
   ShoppingBag,
   User,
   User2,
-  CalendarCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,6 +53,11 @@ const navigationItems = [
     title: "Explore Mentors",
     url: "/manage/mentee/explore-mentor",
     icon: User2,
+  },
+  {
+    title: "Work Experience Packages",
+    url: "/manage/mentee/explore-work-exp-pkg",
+    icon: ShoppingBag,
   },
   {
     title: "My Courses",
@@ -78,6 +84,8 @@ const navigationItems = [
 export default function MenteeSidebar() {
   const location = usePathname();
   const user = useProfileStore();
+  const logoutMutation = useLogoutMutation();
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="dark:bg-[#080808] bg-white">
@@ -202,9 +210,11 @@ export default function MenteeSidebar() {
                     <span>Orders</span>
                   </Link>
                 </DropdownMenuItem>
-
                 <DropdownMenuSeparator className="bg-blue-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 cursor-pointer my-1  hover:bg-red-50 hover:text-blue-600 ">
+                <DropdownMenuItem
+                  className="rounded-lg mx-1 cursor-pointer my-1  hover:bg-red-50 hover:text-blue-600 "
+                  onClick={() => logoutMutation.mutate()}
+                >
                   <LogOut className="mr-3 h-4 w-4 text-blue-500" />
                   <span>Log out</span>
                 </DropdownMenuItem>

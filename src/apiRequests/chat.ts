@@ -218,18 +218,18 @@ const chatApiRequest = {
     messageId: number,
     body: { content: string }
   ) =>
-    http.patch(
+    http.put(
       `/chat/conversations/${conversationId}/messages/${messageId}`,
       body
     ),
 
   // Archive cuộc hội thoại
   archiveConversation: (conversationId: number) =>
-    http.patch(`/chat/conversations/${conversationId}/archive`, {}),
+    http.put(`/chat/conversations/${conversationId}/archive`, {}),
 
   // Unarchive cuộc hội thoại
   unarchiveConversation: (conversationId: number) =>
-    http.patch(`/chat/conversations/${conversationId}/unarchive`, {}),
+    http.put(`/chat/conversations/${conversationId}/unarchive`, {}),
 
   // Rời khỏi cuộc hội thoại
   leaveConversation: (conversationId: number) =>

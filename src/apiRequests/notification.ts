@@ -54,10 +54,8 @@ const notificationApiRequest = {
     if (params?.offset) queryParams.append("offset", params.offset.toString());
     if (params?.type && params.type !== "all")
       queryParams.append("type", params.type);
-    if (params?.status && params.status !== "all")
-      queryParams.append("status", params.status);
 
-    const url = `/notifications/users/${userId}`;
+    const url = `/notifications/users/${userId}?includeRead=true`;
 
     return http.get<NotificationResponse>(url);
   },

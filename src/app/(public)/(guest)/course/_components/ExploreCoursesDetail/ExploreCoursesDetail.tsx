@@ -16,7 +16,7 @@ import {
 import "@vidstack/react/player/styles/default/layouts/audio.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-import { ArrowLeft, BookOpen, Star } from "lucide-react";
+import { ArrowLeft, BookOpen, Check, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -238,10 +238,28 @@ export default function CourseDetailPage() {
                 About this course
               </h3>
               <p className="text-gray-600 dark:text-white leading-relaxed">
-                {course.description}
+                <span
+                  dangerouslySetInnerHTML={{ __html: course.description }}
+                />
               </p>
             </div>
 
+            <div className="dark:border-1 dark:border-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                What You’ll Learn?
+              </h3>
+              <ul className="space-y-2">
+                {course.needToLearn.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-2 text-gray-700 dark:text-gray-200"
+                  >
+                    <Check className="w-5 h-5 text-purple-500 mt-1 shrink-0" />
+                    <span dangerouslySetInnerHTML={{ __html: item }} />
+                  </li>
+                ))}
+              </ul>
+            </div>
             <div className="dark:border-1 dark:border-white rounded-lg shadow-sm p-6">
               <ModuleLessons course={course} />
             </div>

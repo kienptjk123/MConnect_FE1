@@ -26,7 +26,7 @@ const labelsApiRequest = {
 
   // PUT /labels/:id
   updateLabel: (id: number, body: LabelUpdateType) => {
-    return http.put<LabelUpdateResponseType>(`/labels/${id}`, body);
+    return http.put<LabelUpdateResponseType>(`/labels/update/${id}`, body);
   },
 
   // DELETE /labels/delete/:id

@@ -56,7 +56,7 @@ export default function CommentSection({
     const content = newComment.trim();
     if (!content) {
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Please enter comment content",
         variant: "destructive",
       });
@@ -65,7 +65,7 @@ export default function CommentSection({
 
     if (!currentUser) {
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Please login to comment",
         variant: "destructive",
       });
@@ -91,7 +91,7 @@ export default function CommentSection({
     } catch (error) {
       console.error("Error creating reply:", error);
       toast({
-        title: "Error",
+        title: "Please login to comment on posts",
         description: "Cannot add comment",
         variant: "destructive",
       });

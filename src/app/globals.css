@@ -192,3 +192,21 @@
     -webkit-line-clamp: 3;
   }
 }
+
+.slider::after {
+  position: absolute;
+  content: "";
+  top: -1rem;
+  bottom: -1rem;
+  right: -1rem;
+  left: -1rem;
+  outline: 1.5px dashed #d1d5db; /* var(--light) => màu xám Tailwind */
+  border-radius: 10px;
+}
+.swal2-container {
+  z-index: 100000 !important;
+}
+
+.z-\[100000\] {
+  z-index: 100000 !important;
+}

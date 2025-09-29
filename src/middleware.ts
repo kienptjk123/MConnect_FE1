@@ -34,7 +34,6 @@ const PRIVATE_PATHS = Object.values(ROLE_PATHS)
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Skip middleware cho các path đặc biệt
   if (
     pathname.startsWith("/api/") ||
     pathname.startsWith("/_next/") ||
@@ -43,13 +42,6 @@ export function middleware(request: NextRequest) {
   ) {
     return NextResponse.next();
   }
-
-  // Add debug logging
-  console.log("🔍 [Middleware] Processing request:", {
-    pathname,
-    hasAccessToken: !!request.cookies.get("accessToken")?.value,
-    hasRefreshToken: !!request.cookies.get("refreshToken")?.value,
-  });
 
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
@@ -116,16 +108,13 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
+// middleware.ts
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - refresh-token (refresh token page)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|refresh-token).*)",
+    // Chạy middleware cho mọi path TRỪ các path/đuôi sau:
+    // - api, _next/*, favicon/sitemap/robots/manifest
+    // - thư mục static phổ biến (models, draco, basis, textures, assets, images, fonts, videos, static, wasm…)
+    // - các file đuôi tĩnh (glb/gltf/bin/ktx2/basis/wasm và hình/vid/audio…)
+    "/((?!api|_next/static|_next/image|_next/data|favicon\\.ico|sitemap\\.xml|robots\\.txt|manifest\\.webmanifest|assets|static|models|model|draco|basis|textures|images|img|fonts|videos|media|wasm)(?!.*\\.(?:glb|gltf|bin|ktx2|basis|wasm|ico|png|jpg|jpeg|gif|webp|avif|svg|mp4|webm|mp3|wav|ogg|txt|xml|json|map)$).*)",
   ],
 };

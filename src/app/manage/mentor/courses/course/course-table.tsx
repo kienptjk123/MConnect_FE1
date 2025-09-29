@@ -1,15 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -18,9 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { toast } from "@/components/ui/use-toast";
+import { useMentorDeleteCourseMutation } from "@/queries/useMentorCourse";
 import { CourseType } from "@/schemaValidations/course.schema";
-import { Edit, Eye, MoreHorizontal, Star, Trash2 } from "lucide-react";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { Edit, Eye, Star, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
 interface CourseTableProps {
   data: CourseType[];
@@ -52,6 +49,8 @@ const getStatusBadge = (status: "PUBLISHED" | "DRAFT" | "ARCHIVED") => {
 
 export default function CourseTable({ data }: CourseTableProps) {
   const router = useRouter();
+  const deleteCourseMutation = useMentorDeleteCourseMutation();
+  const [courses, setCourses] = useState<CourseType[]>(data);
 
   const handleEdit = (id: number) => {
     router.push(`/manage/mentor/courses/course/${id}/edit`);
@@ -61,8 +60,33 @@ export default function CourseTable({ data }: CourseTableProps) {
     router.push(`/courses/${slug}`);
   };
 
-  const handleDelete = (id: number) => {
-    console.log("Delete course:", id);
+  const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+      title: `Are you sure to delete course?`,
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Delete",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!result.isConfirmed) return;
+    try {
+      await deleteCourseMutation.mutateAsync(id);
+      toast({
+        title: "Course deleted",
+        description: `"Course was removed.`,
+      });
+      setCourses((prev) => prev.filter((course) => course.id !== id));
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete tag.",
+        variant: "destructive",
+      });
+    }
   };
 
   const formatPrice = (price: string) => {
@@ -98,7 +122,7 @@ export default function CourseTable({ data }: CourseTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.length === 0 ? (
+            {courses.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={8} className="text-center py-12">
                   <div className="flex flex-col items-center gap-3 text-gray-500">
@@ -110,7 +134,7 @@ export default function CourseTable({ data }: CourseTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              data.map((course) => (
+              courses.map((course) => (
                 <TableRow key={course.id} className="hover:bg-gray-50/50">
                   <TableCell>
                     <div className="font-medium text-gray-900 dark:text-gray-100">
@@ -163,10 +187,10 @@ export default function CourseTable({ data }: CourseTableProps) {
         </Table>
       </div>
 
-      {data.length > 0 && (
+      {courses.length > 0 && (
         <div className="flex items-center justify-between space-x-2 py-4">
           <div className="flex-1 text-sm text-muted-foreground">
-            Showing {data.length} course{data.length !== 1 ? "s" : ""}
+            Showing {courses.length} course{courses.length !== 1 ? "s" : ""}
           </div>
         </div>
       )}

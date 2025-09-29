@@ -31,6 +31,8 @@ export const MentorSchema = z.object({
   name: z.string(),
   bio: z.string().nullable(),
   location: z.string().nullable(),
+  major: z.string().nullable(),
+  my_cv: z.string().nullable(),
   username: z.string(),
   avatar: z.string().nullable(),
   coverPhoto: z.string().nullable(),

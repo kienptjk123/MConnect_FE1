@@ -383,14 +383,8 @@ export default function MentorDetailPage() {
                         Expertise
                       </h3>
                       <div className="flex flex-wrap gap-2">
-                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
-                          AI
-                        </Badge>
                         <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
                           Engineering
-                        </Badge>
-                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
-                          +1
                         </Badge>
                       </div>
                     </div>
@@ -412,10 +406,6 @@ export default function MentorDetailPage() {
                       </h3>
                       <div className="flex flex-wrap gap-2">
                         <Badge variant="outline">English</Badge>
-                        <Badge variant="outline">Hindi</Badge>
-                        <Badge className="bg-gray-100 light:text-gray-800 hover:bg-gray-200">
-                          +1
-                        </Badge>
                       </div>
                     </div>
                   </div>
