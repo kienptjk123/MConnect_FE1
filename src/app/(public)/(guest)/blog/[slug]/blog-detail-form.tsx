@@ -140,7 +140,7 @@ export default function BlogDetailForm() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header section */}
-      <div className="relative w-screen ">
+      <div className="relative">
         <svg
           className="w-full block "
           viewBox="0 0 1440 230"

@@ -106,20 +106,20 @@ export default function Blender() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row h-[700px]">
+    <div className="flex justify-between items-center h-[700px] w-full">
       <div
         ref={overlayTextRef}
         className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 z-10"
       >
         <div className="text-center space-y-6">
-          <h2 className="text-5xl md:text-7xl font-bold drop-shadow-2xl block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+          <h2 className="text-4xl md:text-5xl font-bold drop-shadow-2xl block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
             Connect
             <span className="animate-text block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
               Mentors & Mentees
             </span>
           </h2>
 
-          <p className="animate-text text-xl md:text-2xl text-black drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
+          <p className="animate-text text-xl text-black drop-shadow-lg max-w-2xl mx-auto leading-relaxed">
             A modern learning platform where you are guided by experienced
             mentors, while exploring an interactive 3D sandbox to practice
             real-world skills in a dynamic and engaging way.

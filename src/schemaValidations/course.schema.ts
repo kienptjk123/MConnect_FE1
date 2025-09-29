@@ -90,6 +90,9 @@ export const CourseDetailSchema = z.object({
   avgRating: z.number(),
   ratingCount: z.number(),
   thumbnail: z.string(),
+  courseResponse: z.array(z.string()),
+  needToLearn: z.array(z.string()),
+  subtitle: z.string(),
   createdAt: z.string(),
   categories: z.array(
     z.object({

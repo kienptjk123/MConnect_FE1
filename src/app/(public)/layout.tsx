@@ -9,9 +9,7 @@ export default function PublicLayout({
   return (
     <>
       <div className="light:bg-white mx-auto">
-        <div className="px-[20px]">
-          <Header />
-        </div>
+        <Header />
         <main className="bg-white">{children}</main>
       </div>
       <Footer />
