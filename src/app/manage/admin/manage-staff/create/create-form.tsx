@@ -30,24 +30,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-
-const CreateStaffSchema = z
-  .object({
-    name: z
-      .string()
-      .min(1, "Name is required")
-      .min(3, "Name must be at least 3 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Confirm password is required"),
-    dateOfBirth: z.string().min(1, "Date of birth is required"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-type CreateStaffFormType = z.infer<typeof CreateStaffSchema>;
+import {
+  CreateStaffFormType,
+  CreateStaffSchema,
+} from "@/schemaValidations/staff.schema";
 
 export default function CreateStaffFormPage() {
   const router = useRouter();
@@ -59,7 +45,7 @@ export default function CreateStaffFormPage() {
       name: "",
       email: "",
       password: "",
-      confirmPassword: "",
+      confirm_password: "",
       dateOfBirth: "",
     },
   });
@@ -174,21 +160,21 @@ export default function CreateStaffFormPage() {
 
               <div className="space-y-2">
                 <Label
-                  htmlFor="confirmPassword"
+                  htmlFor="confirm_password"
                   className="text-sm font-medium text-gray-700"
                 >
                   Confirm Password *
                 </Label>
                 <Input
-                  id="confirmPassword"
+                  id="confirm_password"
                   type="password"
                   placeholder="Confirm password..."
-                  {...form.register("confirmPassword")}
+                  {...form.register("confirm_password")}
                   className="rounded-md border-gray-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
                 />
-                {form.formState.errors.confirmPassword && (
+                {form.formState.errors.confirm_password && (
                   <p className="text-xs text-red-500 font-medium">
-                    {form.formState.errors.confirmPassword.message}
+                    {form.formState.errors.confirm_password.message}
                   </p>
                 )}
               </div>

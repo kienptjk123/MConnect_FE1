@@ -61,6 +61,24 @@ export const UpdateStaffSchema = z.object({
   coverPhoto: z.instanceof(File).nullable().optional(),
 });
 
+export const CreateStaffSchema = z
+  .object({
+    name: z
+      .string()
+      .min(1, "Name is required")
+      .min(3, "Name must be at least 3 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirm_password: z.string().min(6, "Confirm password is required"),
+    dateOfBirth: z.string().min(1, "Date of birth is required"),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: "Passwords don't match",
+    path: ["confirm_password"],
+  });
+
+export type CreateStaffFormType = z.infer<typeof CreateStaffSchema>;
+
 export const StaffResponseSchema = z.object({
   message: z.string(),
   result: z.array(StaffSchema),

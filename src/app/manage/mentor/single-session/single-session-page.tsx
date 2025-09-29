@@ -75,13 +75,6 @@ export default function SingleSessionPage() {
 
         <Separator />
         <CardContent className="p-6">
-          {isLoading && (
-            <div className="py-16 text-center">
-              <div className="inline-flex items-center gap-3 text-gray-600">
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-blue-400 border-t-transparent"></div>
-              </div>
-            </div>
-          )}
           {isError && (
             <div className="py-16 text-center">
               <div className="inline-flex flex-col items-center gap-3 text-red-600">
