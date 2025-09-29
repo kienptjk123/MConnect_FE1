@@ -255,9 +255,10 @@ export default function CourseDetailPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 About this course
               </h3>
-              <p className="text-gray-600 dark:text-white leading-relaxed">
-                {course.description}
-              </p>
+              <div
+                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: course.description }}
+              />
             </div>
 
             <div className="dark:border-1 dark:border-white rounded-lg shadow-sm p-6">
