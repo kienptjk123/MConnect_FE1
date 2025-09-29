@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useFriendActions } from "@/queries/useFriends";
 import {
@@ -56,6 +56,12 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
     return null;
   }
 
+  console.log("isSending", isSending);
+
+  useEffect(() => {
+    isSending;
+  }, [isSending]);
+
   const handleSendRequest = async () => {
     if (!profile?.id) {
       toast.error("Please login to send friend requests");
@@ -81,7 +87,7 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
           className={className}
           size={size}
           variant={variant}
-          disabled={isSending || !profile?.id}
+          disabled={isSending}
         >
           {isSending ? (
             <>
@@ -132,7 +138,7 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
             <Button
               onClick={handleSendRequest}
               disabled={isSending}
-              className="flex-1"
+              className="flex-1 bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center"
             >
               {isSending ? (
                 <>
@@ -158,58 +164,5 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
         </div>
       </DialogContent>
     </Dialog>
-  );
-};
-
-// Alternative simple button without dialog
-export const SimpleFriendRequestButton: React.FC<FriendRequestButtonProps> = ({
-  targetUserId,
-  targetUserName,
-  className = "",
-  size = "default",
-  variant = "default",
-}) => {
-  const { profile } = useProfileStore();
-  const { sendRequest, isSending } = useFriendActions();
-
-  // Don't show button for own profile
-  if (profile?.id === targetUserId) {
-    return null;
-  }
-
-  const handleSendRequest = async () => {
-    if (!profile?.id) {
-      toast.error("Please login to send friend requests");
-      return;
-    }
-
-    try {
-      await sendRequest(targetUserId, `Hi ${targetUserName}, let's connect!`);
-      toast.success(`Friend request sent to ${targetUserName}!`);
-    } catch (error) {
-      console.error("Failed to send friend request:", error);
-    }
-  };
-
-  return (
-    <Button
-      onClick={handleSendRequest}
-      className={className}
-      size={size}
-      variant={variant}
-      disabled={isSending || !profile?.id}
-    >
-      {isSending ? (
-        <>
-          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          Sending...
-        </>
-      ) : (
-        <>
-          <UserPlus className="h-4 w-4 mr-2" />
-          Connect
-        </>
-      )}
-    </Button>
   );
 };

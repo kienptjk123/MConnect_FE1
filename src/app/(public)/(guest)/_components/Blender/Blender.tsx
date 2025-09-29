@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -111,7 +112,7 @@ export default function Blender() {
         className="flex flex-col justify-center items-center w-full md:w-1/2 p-8 z-10"
       >
         <div className="text-center space-y-6">
-          <h2 className="text-5xl md:text-7xl font-bold text-white drop-shadow-2xl">
+          <h2 className="text-5xl md:text-7xl font-bold drop-shadow-2xl block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
             Connect
             <span className="animate-text block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
               Mentors & Mentees
@@ -133,13 +134,13 @@ export default function Blender() {
               Join Now
             </Button>
 
-            <Button
-              variant="outline"
-              className="bg-gray-300 hover:bg-gray-400 dark:text-white rounded-3xl"
-              size="lg"
+            <Link
+              href="http://sandbox-mconnect.s3-website-ap-southeast-1.amazonaws.com"
+              target="_blank"
+              className="bg-gray-300 hover:bg-gray-400 dark:text-white rounded-3xl px-4 py-2"
             >
               View Sandbox Demo
-            </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -161,9 +162,9 @@ export default function Blender() {
             }}
           />
 
-          <div className="absolute top-0 left-0 w-full h-14 bg-[#E3EFFB] z-20"></div>
+          <div className="absolute top-0 left-0 w-full h-14 bg-white z-20"></div>
 
-          <div className="absolute bottom-0 left-0 w-full h-20 bg-[#E3EFFB] z-20"></div>
+          <div className="absolute bottom-0 left-0 w-full h-20 bg-white z-20"></div>
         </div>{" "}
       </div>
     </div>

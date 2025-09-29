@@ -8,11 +8,11 @@ export default function PublicLayout({
 }) {
   return (
     <>
-      <div className="dark:bg-[#E3EFFB] mx-auto">
+      <div className="light:bg-white mx-auto">
         <div className="px-[20px]">
           <Header />
         </div>
-        <main className="bg-[#E3EFFB]">{children}</main>
+        <main className="bg-white">{children}</main>
       </div>
       <Footer />
     </>
