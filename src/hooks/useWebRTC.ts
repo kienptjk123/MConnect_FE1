@@ -32,7 +32,7 @@ export const useWebRTC = ({
     iceServers: [
       { urls: "stun:stun.l.google.com:19302" },
       {
-        urls: "turn:turn.developgenderhealth.io.vn:3478?transport=udp",
+        urls: "turn:turn.mconnect.io.vn:3478?transport=udp",
         username: "turnuser",
         credential: "turnpass",
       },
