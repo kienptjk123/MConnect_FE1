@@ -97,7 +97,7 @@ export default function AnimatedSVGSection({
     <>
       <div
         ref={svgRef}
-        className="flex justify-center mt-8 relative w-full min-h-screen"
+        className="flex justify-center mt-8 relative max-w-[90rem] mx-auto container w-full min-h-screen"
       >
         {/* SVG line chính giữa */}
         <motion.svg
