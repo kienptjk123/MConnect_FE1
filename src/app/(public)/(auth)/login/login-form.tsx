@@ -1,22 +1,21 @@
 "use client";
+import { useAppContext } from "@/components/app-provider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useForm } from "react-hook-form";
-import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { toast } from "@/components/ui/use-toast";
+import envConfig from "@/config";
+import { useLoginMutation } from "@/queries/useAuth";
 import { LoginBody, LoginBodyType } from "@/schemaValidations/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLoginMutation } from "@/queries/useAuth";
-import { toast } from "@/components/ui/use-toast";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAppContext } from "@/components/app-provider";
-import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
-import envConfig from "@/config";
-import notificationService from "@/services/notification-service";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const getOauthGoogleUrl = () => {
   const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -70,19 +69,23 @@ export default function LoginForm() {
       toast({
         description: result.payload.message,
       });
-      setRole(
-        result.payload.result.role as "MENTOR" | "MENTEE" | "STAFF" | "ADMIN"
-      );
-      if (result.payload.result.access_token) {
-        const notificationResult =
-          await notificationService.initializeNotifications();
 
-        if (notificationResult.success) {
-          console.log("Notifications initialized successfully");
-        }
-      }
+      const userRole = result.payload.result.role as
+        | "MENTOR"
+        | "MENTEE"
+        | "STAFF"
+        | "ADMIN";
+      setRole(userRole);
+      const dashboardRoutes = {
+        MENTEE: "/manage/mentee/dashboard",
+        MENTOR: "/manage/mentor/dashboard",
+        STAFF: "/manage/staff/dashboard",
+        ADMIN: "/manage/admin/dashboard",
+      };
 
-      router.push("/");
+      const redirectUrl = dashboardRoutes[userRole] || "/";
+
+      router.push(redirectUrl);
     } catch (error) {
       console.log(error);
       toast({
@@ -157,8 +160,7 @@ export default function LoginForm() {
                         required
                         {...field}
                       />
-                      <button
-                        type="button"
+                      <div
                         className="absolute inset-y-0 right-0 pr-3 flex items-center"
                         onClick={() => setShowPassword(!showPassword)}
                       >
@@ -167,7 +169,7 @@ export default function LoginForm() {
                         ) : (
                           <Eye className="h-4 w-4 text-gray-400" />
                         )}
-                      </button>
+                      </div>
                     </div>
                     <FormMessage />
                   </div>
@@ -204,7 +206,7 @@ export default function LoginForm() {
               className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-md text-sm transition duration-200"
               disabled={loginMutation.isPending}
             >
-              {loginMutation.isPending ? "Đang đăng nhập..." : "Sign in"}
+              {loginMutation.isPending ? "Loading..." : "Sign in"}
             </Button>
 
             <div className="text-center space-y-2">
@@ -214,7 +216,10 @@ export default function LoginForm() {
                 <div className="flex-1 h-1 w-1 bg-gray-300"></div>
               </div>
 
-              <div className="flex items-center justify-between mt-2">
+              <Link
+                href={googleAuthUrl}
+                className="flex items-center justify-between mt-2"
+              >
                 <div className="flex items-center justify-center bg-white border hover:bg-white/85 border-gray-300 text-gray-800 w-full py-3 text-sm rounded-lg mr-2">
                   <Image
                     src="/images/google-logo-search-new-svgrepo-com.svg"
@@ -223,11 +228,9 @@ export default function LoginForm() {
                     height={16}
                     className="mr-2"
                   />
-                  <Link href={googleAuthUrl}>
-                    <div className="">Sign in with Google</div>
-                  </Link>
+                  <div className="">Sign in with Google</div>
                 </div>
-              </div>
+              </Link>
 
               <div className="text-black font-bold mt-2 text-center">
                 Do not have an account?

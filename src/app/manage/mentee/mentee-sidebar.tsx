@@ -19,16 +19,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useLogoutMutation } from "@/queries/useLogout";
+import { useProfileStore } from "@/stores";
 import {
+  CalendarCheck,
   ChevronDown,
   FolderDot,
   LayoutDashboard,
   ListVideo,
   LogOut,
   MessageCircle,
-  MessageCircleQuestionIcon,
   MonitorPlayIcon,
-  Settings,
   ShoppingBag,
   User,
   User2,
@@ -54,6 +55,11 @@ const navigationItems = [
     icon: User2,
   },
   {
+    title: "Work Experience Packages",
+    url: "/manage/mentee/explore-work-exp-pkg",
+    icon: ShoppingBag,
+  },
+  {
     title: "My Courses",
     url: "/manage/mentee/my-courses",
     icon: ListVideo,
@@ -64,6 +70,11 @@ const navigationItems = [
     icon: FolderDot,
   },
   {
+    title: "My Schedules",
+    url: "/manage/mentee/my-schedules",
+    icon: CalendarCheck,
+  },
+  {
     title: "Messages",
     url: "/manage/mentee/message",
     icon: MessageCircle,
@@ -72,9 +83,12 @@ const navigationItems = [
 
 export default function MenteeSidebar() {
   const location = usePathname();
+  const user = useProfileStore();
+  const logoutMutation = useLogoutMutation();
+
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="dark:bg-[#080808]">
+      <SidebarHeader className="dark:bg-[#080808] bg-white">
         <div className="flex items-center gap-2 px-3 py-3 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:py-3">
           <Image src="/images/sandboxlogo.png" width={40} height={40} alt="" />
           <span className="truncate font-bold dark:text-white text-gray-900  text-lg group-data-[collapsible=icon]:hidden">
@@ -83,7 +97,7 @@ export default function MenteeSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent className=" custom-scrollbar overflow-y-auto dark:bg-[#080808]">
+      <SidebarContent className="custom-scrollbar overflow-y-auto dark:bg-[#080808] bg-white">
         <SidebarGroup>
           <SidebarGroupContent className="">
             <SidebarMenu className="space-y-1">
@@ -117,72 +131,91 @@ export default function MenteeSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-pink-100 bg-white p-2">
+      <SidebarFooter className="border-t border-pink-100 light:bg-white p-2">
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size="lg"
-                  className="group h-14 rounded-xl bg-white shadow-sm border border-pink-100 hover:bg-gradient-to-r hover:from-pink-50 hover:to-rose-50 hover:shadow-md transition-all duration-200 data-[state=open]:bg-gradient-to-r data-[state=open]:from-pink-100 data-[state=open]:to-rose-100 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+                  className="group h-14 rounded-xl light:bg-white shadow-sm border border-blue-300 hover:bg-gradient-to-r hover:bg-blue-100 hover:shadow-md transition-all duration-200 data-[state=open]:bg-gradient-to-r data-[state=open]:bg-blue-200 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                 >
-                  <Avatar className="h-9 w-9 rounded-xl border-2 border-pink-200 transition-all duration-300">
+                  <Avatar className="h-9 w-9 rounded-xl border-2 border-blue-300 transition-all duration-300">
                     <AvatarImage
-                      src="/placeholder.svg?height=36&width=36"
+                      src={
+                        user?.profile?.avatar ||
+                        "/placeholder.svg?height=32&width=32"
+                      }
                       alt="User"
                     />
-                    <AvatarFallback className="rounded-xl bg-gradient-to-br from-pink-500 to-rose-500 text-white font-semibold text-sm">
-                      HH
+                    <AvatarFallback className="rounded-xl bg-blue-500 text-white font-semibold text-sm">
+                      {user?.profile?.name.charAt(2)}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
-                    <span className="truncate font-semibold text-gray-900">
-                      User
+                    <span className="truncate font-semibold light:text-gray-900">
+                      {user?.profile?.name}
                     </span>
-                    <span className="truncate text-xs text-blue-600">
-                      kien@example.com
+                    <span className="truncate text-xs light:text-blue-600">
+                      {user?.profile?.email}
                     </span>
                   </div>
                   <ChevronDown className="ml-auto size-4 text-blue-500 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl border-pink-100 shadow-lg"
+                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-xl border-blue-100 shadow-lg"
                 side="bottom"
                 align="end"
                 sideOffset={4}
               >
-                <div className="flex items-center justify-start gap-2 p-3 bg-gradient-to-r from-pink-50 to-rose-50">
+                <div className="flex items-center justify-start gap-2 p-3 bg-gradient-to-r from-blue-50 to-blue-100">
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage
-                      src="/placeholder.svg?height=32&width=32"
+                      src={
+                        user?.profile?.avatar ||
+                        "/placeholder.svg?height=32&width=32"
+                      }
                       alt="User"
                     />
-                    <AvatarFallback className="rounded-lg bg-gradient-to-br from-pink-500 to-rose-500 text-white text-sm">
-                      JD
+                    <AvatarFallback className="rounded-xl bg-blue-500 text-white font-semibold text-sm">
+                      {user?.profile?.name.charAt(2)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex flex-col space-y-1 leading-none">
-                    <p className="font-semibold text-gray-900">User</p>
-                    <p className="text-xs text-blue-600">kien@example.com</p>
+                  <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
+                    <span className="truncate font-semibold text-gray-900">
+                      {user?.profile?.name}
+                    </span>
+                    <span className="truncate text-xs text-blue-600">
+                      {user?.profile?.email}
+                    </span>
                   </div>
                 </div>
-                <DropdownMenuSeparator className="bg-pink-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 my-1 hover:bg-pink-50">
-                  <User className="mr-3 h-4 w-4 text-pink-500" />
-                  <span>Profile</span>
+                <DropdownMenuSeparator className="bg-blue-100" />
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                >
+                  <Link href="/manage/mentee/profile" className="flex gap-2">
+                    <User className="mr-3 h-4 w-4 text-blue-500" />
+                    <span>Profile</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg mx-1 my-1 hover:bg-pink-50">
-                  <ShoppingBag className="mr-3 h-4 w-4 text-pink-500" />
-                  <span>Orders</span>
+                <DropdownMenuItem
+                  asChild
+                  className="rounded-lg mx-1 my-1 hover:bg-blue-50"
+                >
+                  <Link href="/manage/mentee/order" className="flex gap-2">
+                    <ShoppingBag className="mr-3 h-4 w-4 text-blue-500" />
+                    <span>Orders</span>
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="rounded-lg mx-1 my-1 hover:bg-pink-50">
-                  <Settings className="mr-3 h-4 w-4 text-pink-500" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator className="bg-pink-100" />
-                <DropdownMenuItem className="rounded-lg mx-1 cursor-pointer my-1 text-red-600 hover:bg-red-50 hover:text-red-700 ">
-                  <LogOut className="mr-3 h-4 w-4" />
+                <DropdownMenuSeparator className="bg-blue-100" />
+                <DropdownMenuItem
+                  className="rounded-lg mx-1 cursor-pointer my-1  hover:bg-red-50 hover:text-blue-600 "
+                  onClick={() => logoutMutation.mutate()}
+                >
+                  <LogOut className="mr-3 h-4 w-4 text-blue-500" />
                   <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

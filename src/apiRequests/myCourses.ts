@@ -1,7 +1,14 @@
 import http from "@/lib/http";
-import { CourseProgressResponseType } from "@/schemaValidations/course.schema";
+import {
+  CourseProgressResponseType,
+  MyCoursesResponseType,
+} from "@/schemaValidations/myCourses.schema";
 
 const myCoursesApiRequest = {
+  getLearningCourses: () => {
+    return http.get<MyCoursesResponseType>(`/mentee/learning-courses`);
+  },
+
   getCourseProgress: (courseId: number) => {
     return http.get<CourseProgressResponseType>(
       `/mentee/courses/${courseId}/progress`

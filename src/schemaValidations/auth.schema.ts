@@ -11,7 +11,8 @@ export type LoginBodyType = z.TypeOf<typeof LoginBody>;
 
 export const RegisterBody = z
   .object({
-    name: z.string().min(2, "Tên phải có ít nhất 2 ký tự"),
+    firstName: z.string().min(1, "Vui lòng nhập họ"),
+    lastName: z.string().min(1, "Vui lòng nhập tên"),
     email: z.string().email("Email không hợp lệ"),
     password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
     confirm_password: z
@@ -29,7 +30,6 @@ export const RegisterBody = z
   })
   .refine(
     (data) => {
-      // Validate that dateOfBirth is a valid date
       const date = new Date(data.dateOfBirth);
       return !isNaN(date.getTime());
     },
@@ -41,7 +41,6 @@ export const RegisterBody = z
 
 export type RegisterBodyType = z.TypeOf<typeof RegisterBody>;
 
-// API payload type with snake_case for backend
 export type RegisterApiPayload = {
   name: string;
   email: string;
@@ -63,7 +62,7 @@ export type LoginResType = z.TypeOf<typeof LoginRes>;
 
 export const RegisterRes = z.object({
   message: z.string(),
-  data: z.object({
+  result: z.object({
     access_token: z.string(),
     refresh_token: z.string(),
   }),
@@ -96,7 +95,7 @@ export const ResendVerifyEmailRes = z.object({
 export type ResendVerifyEmailResType = z.TypeOf<typeof ResendVerifyEmailRes>;
 
 export const RefreshTokenBody = z.object({
-  refreshToken: z.string(),
+  refresh_token: z.string(),
 });
 
 export type RefreshTokenBodyType = z.TypeOf<typeof RefreshTokenBody>;

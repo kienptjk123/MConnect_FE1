@@ -28,6 +28,16 @@ export const MentorProfileSchema = z.object({
   }),
 });
 
+export const MediaSchema = z.object({
+  id: z.number(),
+  type: z.enum(["VIDEO", "AUDIO", "PDF", "IMAGE"]).default("VIDEO"),
+  s3Key: z.string(),
+  status: z.enum(["UPLOADING", "PROCESSING", "READY", "FAILED"]),
+  durationSec: z.number(),
+  thumbnailKey: z.string().nullable(),
+  createdAt: z.string().datetime(), // ISO datetime string
+});
+
 export const ModuleSchema = z.array(
   z.object({
     id: z.number(),
@@ -43,6 +53,7 @@ export const ModuleSchema = z.array(
         mediaId: z.number().nullable(),
         commentsEnabled: z.boolean(),
         durationSec: z.number(),
+        media: MediaSchema.optional().nullable(),
       })
     ),
   })
@@ -55,8 +66,18 @@ export const CourseSchema = z.object({
   slug: z.string(),
   description: z.string(),
   price: z.string(),
+  subtitle: z.string().nullable(),
   status: z.enum(["PUBLISHED", "DRAFT", "ARCHIVED"]),
   avgRating: z.number(),
+  labels: z.array(
+    z.object({
+      courseLabel: z.object({
+        id: z.number(),
+        name: z.string(),
+        slug: z.string(),
+      }),
+    })
+  ),
   ratingCount: z.number(),
   thumbnail: z.string(),
   createdAt: z.string(),
@@ -90,6 +111,9 @@ export const CourseDetailSchema = z.object({
   avgRating: z.number(),
   ratingCount: z.number(),
   thumbnail: z.string(),
+  courseResponse: z.array(z.string()),
+  needToLearn: z.array(z.string()),
+  subtitle: z.string(),
   createdAt: z.string(),
   categories: z.array(
     z.object({
@@ -147,6 +171,51 @@ export const CourseResponseSchema = z.object({
       limit: z.number(),
       total: z.number(),
       totalPages: z.number(),
+    }),
+  }),
+});
+
+export const CourseMentorResponseSchema = z.object({
+  message: z.string(),
+  result: z.object({
+    id: z.number(),
+    mentorProfileId: z.number(),
+    title: z.string(),
+    slug: z.string(),
+    description: z.string(),
+    price: z.string(),
+    subtitle: z.string().nullable(),
+    status: z.enum(["PUBLISHED", "DRAFT", "ARCHIVED"]),
+    avgRating: z.number(),
+    labels: z.array(
+      z.object({
+        courseLabel: z.object({
+          id: z.number(),
+          name: z.string(),
+          slug: z.string(),
+        }),
+      })
+    ),
+    ratingCount: z.number(),
+    thumbnail: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    categories: z.array(
+      z.object({
+        courseCategory: z.object({
+          id: z.number(),
+          name: z.string(),
+          slug: z.string(),
+        }),
+      })
+    ),
+    modules: ModuleSchema,
+    mentorProfile: MentorProfileSchema,
+    needToLearn: z.array(z.string()),
+    _count: z.object({
+      enrollments: z.number(),
+      ratings: z.number(),
+      modules: z.number(),
     }),
   }),
 });
@@ -224,14 +293,48 @@ export const CourseProgressResponseSchema = z.object({
   }),
 });
 
+export const AdminUpdateCourseSchema = z.object({
+  status: z
+    .enum(["PUBLISHED", "DRAFT", "PENDING_REVIEW", "ARCHIVED"])
+    .optional(),
+  note: z.string().optional(),
+});
+
 export type CourseType = z.TypeOf<typeof CourseSchema>;
 export type CourseDetailType = z.TypeOf<typeof CourseDetailSchema>;
 export type CourseDetailSchema = z.TypeOf<typeof CourseDetailResponseSchema>;
 export type CourseResponseType = z.TypeOf<typeof CourseResponseSchema>;
+export type CourseMentorResponseType = z.TypeOf<
+  typeof CourseMentorResponseSchema
+>;
 export type CourseProgressResponseType = z.TypeOf<
   typeof CourseProgressResponseSchema
 >;
 export type CourseWithProgressType = z.TypeOf<typeof CourseWithProgressSchema>;
 export type CoursePublicStreamResponseType = z.TypeOf<
   typeof CoursePublicStreamResponseSchema
+>;
+export type AdminUpdateCourseType = z.TypeOf<typeof AdminUpdateCourseSchema>;
+
+// Course Enrollment Schemas
+export const CourseEnrollmentBodySchema = z.object({
+  courseId: z.number(),
+  amount: z.number(),
+  orderInfo: z.string(),
+});
+
+export const CourseEnrollmentResponseSchema = z.object({
+  message: z.string(),
+  data: z.object({
+    paymentUrl: z.string(),
+    courseId: z.number(),
+    amount: z.number(),
+  }),
+});
+
+export type CourseEnrollmentBodyType = z.TypeOf<
+  typeof CourseEnrollmentBodySchema
+>;
+export type CourseEnrollmentResponseType = z.TypeOf<
+  typeof CourseEnrollmentResponseSchema
 >;

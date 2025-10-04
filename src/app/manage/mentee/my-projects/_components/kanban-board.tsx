@@ -3,14 +3,14 @@
 import { kanbanTaskApiRequest } from "@/apiRequests/kanban";
 import { TaskCard } from "@/app/manage/mentee/my-projects/_components/task-card";
 import { toast } from "@/components/ui/use-toast";
-import { TaskType } from "@/schemaValidations/taskKanban.schema";
+import { TaskType } from "@/schemaValidations/kanban.schema";
 import { useEffect, useMemo, useState } from "react";
 import { KanbanColumn } from "./kanban-column";
 import { KanbanHeader } from "./kanban-header";
 import { useKanbanTasks } from "@/queries/useKanban";
+import { TaskCardSkeleton } from "@/app/manage/mentee/my-projects/_components/task-card-skeleton";
 
 export function KanbanBoard() {
-  // All hooks must be at the top level
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState("ALL");
@@ -39,7 +39,6 @@ export function KanbanBoard() {
     fetchTasks();
   }, []);
 
-  // Update task status with API call
   const moveTask = useMemo(() => {
     return async (taskId: string, newStatus: TaskType["status"]) => {
       const task = tasks.find((t) => t.id === taskId);
@@ -81,19 +80,6 @@ export function KanbanBoard() {
     };
   }, [tasks]);
 
-  // const addTask = useMemo(() => {
-  //   return (newTask: Omit<TaskType, "id">) => {
-  //     const task: TaskType = {
-  //       ...newTask,
-  //       id: Date.now().toString(),
-  //     };
-  //     setTasks((prevTasks) => {
-  //       if (!Array.isArray(prevTasks)) return [task];
-  //       return [...prevTasks, task];
-  //     });
-  //   };
-  // }, []);
-
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
       const matchesSearch =
@@ -126,16 +112,12 @@ export function KanbanBoard() {
   );
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
-      </div>
-    );
+    return <div></div>;
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="bg-background flex items-center justify-center">
         <div className="text-red-500 text-center">
           <h2 className="text-xl font-bold mb-2">Error Loading Tasks</h2>
           <p>{error.message}</p>
@@ -151,9 +133,9 @@ export function KanbanBoard() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-white max-w-7xl mx-auto w-full p-6">
       <KanbanHeader onSearch={setSearchQuery} onFilterChange={setFilter} />
-      <div className="flex gap-6 p-6 overflow-x-auto justify-center">
+      <div className="flex gap-6 overflow-x-auto justify-center">
         <KanbanColumn
           title="To Do"
           count={todoTasks.length}

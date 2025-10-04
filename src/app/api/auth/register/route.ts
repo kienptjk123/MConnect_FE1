@@ -10,8 +10,7 @@ export async function POST(request: Request) {
 
   try {
     const { payload } = await authApiRequest.sRegister(body);
-
-    const { access_token, refresh_token } = payload.data;
+    const { access_token, refresh_token } = payload.result;
 
     const decodedAccessToken = jwt.decode(access_token) as { exp: number };
     const decodedRefreshToken = jwt.decode(refresh_token) as { exp: number };
@@ -20,33 +19,31 @@ export async function POST(request: Request) {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
-      secure: true,
-      expires: new Date(decodedAccessToken.exp * 1000),
+      secure: process.env.NODE_ENV === "production",
+      expires: decodedAccessToken?.exp
+        ? new Date(decodedAccessToken.exp * 1000)
+        : undefined,
     });
 
     cookieStore.set("refreshToken", refresh_token, {
       path: "/",
       httpOnly: true,
       sameSite: "lax",
-      secure: true,
-      expires: new Date(decodedRefreshToken.exp * 1000),
+      secure: process.env.NODE_ENV === "production",
+      expires: decodedRefreshToken?.exp
+        ? new Date(decodedRefreshToken.exp * 1000)
+        : undefined,
     });
 
     return Response.json(payload);
   } catch (error) {
+    console.error("❌ Register API error:", error);
+
     if (error instanceof HttpError) {
-      return Response.json(error.payload, {
-        status: error.status,
-      });
-    } else {
-      return Response.json(
-        {
-          message: "Có lỗi xảy ra",
-        },
-        {
-          status: 500,
-        }
-      );
+      return Response.json(error.payload, { status: error.status });
     }
+
+    // ✅ vẫn trả JSON thay vì rỗng
+    return Response.json({ message: "Có lỗi xảy ra" }, { status: 500 });
   }
 }

@@ -6,6 +6,7 @@ export const ProfileSchema = z.object({
   role: z.string(),
   status: z.string(),
   mentee_profile_id: z.number(),
+  mentor_profile_id: z.number().nullable(),
   created_at: z.string(),
   updated_at: z.string(),
   name: z.string(),
@@ -32,17 +33,13 @@ export const UpdateProfileSchema = z.object({
     .min(3, "Name must be at least 3 characters")
     .max(100)
     .optional(),
-  bio: z
-    .string()
-    .max(160, "Bio must be less than 160 characters")
-    .nullable()
-    .optional(),
+  bio: z.string().max(100, "Bio must be less than 160 characters").nullable(),
   date_of_birth: z.string().optional(),
   location: z
     .string()
+    .min(3, "Location must be at least 3 characters")
     .max(100, "Location must be less than 100 characters")
-    .nullable()
-    .optional(),
+    .nullable(),
   website: z
     .string()
     .url("Please enter a valid URL")
@@ -62,6 +59,7 @@ export const UpdateProfileSchema = z.object({
     .optional(),
   description: z
     .string()
+    .min(3, "Description must be at least 3 characters")
     .max(100, "Description must be less than 100 characters")
     .nullable()
     .optional(),

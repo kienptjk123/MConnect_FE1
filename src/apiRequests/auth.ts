@@ -30,16 +30,16 @@ const authApiRequest = {
   sRegister: (body: RegisterApiPayload) =>
     http.post<RegisterResType>("/users/register", body),
 
+  register: (body: RegisterApiPayload) =>
+    http.post<RegisterResType>("/api/auth/register", body, {
+      baseUrl: "",
+    }),
+
   sVerifyEmail: (body: VerifyEmailBodyType, accessToken: string) =>
     http.post<VerifyEmailResType>("/users/verify-email", body, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-    }),
-
-  register: (body: RegisterApiPayload) =>
-    http.post<RegisterResType>("/api/auth/register", body, {
-      baseUrl: "",
     }),
 
   verifyEmail: (body: VerifyEmailBodyType) =>
@@ -50,14 +50,13 @@ const authApiRequest = {
   resendVerifyEmail: () =>
     http.post<ResendVerifyEmailResType>("/users/resend-verify-email", {}),
   sRefreshToken: (body: RefreshTokenBodyType) =>
-    http.post<RefreshTokenResType>("/auth/refresh-token", body, {
-      baseUrl: "",
-    }),
+    http.post<RefreshTokenResType>("/users/refresh-token", body),
+
+  sLogout: (body: { refresh_token: string }) =>
+    http.post<{ message: string }>("/users/logout", body),
 
   logout: () =>
-    http.post("/api/auth/logout", null, {
-      baseUrl: "",
-    }),
+    http.post<{ message: string }>("/api/auth/logout", {}, { baseUrl: "" }),
 
   async refreshToken() {
     if (this.refreshTokenRequest) {
@@ -74,6 +73,19 @@ const authApiRequest = {
     this.refreshTokenRequest = null;
     return result;
   },
+
+  // Method that refreshes tokens and sets them to both cookies and localStorage
+  refreshAndSetTokens: () =>
+    http.post<{
+      message: string;
+      result: {
+        access_token: string;
+        refresh_token: string;
+        role: string;
+      };
+    }>("/api/auth/refresh-token?returnData=true", null, {
+      baseUrl: "",
+    }),
 
   sForgotPassword: (body: ForgotPasswordBodyType) =>
     http.post<ForgotPasswordBodyType>("/users/forgot-password", body),

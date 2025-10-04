@@ -8,10 +8,7 @@ import TagTable from "@/app/manage/staff/manage-tag/tag-table";
 import { CreateTagDialog } from "@/app/manage/staff/manage-tag/create-tag-form";
 
 export default function TagManagementPage() {
-  const { data, isLoading, isError, refetch } = useTagsQuery();
-  const count = Array.isArray(data?.payload?.data)
-    ? data?.payload?.data?.length
-    : 0;
+  const { data, isLoading, isError } = useTagsQuery();
 
   return (
     <div className="mx-auto min-w-7xl p-6">

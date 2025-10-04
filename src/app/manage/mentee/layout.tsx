@@ -10,7 +10,7 @@ export default function PublicLayout({
   return (
     <SidebarProvider>
       <MenteeSidebar />
-      <SidebarInset>
+      <SidebarInset className="flex flex-col h-screen">
         <MenteeHeader />
         {children}
       </SidebarInset>

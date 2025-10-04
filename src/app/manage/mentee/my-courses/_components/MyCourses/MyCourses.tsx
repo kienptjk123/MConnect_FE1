@@ -4,42 +4,34 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { useCourseProgress } from "@/queries/useCourse";
+import { useLearningCourses } from "@/queries/useMyCourses";
 import { BookOpen, Download, Play, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-const ENROLLED_COURSE_IDS = [1];
-
 export default function MyCourses() {
   const [activeTab, setActiveTab] = useState<"all" | "active" | "completed">(
     "all"
   );
-  const { data, isLoading, error } = useCourseProgress(ENROLLED_COURSE_IDS[0]);
-  const enrollments = data?.payload?.result
-    ? [
-        {
-          id: data.payload.result.enrollment.id,
-          course: data.payload.result.course,
-          progressPercentage: data.payload.result.progressPercentage,
-          totalLessons: data.payload.result.totalLessons,
-          completedLessons: data.payload.result.completedLessons,
-        },
-      ]
-    : [];
+  const { data, error } = useLearningCourses();
 
-  const filterCourses = (courses: any[]) => {
+  const enrollments = data?.payload?.result?.enrollments || [];
+
+  const filterCourses = (enrollments: any[]) => {
     switch (activeTab) {
       case "active":
-        return courses.filter(
-          (course) =>
-            course.progressPercentage > 0 && course.progressPercentage < 100
+        return enrollments.filter(
+          (enrollment) =>
+            enrollment.progressPercentage > 0 &&
+            enrollment.progressPercentage < 100
         );
       case "completed":
-        return courses.filter((course) => course.progressPercentage >= 100);
+        return enrollments.filter(
+          (enrollment) => enrollment.progressPercentage >= 100
+        );
       default:
-        return courses;
+        return enrollments;
     }
   };
 
@@ -47,7 +39,7 @@ export default function MyCourses() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br bg-white">
+      <div className="flex flex-col items-center justify-center bg-gradient-to-br bg-white">
         <div className="flex flex-col items-center justify-center p-8 rounded-2xl shadow-xl bg-white border border-blue-100">
           <div className="mb-6">
             <svg
@@ -71,7 +63,7 @@ export default function MyCourses() {
           <h2 className="text-2xl font-bold text-blue-700 mb-2">
             Bạn chưa tham gia khóa học nào
           </h2>
-          <p className="text-gray-600 mb-6 max-w-xs text-center">
+          <p className="light:text-gray-600 mb-6 max-w-xs text-center">
             Hãy khám phá các khóa học hấp dẫn và bắt đầu hành trình học tập của
             bạn ngay hôm nay!
           </p>
@@ -87,74 +79,59 @@ export default function MyCourses() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Courses</h1>
-          <p className="text-gray-600">Continue your learning journey</p>
+    <div className="light:bg-white max-w-7xl mx-auto w-full p-6">
+      <h1 className="text-3xl font-bold light:text-gray-900 mb-2">
+        My Courses
+      </h1>
+      <p className="light:text-gray-600">Continue your learning journey</p>
+
+      <div className="light:bg-white mt-4 border-b">
+        <div className="flex space-x-8">
+          <button
+            onClick={() => setActiveTab("all")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === "all"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent light:text-gray-500 hover:light:text-gray-700"
+            }`}
+          >
+            Enrolled Courses
+          </button>
+          <button
+            onClick={() => setActiveTab("active")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === "active"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent light:text-gray-500 hover:light:text-gray-700"
+            }`}
+          >
+            Active Courses
+          </button>
+          <button
+            onClick={() => setActiveTab("completed")}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === "completed"
+                ? "border-blue-500 text-blue-600"
+                : "border-transparent light:text-gray-500 hover:light:text-gray-700"
+            }`}
+          >
+            Completed Courses
+          </button>
         </div>
       </div>
 
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex space-x-8">
-            <button
-              onClick={() => setActiveTab("all")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "all"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Enrolled Courses ({enrollments.length})
-            </button>
-            <button
-              onClick={() => setActiveTab("active")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "active"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Active Courses
-            </button>
-            <button
-              onClick={() => setActiveTab("completed")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === "completed"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
-              }`}
-            >
-              Completed Courses
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {isLoading && (
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div
-                key={index}
-                className="h-80 bg-gray-200 rounded-lg animate-pulse"
-              />
-            ))}
-          </div>
-        )}
-
-        {!isLoading && filteredCourses.length === 0 && (
+      <div className="mt-8">
+        {filteredCourses.length === 0 && (
           <div className="text-center py-12">
-            <BookOpen className="w-16 h-16 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <BookOpen className="w-16 h-16 mx-auto light:text-gray-400 mb-4" />
+            <h3 className="text-lg font-semibold light:text-gray-900 mb-2">
               {activeTab === "all"
                 ? "No courses enrolled yet"
                 : activeTab === "active"
                 ? "No active courses"
                 : "No completed courses"}
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="light:text-gray-600 mb-6">
               {activeTab === "all"
                 ? "Start your learning journey by enrolling in a course"
                 : "Complete some lessons to see courses here"}
@@ -169,12 +146,14 @@ export default function MyCourses() {
           </div>
         )}
 
-        {!isLoading && filteredCourses.length > 0 && (
-          <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            {filteredCourses.map((enrollment) => (
-              <CourseCard key={enrollment.id} enrollment={enrollment} />
-            ))}
-          </div>
+        {filteredCourses.length > 0 && (
+          <>
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {filteredCourses.map((enrollment) => (
+                <CourseCard key={enrollment.id} enrollment={enrollment} />
+              ))}
+            </div>
+          </>
         )}
       </div>
     </div>
@@ -186,14 +165,16 @@ function CourseCard({ enrollment }: { enrollment: any }) {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div className="relative h-48 bg-gradient-to-r from-purple-500 to-blue-600">
+      <div className="relative h-56 bg-gradient-to-r from-purple-500 to-blue-600">
         {course.thumbnail ? (
-          <Image
-            src={course.thumbnail}
-            alt={course.title}
-            fill
-            className="object-cover"
-          />
+          <Link href={`/manage/mentee/my-courses/${course.slug}`}>
+            <Image
+              src={course.thumbnail}
+              alt={course.title}
+              fill
+              className="object-cover"
+            />
+          </Link>
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-white text-center">
@@ -201,54 +182,48 @@ function CourseCard({ enrollment }: { enrollment: any }) {
                 <span className="text-2xl">📚</span>
               </div>
               <div className="px-4">
-                <p className="text-sm font-medium opacity-90">{course.title}</p>
+                <p className="text-sm font-medium opacity-90">
+                  {course?.title}
+                </p>
                 <p className="text-xs opacity-70 mt-1">
-                  Mentor ID: {course.mentorProfileId}
+                  by {course?.mentorProfile?.name || "Unknown Mentor"}
                 </p>
               </div>
             </div>
           </div>
         )}
-
-        <div className="absolute top-3 right-3">
-          <Badge
-            variant={
-              enrollment.progressPercentage === 100 ? "default" : "secondary"
-            }
-          >
-            {enrollment.progressPercentage}%
-          </Badge>
-        </div>
       </div>
 
-      <div className="p-6">
-        {/* Rating */}
-        <div className="flex items-center gap-2 mb-3">
-          <div className="flex text-yellow-400">{"★".repeat(5)}</div>
-          <span className="text-sm text-gray-600">
-            ({course.ratingCount} Reviews)
-          </span>
-        </div>
-
-        <h3 className="font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+      <div className="p-4">
+        <Link
+          href={`/manage/mentee/my-courses/${course.slug}`}
+          className="font-bold text-xl line-clamp-2 light:text-gray-900 dark:text-white mb-3
+             relative w-fit transition-colors duration-400 
+             hover:text-blue-500
+             after:content-[''] after:absolute after:left-0 after:bottom-0
+             after:w-0 after:h-[2px] after:bg-blue-500 after:transition-all 
+             after:duration-400 hover:after:w-full"
+        >
           {course.title}
-        </h3>
+        </Link>
 
-        <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+        <div className="flex items-center gap-4 text-sm light:text-gray-600 mb-4">
           <div className="flex items-center gap-1">
             <BookOpen className="w-4 h-4" />
             <span>{enrollment.totalLessons} Lessons</span>
           </div>
           <div className="flex items-center gap-1">
             <Users className="w-4 h-4" />
-            <span>${course.price}</span>
+            <span>{course._count.enrollments}</span>
           </div>
         </div>
 
         <div className="mb-4">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium text-gray-700">COMPLETE</span>
-            <span className="text-sm font-medium text-gray-900">
+            <span className="text-sm font-medium light:text-gray-700">
+              COMPLETE
+            </span>
+            <span className="text-sm font-medium light:text-gray-900">
               {enrollment.progressPercentage}%
             </span>
           </div>
@@ -260,7 +235,7 @@ function CourseCard({ enrollment }: { enrollment: any }) {
             <Button
               variant="outline"
               size="lg"
-              className="flex-1 bg-blue-500 hover:bg-blue-600"
+              className="flex-1 text-white bg-blue-500 hover:bg-blue-600"
             >
               <Download className="w-4 h-4 mr-1" />
               Download Certificate

@@ -16,7 +16,7 @@ import {
 import "@vidstack/react/player/styles/default/layouts/audio.css";
 import "@vidstack/react/player/styles/default/layouts/video.css";
 import "@vidstack/react/player/styles/default/theme.css";
-import { ArrowLeft, BookOpen, Star } from "lucide-react";
+import { ArrowLeft, BookOpen, Check, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -54,26 +54,17 @@ export default function CourseDetailPage() {
     (c) => c.slug === params.slug
   );
 
-  const {
-    data: courseResponse,
-    isLoading,
-    error,
-  } = useCourseDetail(courses?.id as number);
+  const { data: courseResponse, error } = useCourseDetail(
+    courses?.id as number
+  );
 
   const lesson = courseResponse?.payload?.result?.modules?.[0].lessons?.[0];
   const course = courseResponse?.payload?.result;
   const video = useCoursePublicStream(lesson?.id as number);
-  if (isLoading && loadingCourses) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Error loading course
@@ -91,7 +82,7 @@ export default function CourseDetailPage() {
 
   if (!course) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-600 mb-4">
             Course not found
@@ -115,7 +106,7 @@ export default function CourseDetailPage() {
   );
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#080808]">
+    <div className="bg-white dark:bg-[#080808]">
       <div className="border-b">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -192,14 +183,14 @@ export default function CourseDetailPage() {
             <div className="dark:border-1 dark:border-white  rounded-lg shadow-sm p-6">
               <div className="flex justify-between items-center">
                 <div className="">
-                  {course.mentorProfile && (
+                  {course?.mentorProfile && (
                     <div className="">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center overflow-hidden">
-                          {course.mentorProfile.avatar ? (
+                          {course?.mentorProfile?.avatar ? (
                             <Image
-                              src={course.mentorProfile.avatar}
-                              alt={course.mentorProfile.name}
+                              src={course?.mentorProfile?.avatar}
+                              alt={course?.mentorProfile?.name}
                               width={48}
                               height={48}
                               className="w-full h-full object-cover"
@@ -207,7 +198,7 @@ export default function CourseDetailPage() {
                           ) : (
                             <span className="text-blue-600 font-semibold text-lg">
                               {course.mentorProfile.name
-                                .charAt(0)
+                                ?.charAt(0)
                                 .toUpperCase()}
                             </span>
                           )}
@@ -217,7 +208,7 @@ export default function CourseDetailPage() {
                             Created by
                           </p>
                           <p className="text-lg text-gray-900 dark:text-white">
-                            {course.mentorProfile.name}
+                            {course?.mentorProfile?.name}
                           </p>
                         </div>
                       </div>
@@ -264,9 +255,27 @@ export default function CourseDetailPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
                 About this course
               </h3>
-              <p className="text-gray-600 dark:text-white leading-relaxed">
-                {course.description}
-              </p>
+              <div
+                className="prose prose-lg max-w-none text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: course.description }}
+              />
+            </div>
+
+            <div className="dark:border-1 dark:border-white rounded-lg shadow-sm p-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                What You’ll Learn?
+              </h3>
+              <ul className="space-y-2">
+                {course.needToLearn.map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-2 text-gray-700 dark:text-gray-200"
+                  >
+                    <Check className="w-5 h-5 text-purple-500 mt-1 shrink-0" />
+                    <span dangerouslySetInnerHTML={{ __html: item }} />
+                  </li>
+                ))}
+              </ul>
             </div>
 
             <div className="dark:border-1 dark:border-white rounded-lg shadow-sm p-6">

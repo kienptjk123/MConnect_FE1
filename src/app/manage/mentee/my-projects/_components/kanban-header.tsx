@@ -29,7 +29,7 @@ export function KanbanHeader({ onSearch, onFilterChange }: KanbanHeaderProps) {
   };
 
   return (
-    <header className="border-b border-border bg-background px-6 py-4">
+    <header className="mb-8 bg-background">
       <div className="flex items-center justify-between">
         {/* Left Section */}
         <div className="flex items-center gap-4">

@@ -4,13 +4,16 @@
 import envConfig from "@/config";
 import {
   getAccessTokenFromLocalStorage,
+  getRefreshTokenFromLocalStorage,
   normalizePath,
   removeTokensFromLocalStorage,
   setAccessTokenToLocalStorage,
+  setIdToLocalStorage,
   setRefreshTokenToLocalStorage,
 } from "@/lib/utils";
 import { LoginResType } from "@/schemaValidations/auth.schema";
 import { redirect } from "next/navigation";
+import jwt from "jsonwebtoken";
 
 type CustomOptions = Omit<RequestInit, "method"> & {
   baseUrl?: string | undefined;
@@ -65,6 +68,8 @@ export class EntityError extends HttpError {
 }
 
 let clientLogoutRequest: null | Promise<any> = null;
+let isRedirectingToRefresh = false; // Flag to prevent multiple redirects
+
 const isClient = typeof window !== "undefined";
 const request = async <Response>(
   method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH",
@@ -100,32 +105,97 @@ const request = async <Response>(
       : options.baseUrl;
 
   const fullUrl = `${baseUrl}/${normalizePath(url)}`;
-  const res = await fetch(fullUrl, {
-    ...options,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    } as any,
-    body,
-    method,
-  });
-  const payload: Response = await res.json();
+
+  let fetchResponse: globalThis.Response;
+  let payload: Response;
+
+  try {
+    fetchResponse = await fetch(fullUrl, {
+      ...options,
+      headers: {
+        ...baseHeaders,
+        ...options?.headers,
+      } as any,
+      body,
+      method,
+    });
+  } catch (networkError) {
+    throw new Error(
+      `Failed to fetch: ${
+        networkError instanceof Error ? networkError.message : "Network error"
+      }`
+    );
+  }
+
+  try {
+    payload = await fetchResponse.json();
+  } catch (jsonError) {
+    throw new Error(
+      `Invalid JSON response: ${
+        jsonError instanceof Error ? jsonError.message : "JSON parsing error"
+      }`
+    );
+  }
+
   const data = {
-    status: res.status,
+    status: fetchResponse.status,
     payload,
   };
   // Interceptor là nời chúng ta xử lý request và response trước khi trả về cho phía component
-  if (!res.ok) {
-    if (res.status === ENTITY_ERROR_STATUS) {
+  if (!fetchResponse.ok) {
+    if (fetchResponse.status === ENTITY_ERROR_STATUS) {
       throw new EntityError(
         data as {
           status: 422;
           payload: EntityErrorPayload;
         }
       );
-    } else if (res.status === AUTHENTICATION_ERROR_STATUS) {
+    } else if (fetchResponse.status === AUTHENTICATION_ERROR_STATUS) {
       if (isClient) {
+        const refreshToken = getRefreshTokenFromLocalStorage();
+        const currentPath = window.location.pathname;
+
+        console.log("🔍 [HTTP] Token status check:", {
+          hasRefreshToken: !!refreshToken,
+          refreshTokenLength: refreshToken ? refreshToken.length : 0,
+          currentPath,
+          isOnRefreshTokenPage: currentPath.includes("/refresh-token"),
+        });
+
+        // Prevent redirect loop - don't redirect if already on refresh-token page or already redirecting
+        if (
+          refreshToken &&
+          !currentPath.includes("/refresh-token") &&
+          !isRedirectingToRefresh
+        ) {
+          // Set flag to prevent multiple redirects
+          isRedirectingToRefresh = true;
+
+          // We have a refresh token, redirect to refresh-token page to get new access token
+          // Preserve the current page in the redirect parameter
+          const fullCurrentPath =
+            window.location.pathname + window.location.search;
+          const refreshUrl = `/refresh-token?redirect=${encodeURIComponent(
+            fullCurrentPath
+          )}`;
+
+          // Use setTimeout to ensure the redirect happens after this function returns
+          setTimeout(() => {
+            window.location.href = refreshUrl;
+          }, 0);
+
+          // Return a rejected promise to stop further execution
+          return Promise.reject(new Error("Redirecting to refresh token page"));
+        }
+
+        // If we're already redirecting or on refresh page, don't proceed with logout
+        if (isRedirectingToRefresh || currentPath.includes("/refresh-token")) {
+          return Promise.reject(new Error("Token refresh in progress"));
+        }
+
+        // No refresh token available or already on refresh page, proceed with logout
         if (!clientLogoutRequest) {
+          console.log("🔓 [HTTP] Starting logout request");
           clientLogoutRequest = fetch("/api/auth/logout", {
             method: "POST",
             body: null, // Logout mình sẽ cho phép luôn luôn thành công
@@ -134,8 +204,10 @@ const request = async <Response>(
             } as any,
           });
           try {
-            await clientLogoutRequest;
+            const response = await clientLogoutRequest;
+            console.log("🔓 [HTTP] Logout response:", response.status);
           } catch (error) {
+            console.warn("🔓 [HTTP] Logout request failed:", error);
           } finally {
             removeTokensFromLocalStorage();
             clientLogoutRequest = null;
@@ -169,13 +241,36 @@ const request = async <Response>(
       const { access_token, refresh_token } = (payload as LoginResType).result;
       setAccessTokenToLocalStorage(access_token);
       setRefreshTokenToLocalStorage(refresh_token);
-    } else if ("api/auth/token" === normalizeUrl) {
+
+      // Reset redirect flag when tokens are successfully set
+      if (isRedirectingToRefresh) {
+        isRedirectingToRefresh = false;
+      }
+    } else if (
+      ["api/auth/token", "api/auth/refresh-token"].includes(normalizeUrl)
+    ) {
       const { access_token, refresh_token } = payload as {
         access_token: string;
         refresh_token: string;
       };
+
+      const decodedAccessToken = jwt.decode(access_token) as {
+        exp?: number;
+        user_id?: number;
+        role?: string;
+        verify?: string;
+      } | null;
+
+      if (decodedAccessToken?.user_id) {
+        setIdToLocalStorage(decodedAccessToken.user_id.toString());
+      }
       setAccessTokenToLocalStorage(access_token);
       setRefreshTokenToLocalStorage(refresh_token);
+
+      // Reset redirect flag when tokens are successfully refreshed
+      if (isRedirectingToRefresh) {
+        isRedirectingToRefresh = false;
+      }
     } else if (["api/auth/verify-email"].includes(normalizeUrl)) {
       // Handle verify email response - may contain new tokens
       if (
@@ -189,6 +284,8 @@ const request = async <Response>(
       ["api/auth/logout", "api/guest/auth/logout"].includes(normalizeUrl)
     ) {
       removeTokensFromLocalStorage();
+      // Reset redirect flag on logout
+      isRedirectingToRefresh = false;
     }
   }
   return data;
@@ -200,6 +297,13 @@ const http = {
     options?: Omit<CustomOptions, "body"> | undefined
   ) {
     return request<Response>("GET", url, options);
+  },
+  gets<Response>(
+    url: string,
+    body: any,
+    options?: Omit<CustomOptions, "body"> | undefined
+  ) {
+    return request<Response>("GET", url, { ...options, body });
   },
   post<Response>(
     url: string,
