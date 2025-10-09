@@ -210,3 +210,42 @@
 .z-\[100000\] {
   z-index: 100000 !important;
 }
+
+/* AI Assistant Floating Styles */
+.ai-assistant-float {
+  pointer-events: auto;
+}
+
+.ai-assistant-float > div {
+  /* Ensure the component doesn't interfere with scrollbars or other floating elements */
+  margin-right: 0;
+  margin-bottom: 0;
+}
+
+/* Smooth animations for AI Assistant */
+.ai-assistant-float .transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Ensure AI Assistant button is always visible and clickable */
+.ai-assistant-float button {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* Make sure AI Assistant doesn't interfere with mobile viewport */
+@media (max-width: 768px) {
+  .ai-assistant-float {
+    bottom: 1rem !important;
+    right: 1rem !important;
+  }
+
+  .ai-assistant-float .w-96 {
+    width: calc(100vw - 2rem) !important;
+    max-width: 24rem;
+  }
+}
