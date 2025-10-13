@@ -25,7 +25,6 @@ export default function Homepage() {
   return (
     <>
       <main className="relative min-h-screen bg-white overflow-hidden">
-        {/* ✨ Hiệu ứng hạt bay nền */}
         <ParticlesBackground zIndex={0} count={500} speed={1} />
         <div className="container mx-auto px-10">
           <Blender />
