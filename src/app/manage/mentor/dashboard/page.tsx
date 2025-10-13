@@ -6,7 +6,7 @@ import {
   useProfileLoading,
   useFetchProfile,
 } from "@/stores/profileStore";
-import { DashboardLayout } from "@/app/manage/mentor/dashboard/components/dashboard-layout";
+
 import { DashboardHeader } from "@/app/manage/mentor/dashboard/components/dashboard-header";
 import { StatsGrid } from "@/app/manage/mentor/dashboard/components/stats-grid";
 import { ProfileSection } from "@/app/manage/mentor/dashboard/components/profile-section";
