@@ -10,7 +10,7 @@ export default function PublicLayout({
   return (
     <SidebarProvider>
       <MentorSidebar />
-      <SidebarInset>
+      <SidebarInset className="flex flex-col h-screen">
         <MentorHeader />
         {children}
       </SidebarInset>

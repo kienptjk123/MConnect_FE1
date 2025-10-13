@@ -206,7 +206,7 @@ export default function LoginForm() {
               className="w-full cursor-pointer bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-md text-sm transition duration-200"
               disabled={loginMutation.isPending}
             >
-              {loginMutation.isPending ? "Đang đăng nhập..." : "Sign in"}
+              {loginMutation.isPending ? "Loading..." : "Sign in"}
             </Button>
 
             <div className="text-center space-y-2">
@@ -216,7 +216,10 @@ export default function LoginForm() {
                 <div className="flex-1 h-1 w-1 bg-gray-300"></div>
               </div>
 
-              <div className="flex items-center justify-between mt-2">
+              <Link
+                href={googleAuthUrl}
+                className="flex items-center justify-between mt-2"
+              >
                 <div className="flex items-center justify-center bg-white border hover:bg-white/85 border-gray-300 text-gray-800 w-full py-3 text-sm rounded-lg mr-2">
                   <Image
                     src="/images/google-logo-search-new-svgrepo-com.svg"
@@ -225,11 +228,9 @@ export default function LoginForm() {
                     height={16}
                     className="mr-2"
                   />
-                  <Link href={googleAuthUrl}>
-                    <div className="">Sign in with Google</div>
-                  </Link>
+                  <div className="">Sign in with Google</div>
                 </div>
-              </div>
+              </Link>
 
               <div className="text-black font-bold mt-2 text-center">
                 Do not have an account?

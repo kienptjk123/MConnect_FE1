@@ -8,6 +8,7 @@ import {
   CreateLessonType,
   UpdateLessonType,
 } from "@/schemaValidations/mentorCourse.schema";
+import courseApiRequest from "@/apiRequests/course";
 
 export const MENTOR_COURSES_QUERY_KEY = ["mentor-courses"];
 export const MENTOR_COURSE_DETAIL_QUERY_KEY = (id: number) => [

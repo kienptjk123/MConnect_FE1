@@ -724,6 +724,12 @@ export default function CreateForm() {
       const courseData = {
         ...data,
         needToLearn: data.needToLearn.split("\n").filter((item) => item.trim()),
+        categories: Array.isArray(data.categories)
+          ? data.categories.map((c) => Number(c))
+          : [],
+        labels: Array.isArray(data.labels)
+          ? data.labels.map((l) => Number(l))
+          : [],
       };
 
       const moduleData = modules.map((module) => ({

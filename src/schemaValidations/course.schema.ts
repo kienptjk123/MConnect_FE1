@@ -28,6 +28,16 @@ export const MentorProfileSchema = z.object({
   }),
 });
 
+export const MediaSchema = z.object({
+  id: z.number(),
+  type: z.enum(["VIDEO", "AUDIO", "PDF", "IMAGE"]).default("VIDEO"),
+  s3Key: z.string(),
+  status: z.enum(["UPLOADING", "PROCESSING", "READY", "FAILED"]),
+  durationSec: z.number(),
+  thumbnailKey: z.string().nullable(),
+  createdAt: z.string().datetime(), // ISO datetime string
+});
+
 export const ModuleSchema = z.array(
   z.object({
     id: z.number(),
@@ -43,6 +53,7 @@ export const ModuleSchema = z.array(
         mediaId: z.number().nullable(),
         commentsEnabled: z.boolean(),
         durationSec: z.number(),
+        media: MediaSchema.optional().nullable(),
       })
     ),
   })
@@ -55,8 +66,18 @@ export const CourseSchema = z.object({
   slug: z.string(),
   description: z.string(),
   price: z.string(),
+  subtitle: z.string().nullable(),
   status: z.enum(["PUBLISHED", "DRAFT", "ARCHIVED"]),
   avgRating: z.number(),
+  labels: z.array(
+    z.object({
+      courseLabel: z.object({
+        id: z.number(),
+        name: z.string(),
+        slug: z.string(),
+      }),
+    })
+  ),
   ratingCount: z.number(),
   thumbnail: z.string(),
   createdAt: z.string(),
@@ -154,6 +175,51 @@ export const CourseResponseSchema = z.object({
   }),
 });
 
+export const CourseMentorResponseSchema = z.object({
+  message: z.string(),
+  result: z.object({
+    id: z.number(),
+    mentorProfileId: z.number(),
+    title: z.string(),
+    slug: z.string(),
+    description: z.string(),
+    price: z.string(),
+    subtitle: z.string().nullable(),
+    status: z.enum(["PUBLISHED", "DRAFT", "ARCHIVED"]),
+    avgRating: z.number(),
+    labels: z.array(
+      z.object({
+        courseLabel: z.object({
+          id: z.number(),
+          name: z.string(),
+          slug: z.string(),
+        }),
+      })
+    ),
+    ratingCount: z.number(),
+    thumbnail: z.string(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    categories: z.array(
+      z.object({
+        courseCategory: z.object({
+          id: z.number(),
+          name: z.string(),
+          slug: z.string(),
+        }),
+      })
+    ),
+    modules: ModuleSchema,
+    mentorProfile: MentorProfileSchema,
+    needToLearn: z.array(z.string()),
+    _count: z.object({
+      enrollments: z.number(),
+      ratings: z.number(),
+      modules: z.number(),
+    }),
+  }),
+});
+
 export const CoursePublicStreamResponseSchema = z.object({
   message: z.string(),
   result: z.object({
@@ -238,6 +304,9 @@ export type CourseType = z.TypeOf<typeof CourseSchema>;
 export type CourseDetailType = z.TypeOf<typeof CourseDetailSchema>;
 export type CourseDetailSchema = z.TypeOf<typeof CourseDetailResponseSchema>;
 export type CourseResponseType = z.TypeOf<typeof CourseResponseSchema>;
+export type CourseMentorResponseType = z.TypeOf<
+  typeof CourseMentorResponseSchema
+>;
 export type CourseProgressResponseType = z.TypeOf<
   typeof CourseProgressResponseSchema
 >;

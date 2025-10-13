@@ -6,20 +6,30 @@ import { Toaster } from "@/components/ui/sonner";
 import { SocketProvider } from "@/components/SocketProvider";
 import { AIAssistantProvider } from "@/components/Chat/AIAssistantProvider";
 import AIAssistantFloat from "@/components/Chat/AIAssistantFloat";
+import { usePathname } from "next/navigation";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
-
+  const pathName = usePathname();
+  const isPublicRoute = /^\/($|blog|contact|course|forum)(\/.*)?$/.test(
+    pathName
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <SocketProvider>
-          <AIAssistantProvider>
-            {children}
-            <Toaster />
-            {/* AI Assistant floats on all screens for authenticated users */}
-            <AIAssistantFloat />
-          </AIAssistantProvider>
+          {isPublicRoute ? (
+            <>
+              {children}
+              <Toaster />
+            </>
+          ) : (
+            <AIAssistantProvider>
+              {children}
+              <Toaster />
+              <AIAssistantFloat />
+            </AIAssistantProvider>
+          )}
         </SocketProvider>
       </AppProvider>
     </QueryClientProvider>
