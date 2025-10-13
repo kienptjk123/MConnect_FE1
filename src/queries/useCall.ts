@@ -94,7 +94,6 @@ export const useEndCallMutation = () => {
       callApiRequest.endCall(callId, reason ? { reason } : undefined),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["calls"] });
-      toast.success("Đã kết thúc cuộc gọi");
     },
     onError: (error: any) => {
       toast.error(

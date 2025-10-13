@@ -11,9 +11,8 @@ import { usePathname } from "next/navigation";
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const pathName = usePathname();
-  const isPublicRoute = /^\/($|blog|contact|course|forum)(\/.*)?$/.test(
-    pathName
-  );
+  const isPublicRoute =
+    /^\/($|blog|contact|course|forum|about|message)(\/.*)?$/.test(pathName);
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
