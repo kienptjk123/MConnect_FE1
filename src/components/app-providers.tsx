@@ -11,8 +11,20 @@ import { usePathname } from "next/navigation";
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   const pathName = usePathname();
-  const isPublicRoute =
-    /^\/($|blog|contact|course|forum|about|message)(\/.*)?$/.test(pathName);
+  const hiddenAIPaths = [
+    "/",
+    "/blog",
+    "/contact",
+    "/course",
+    "/forum",
+    "/about",
+    "/manager/mentee/message",
+    "/manager/mentor/message",
+  ];
+
+  const isPublicRoute = hiddenAIPaths.some((route) =>
+    pathName.startsWith(route)
+  );
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
