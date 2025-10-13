@@ -11,8 +11,8 @@ import { WorkExperiencePackage } from "@/schemaValidations/work-exp-package.sche
 import {
   BookOpen,
   Clock,
-  DollarSign,
   Package,
+  ReceiptCent,
   User,
   Users,
 } from "lucide-react";
@@ -179,7 +179,7 @@ export default function WorkExpPackageCard({
           </div>
 
           <div className="flex items-center text-gray-600 text-sm">
-            <DollarSign className="h-4 w-4 mr-2" />
+            <ReceiptCent className="h-4 w-4 mr-2" />
             <span className="font-semibold text-green-600">
               {formatPrice(workPackage.price)}
             </span>
