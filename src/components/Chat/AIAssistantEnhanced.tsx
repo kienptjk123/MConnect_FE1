@@ -43,7 +43,9 @@ import {
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useAIAssistant } from "./AIAssistantProvider";
-
+import Image from "next/image";
+import { motion } from "framer-motion";
+import FloatingBee from "@/components/FloatingBee/FloatingBee";
 // ==================== TYPES ====================
 
 interface AIAssistantEnhancedProps {
@@ -503,7 +505,7 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
   // ==================== FLOATING TRIGGER ====================
 
   return (
-    <div className={`fixed bottom-6 right-6 z-[9999] ${className}`}>
+    <div className={`fixed bottom-0 right-0 z-[9999] ${className}`}>
       <div
         onClick={showAssistant}
         className={`absolute bottom-0 right-0 transition-all duration-500  ${
@@ -515,19 +517,8 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div onClick={showAssistant} className="w-64 h-64">
-                <iframe
-                  ref={iframeRef}
-                  title="Noodle Bar - Interactive 3D Learning Experience"
-                  src="https://sketchfab.com/models/92bcda53d5eb4eef8cd842a1b65ff205/embed?autospin=0.5&autostart=1&preload=1&transparent=1&ui_hint=0&scrollwheel=0"
-                  className="w-full h-full border-0 rounded-3xl"
-                  allow="autoplay; fullscreen; xr-spatial-tracking"
-                  style={{
-                    filter: "brightness(1) contrast(1.05)",
-                    transform: "perspective(1000px)",
-                    pointerEvents: "none",
-                  }}
-                />
+              <div onClick={showAssistant}>
+                <FloatingBee />
               </div>
             </TooltipTrigger>
             <TooltipContent side="left">
@@ -535,7 +526,6 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="absolute bottom-2 left-0 w-full h-9 bg-white dark:bg-black z-20"></div>
       </div>
       <div
         className={`transition-all relative duration-500 rounded-2xl ${
