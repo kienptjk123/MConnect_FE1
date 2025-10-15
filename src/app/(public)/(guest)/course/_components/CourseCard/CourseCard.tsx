@@ -46,7 +46,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             </Link>
           ) : (
             <Link
-              href={`/manage/mentee/explore-courses/${course.slug}`}
+              href={`/course/${course.slug}`}
               className="w-full h-full flex items-center justify-center"
             >
               <BookOpen className="w-52 h-52 text-white/80" />
@@ -79,7 +79,7 @@ export default function CourseCard({ course }: CourseCardProps) {
             </div>
           </div>
           <Link
-            href={`/manage/mentee/explore-courses/${course.slug}`}
+            href={`/course/${course.slug}`}
             className="mt-3 font-bold text-xl line-clamp-2 text-gray-900 dark:text-white mb-3
              relative w-fit transition-colors duration-400 
              hover:text-blue-500

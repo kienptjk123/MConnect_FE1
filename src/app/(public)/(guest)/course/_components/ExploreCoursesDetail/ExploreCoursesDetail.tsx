@@ -66,7 +66,7 @@ export default function CourseDetailPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Error loading course
@@ -82,9 +82,22 @@ export default function CourseDetailPage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-600 mb-4">
+            Loading course...
+          </h1>
+          <p className="text-gray-600">Please wait while we fetch the data.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!course) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center ">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-600 mb-4">
             Course not found
