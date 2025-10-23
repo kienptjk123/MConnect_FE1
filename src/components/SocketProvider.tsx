@@ -36,6 +36,8 @@ interface SocketContextType {
   onNewFriendAdded: (callback: (data: any) => void) => () => void;
   onNotificationUpdate: (callback: (data: any) => void) => () => void;
   onNotification: (callback: (data: any) => void) => () => void;
+  onPaymentSuccess: (callback: (data: any) => void) => () => void;
+  onPaymentFailed: (callback: (data: any) => void) => () => void;
   initiateCall: (
     receiverId: number,
     callType: "VOICE" | "VIDEO",
@@ -348,6 +350,27 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     return () => {};
   };
 
+  // Payment event listeners
+  const onPaymentSuccess = (callback: (data: any) => void) => {
+    if (socketRef.current) {
+      socketRef.current.on("payment_success", callback);
+      return () => {
+        socketRef.current?.off("payment_success", callback);
+      };
+    }
+    return () => {};
+  };
+
+  const onPaymentFailed = (callback: (data: any) => void) => {
+    if (socketRef.current) {
+      socketRef.current.on("payment_failed", callback);
+      return () => {
+        socketRef.current?.off("payment_failed", callback);
+      };
+    }
+    return () => {};
+  };
+
   const value: SocketContextType = {
     socket: socketRef.current,
     connected,
@@ -374,6 +397,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     onNewFriendAdded,
     onNotificationUpdate,
     onNotification,
+    onPaymentSuccess,
+    onPaymentFailed,
     initiateCall: (
       receiverId: number,
       callType: "VOICE" | "VIDEO",
