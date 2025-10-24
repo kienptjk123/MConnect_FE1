@@ -29,7 +29,6 @@ RUN npm run build
 
 # ==========================
 # STEP 2: Runtime Stage
-# ==========================
 FROM node:20-bullseye-slim AS runner
 
 WORKDIR /app

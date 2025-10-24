@@ -29,11 +29,17 @@ jobs:
     runs-on: [self-hosted, Linux, X64]
 
     steps:
+      - name: Fix Docker Permissions
+        run: |
+          sudo usermod -aG docker $USER || true
+          sudo systemctl start docker || true
+          sudo chmod 666 /var/run/docker.sock || true
+
       - name: Pull image from Docker Hub
-        run: docker pull kienptjk123/mconnects:latest
+        run: sudo docker pull kienptjk123/mconnects:latest
 
       - name: Delete Old Container
-        run: docker rm -f reactContainer || true
+        run: sudo docker rm -f reactContainer || true
 
-      - name: Run docker container
-        run: docker run -d -p 3000:3000 --name reactContainer kienptjk123/mconnects:latest
+      - name: Run Docker Container
+        run: sudo docker run -d -p 3000:3000 --name reactContainer kienptjk123/mconnects:latest
