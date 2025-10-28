@@ -61,7 +61,6 @@ export default function CourseCard({ course }: CourseCardProps) {
 
   useEffect(() => {
     if (!paymentData) return;
-
     const handlePaymentSuccess = (data: any) => {
       setPaymentData(null);
       toast({

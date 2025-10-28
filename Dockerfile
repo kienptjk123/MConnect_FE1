@@ -43,4 +43,4 @@ COPY --from=builder /app/public ./public
 EXPOSE 3000
 
 # ✅ Chạy đúng server standalone
-CMD ["node", "server.js"]
+CMD ["node", ".next/standalone/server.js"]
