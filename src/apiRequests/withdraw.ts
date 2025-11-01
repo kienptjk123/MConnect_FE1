@@ -95,10 +95,17 @@ const withdrawApiRequest = {
     page?: number;
     limit?: number;
     status?: "PENDING" | "APPROVED" | "REJECTED";
-  }) =>
-    http.get<GetWithdrawRequestsResponse>("/withdraw-requests/my-requests", {
-      params,
-    }),
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set("page", params.page.toString());
+    if (params?.limit) searchParams.set("limit", params.limit.toString());
+    if (params?.status) searchParams.set("status", params.status);
+
+    const query = searchParams.toString();
+    return http.get<GetWithdrawRequestsResponse>(
+      `/withdraw-requests/my-requests${query ? `?${query}` : ""}`
+    );
+  },
 
   // Get withdrawal request by ID
   getWithdrawRequestById: (id: number) =>
@@ -114,10 +121,21 @@ const withdrawApiRequest = {
     mentor_id?: number;
     sort_by?: "created_at" | "updated_at" | "amount";
     sort_order?: "asc" | "desc";
-  }) =>
-    http.get<GetWithdrawRequestsResponse>("/withdraw-requests/admin/all", {
-      params,
-    }),
+  }) => {
+    const searchParams = new URLSearchParams();
+    if (params?.page) searchParams.set("page", params.page.toString());
+    if (params?.limit) searchParams.set("limit", params.limit.toString());
+    if (params?.status) searchParams.set("status", params.status);
+    if (params?.mentor_id)
+      searchParams.set("mentor_id", params.mentor_id.toString());
+    if (params?.sort_by) searchParams.set("sort_by", params.sort_by);
+    if (params?.sort_order) searchParams.set("sort_order", params.sort_order);
+
+    const query = searchParams.toString();
+    return http.get<GetWithdrawRequestsResponse>(
+      `/withdraw-requests/admin/all${query ? `?${query}` : ""}`
+    );
+  },
 
   // Admin: Review withdrawal request
   reviewWithdrawRequest: (
