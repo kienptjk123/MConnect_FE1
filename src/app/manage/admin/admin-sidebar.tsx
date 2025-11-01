@@ -22,6 +22,7 @@ import {
 import { useLogoutMutation } from "@/queries/useLogout";
 import { useProfile } from "@/queries/useProfile";
 import {
+  BadgeCent,
   ChevronDown,
   LayoutDashboard,
   ListVideo,
@@ -70,6 +71,11 @@ const navigationItems = [
     title: "Course Management",
     url: "/manage/admin/manage-course",
     icon: MonitorPlayIcon,
+  },
+  {
+    title: "Withdraw Request Management",
+    url: "/manage/admin/withdraw-requests",
+    icon: BadgeCent,
   },
 ];
 

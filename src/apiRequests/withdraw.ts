@@ -25,6 +25,9 @@ export interface MentorEarningsResponse {
 
 export interface CreateWithdrawRequest {
   amount: number;
+  account_number: string;
+  bank_name: string;
+  account_owner_name: string;
 }
 
 export interface WithdrawRequestResponse {
@@ -32,6 +35,9 @@ export interface WithdrawRequestResponse {
   mentor_profile_id: number;
   amount: number;
   status: "PENDING" | "APPROVED" | "REJECTED";
+  account_number: string;
+  bank_name: string;
+  account_owner_name: string;
   transaction_image?: string;
   admin_note?: string;
   reviewed_at?: string;
@@ -130,15 +136,10 @@ const withdrawApiRequest = {
 
     return http.patch<{ message: string; result: WithdrawRequestResponse }>(
       `/withdraw-requests/${id}/review`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
+      formData
+      // Don't set Content-Type header - let the browser set it automatically with boundary
     );
   },
 };
 
 export default withdrawApiRequest;
-

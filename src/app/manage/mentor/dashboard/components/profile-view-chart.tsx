@@ -37,9 +37,7 @@ export function ProfileViewChart() {
       <CardContent>
         <div className="mb-4">
           <p className="text-2xl font-bold text-foreground">7,000,443đ</p>
-          <p className="text-sm text-muted-foreground">
-            USD Dollar you earned.
-          </p>
+          <p className="text-sm text-muted-foreground">VND you earned.</p>
         </div>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">

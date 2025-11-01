@@ -6,7 +6,13 @@ import {
   useReviewWithdrawRequestMutation,
   useWithdrawRequestByIdQuery,
 } from "@/queries/useWithdraw";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,21 +26,41 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default function AdminWithdrawRequestsPage() {
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(null);
+  // Use a non-empty sentinel value for "all" because Select.Item requires non-empty values
+  const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
+    null
+  );
   const [isReviewDialogOpen, setIsReviewDialogOpen] = useState(false);
-  const [reviewStatus, setReviewStatus] = useState<"APPROVED" | "REJECTED">("APPROVED");
+  const [reviewStatus, setReviewStatus] = useState<"APPROVED" | "REJECTED">(
+    "APPROVED"
+  );
   const [adminNote, setAdminNote] = useState("");
   const [transactionImage, setTransactionImage] = useState<File | null>(null);
 
   const { data, isLoading, refetch } = useAllWithdrawRequestsQuery({
-    status: statusFilter as any,
+    // The Select component cannot use an empty string for an item's value.
+    // Map our sentinel 'ALL' to undefined so the API receives no status filter.
+    status: statusFilter === "ALL" ? undefined : (statusFilter as any),
     limit: 50,
   });
 
@@ -45,7 +71,7 @@ export default function AdminWithdrawRequestsPage() {
 
   const reviewMutation = useReviewWithdrawRequestMutation();
 
-  const requests = data?.result?.requests || [];
+  const requests = data?.payload?.result?.requests || [];
 
   const handleReview = async () => {
     if (!selectedRequestId) return;
@@ -66,7 +92,9 @@ export default function AdminWithdrawRequestsPage() {
       setTransactionImage(null);
       refetch();
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to review withdrawal request");
+      toast.error(
+        error?.response?.data?.message || "Failed to review withdrawal request"
+      );
     }
   };
 
@@ -78,11 +106,23 @@ export default function AdminWithdrawRequestsPage() {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "PENDING":
-        return <Badge variant="outline" className="bg-yellow-50 text-yellow-700">Pending</Badge>;
+        return (
+          <Badge variant="outline" className="bg-yellow-50 text-yellow-700">
+            Pending
+          </Badge>
+        );
       case "APPROVED":
-        return <Badge variant="outline" className="bg-green-50 text-green-700">Approved</Badge>;
+        return (
+          <Badge variant="outline" className="bg-green-50 text-green-700">
+            Approved
+          </Badge>
+        );
       case "REJECTED":
-        return <Badge variant="outline" className="bg-red-50 text-red-700">Rejected</Badge>;
+        return (
+          <Badge variant="outline" className="bg-red-50 text-red-700">
+            Rejected
+          </Badge>
+        );
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -108,7 +148,8 @@ export default function AdminWithdrawRequestsPage() {
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Status</SelectItem>
+            {/* Use a non-empty value for the All option */}
+            <SelectItem value="ALL">All Status</SelectItem>
             <SelectItem value="PENDING">Pending</SelectItem>
             <SelectItem value="APPROVED">Approved</SelectItem>
             <SelectItem value="REJECTED">Rejected</SelectItem>
@@ -119,11 +160,15 @@ export default function AdminWithdrawRequestsPage() {
       <Card>
         <CardHeader>
           <CardTitle>All Withdrawal Requests</CardTitle>
-          <CardDescription>Review and manage mentor withdrawal requests</CardDescription>
+          <CardDescription>
+            Review and manage mentor withdrawal requests
+          </CardDescription>
         </CardHeader>
         <CardContent>
           {requests.length === 0 ? (
-            <p className="text-muted-foreground">No withdrawal requests found</p>
+            <p className="text-muted-foreground">
+              No withdrawal requests found
+            </p>
           ) : (
             <Table>
               <TableHeader>
@@ -142,9 +187,14 @@ export default function AdminWithdrawRequestsPage() {
                     <TableCell>#{request.id}</TableCell>
                     <TableCell>
                       <div>
-                        <p className="font-medium">{request.mentor_profile.name || "N/A"}</p>
+                        <p className="font-medium">
+                          {request.mentor_profile.name || "N/A"}
+                        </p>
                         <p className="text-sm text-muted-foreground">
                           {request.mentor_profile.user.email}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {request.bank_name} - {request.account_number}
                         </p>
                       </div>
                     </TableCell>
@@ -191,16 +241,38 @@ export default function AdminWithdrawRequestsPage() {
           <div className="space-y-4 py-4">
             {selectedRequest && (
               <div className="space-y-2">
-                <div className="p-4 border rounded-lg">
-                  <p className="font-medium">Request #{selectedRequest.result.id}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Mentor: {selectedRequest.result.mentor_profile.name}
+                <div className="p-4 border rounded-lg space-y-2">
+                  <p className="font-medium">
+                    Request #{selectedRequest.payload.result.id}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Amount: {formatCurrency(selectedRequest.result.amount)}
+                    Mentor: {selectedRequest.payload.result.mentor_profile.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Created: {new Date(selectedRequest.result.created_at).toLocaleDateString()}
+                    Amount:{" "}
+                    {formatCurrency(selectedRequest.payload.result.amount)}
+                  </p>
+                  <div className="mt-3 pt-3 border-t">
+                    <p className="text-sm font-medium mb-2">
+                      Payment Information:
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Account Number:{" "}
+                      {selectedRequest.payload.result.account_number}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Bank Name: {selectedRequest.payload.result.bank_name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Account Owner:{" "}
+                      {selectedRequest.payload.result.account_owner_name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Created:{" "}
+                    {new Date(
+                      selectedRequest.payload.result.created_at
+                    ).toLocaleDateString()}
                   </p>
                 </div>
 
@@ -208,7 +280,9 @@ export default function AdminWithdrawRequestsPage() {
                   <Label htmlFor="status">Status</Label>
                   <Select
                     value={reviewStatus}
-                    onValueChange={(value) => setReviewStatus(value as "APPROVED" | "REJECTED")}
+                    onValueChange={(value) =>
+                      setReviewStatus(value as "APPROVED" | "REJECTED")
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -247,11 +321,19 @@ export default function AdminWithdrawRequestsPage() {
                 </div>
 
                 <div className="flex justify-end space-x-2">
-                  <Button variant="outline" onClick={() => setIsReviewDialogOpen(false)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsReviewDialogOpen(false)}
+                  >
                     Cancel
                   </Button>
-                  <Button onClick={handleReview} disabled={reviewMutation.isPending}>
-                    {reviewMutation.isPending ? "Processing..." : "Submit Review"}
+                  <Button
+                    onClick={handleReview}
+                    disabled={reviewMutation.isPending}
+                  >
+                    {reviewMutation.isPending
+                      ? "Processing..."
+                      : "Submit Review"}
                   </Button>
                 </div>
               </div>
@@ -261,7 +343,10 @@ export default function AdminWithdrawRequestsPage() {
       </Dialog>
 
       {selectedRequestId && !isReviewDialogOpen && (
-        <Dialog open={!!selectedRequestId} onOpenChange={() => setSelectedRequestId(null)}>
+        <Dialog
+          open={!!selectedRequestId}
+          onOpenChange={() => setSelectedRequestId(null)}
+        >
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Request Details</DialogTitle>
@@ -269,26 +354,48 @@ export default function AdminWithdrawRequestsPage() {
             {selectedRequest && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className="font-medium">Request ID: #{selectedRequest.result.id}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Mentor: {selectedRequest.result.mentor_profile.name}
+                  <p className="font-medium">
+                    Request ID: #{selectedRequest.payload.result.id}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Amount: {formatCurrency(selectedRequest.result.amount)}
+                    Mentor: {selectedRequest.payload.result.mentor_profile.name}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    Status: {getStatusBadge(selectedRequest.result.status)}
+                    Amount:{" "}
+                    {formatCurrency(selectedRequest.payload.result.amount)}
                   </p>
-                  {selectedRequest.result.admin_note && (
+                  <div className="mt-3 pt-3 border-t">
+                    <p className="text-sm font-medium mb-2">
+                      Payment Information:
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      Admin Note: {selectedRequest.result.admin_note}
+                      Account Number:{" "}
+                      {selectedRequest.payload.result.account_number}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Bank Name: {selectedRequest.payload.result.bank_name}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Account Owner:{" "}
+                      {selectedRequest.payload.result.account_owner_name}
+                    </p>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-3">
+                    Status:{" "}
+                    {getStatusBadge(selectedRequest.payload.result.status)}
+                  </p>
+                  {selectedRequest.payload.result.admin_note && (
+                    <p className="text-sm text-muted-foreground">
+                      Admin Note: {selectedRequest.payload.result.admin_note}
                     </p>
                   )}
-                  {selectedRequest.result.transaction_image && (
+                  {selectedRequest.payload.result.transaction_image && (
                     <div>
-                      <p className="text-sm font-medium mb-2">Transaction Receipt:</p>
+                      <p className="text-sm font-medium mb-2">
+                        Transaction Receipt:
+                      </p>
                       <img
-                        src={selectedRequest.result.transaction_image}
+                        src={selectedRequest.payload.result.transaction_image}
                         alt="Transaction receipt"
                         className="w-full h-auto rounded"
                       />
@@ -303,4 +410,3 @@ export default function AdminWithdrawRequestsPage() {
     </div>
   );
 }
-
