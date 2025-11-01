@@ -53,7 +53,7 @@ const stats = [
     bgColor: "bg-green-50",
   },
   {
-    title: "USD Total Earning",
+    title: "Total Earning",
     value: "7,461,767đ",
     icon: CreditCard,
     color: "text-gray-500",

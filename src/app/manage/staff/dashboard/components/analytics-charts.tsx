@@ -176,10 +176,8 @@ export function AnalyticsCharts() {
         </CardHeader>
         <CardContent>
           <div className="mb-4">
-            <div className="text-2xl font-bold text-foreground">$7,443</div>
-            <div className="text-xs text-muted-foreground">
-              USD Dollar you earned
-            </div>
+            <div className="text-2xl font-bold text-foreground">7,443</div>
+            <div className="text-xs text-muted-foreground">VND you earned</div>
           </div>
           <div className="h-48">
             <ResponsiveContainer width="100%" height="100%">

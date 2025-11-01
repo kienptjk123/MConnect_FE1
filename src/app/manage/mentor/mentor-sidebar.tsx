@@ -39,6 +39,7 @@ import {
   Settings,
   ShoppingBag,
   User,
+  Wallet,
   WorkflowIcon,
 } from "lucide-react";
 import Image from "next/image";
@@ -93,6 +94,11 @@ const navigationItems = [
     title: "Work Experience Packages",
     url: "/manage/mentor/work-experience-package",
     icon: WorkflowIcon,
+  },
+  {
+    title: "Withdraw",
+    url: "/manage/mentor/withdraw",
+    icon: Wallet,
   },
   {
     title: "Messages",
