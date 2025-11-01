@@ -1,49 +1,48 @@
 "use client";
 
-import type React from "react";
-import { useState, useRef, useEffect } from "react";
-import {
-  MessageCircle,
-  Minimize2,
-  Maximize2,
-  X,
-  Send,
-  Loader2,
-  User,
-  Plus,
-  Settings,
-  Trash2,
-  Calendar,
-  BookOpen,
-  TrendingUp,
-  DollarSign,
-  Brain,
-  Target,
-  Sparkles,
-  Copy,
-  Check,
-} from "lucide-react";
+import type { ChatMessage } from "@/apiRequests/aiAssistant";
+import { useSocket } from "@/components/SocketProvider";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
   DropdownMenuSeparator,
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useAIAssistant } from "./AIAssistantProvider";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useProfile } from "@/hooks/useProfile";
-import { useSocket } from "@/components/SocketProvider";
-import type { ChatMessage } from "@/apiRequests/aiAssistant";
+import {
+  BookOpen,
+  Brain,
+  Calendar,
+  Check,
+  Copy,
+  DollarSign,
+  Loader2,
+  Maximize2,
+  Minimize2,
+  Plus,
+  Send,
+  Settings,
+  Sparkles,
+  Target,
+  Trash2,
+  TrendingUp,
+  User,
+  X,
+} from "lucide-react";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
+import { useAIAssistant } from "./AIAssistantProvider";
 
 // ==================== TYPES ====================
 
@@ -228,9 +227,13 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const userRole = profile?.role as "MENTEE" | "MENTOR" | undefined;
   const currentSessionData = currentSession ? sessions[currentSession] : null;
+
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
 
   // ==================== SOCKET INTEGRATION ====================
 
@@ -499,211 +502,227 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
 
   // ==================== FLOATING TRIGGER ====================
 
-  if (!isVisible) {
-    return (
-      <div className={`fixed bottom-6 right-6 z-[9999] ${className}`}>
+  return (
+    <div className={`fixed bottom-6 right-6 z-[9999] ${className}`}>
+      <div
+        onClick={showAssistant}
+        className={`absolute bottom-0 right-0 transition-all duration-500  ${
+          isVisible
+            ? "opacity-0 scale-75 pointer-events-none"
+            : "opacity-100 scale-100 cursor-pointer"
+        }`}
+      >
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                onClick={showAssistant}
-                size="lg"
-                className="rounded-full w-16 h-16 shadow-2xl hover:shadow-3xl transition-all duration-300 bg-gradient-to-br from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:scale-110 group"
-              >
-                <MessageCircle className="w-7 h-7 text-white group-hover:scale-110 transition-transform" />
-              </Button>
+              <div onClick={showAssistant} className="w-64 h-64">
+                <iframe
+                  ref={iframeRef}
+                  title="Noodle Bar - Interactive 3D Learning Experience"
+                  src="https://sketchfab.com/models/92bcda53d5eb4eef8cd842a1b65ff205/embed?autospin=0.5&autostart=1&preload=1&transparent=1&ui_hint=0&scrollwheel=0"
+                  className="w-full h-full border-0 rounded-3xl"
+                  allow="autoplay; fullscreen; xr-spatial-tracking"
+                  style={{
+                    filter: "brightness(1) contrast(1.05)",
+                    transform: "perspective(1000px)",
+                    pointerEvents: "none",
+                  }}
+                />
+              </div>
             </TooltipTrigger>
             <TooltipContent side="left">
               <p className="font-medium">AI Assistant</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+        <div className="absolute bottom-2 left-0 w-full h-9 bg-white dark:bg-black z-20"></div>
       </div>
-    );
-  }
+      <div
+        className={`transition-all relative duration-500 rounded-2xl ${
+          isVisible
+            ? "opacity-100 scale-100"
+            : "opacity-0 scale-90 pointer-events-none"
+        }`}
+      >
+        <Card className="w-[420px] h-[680px] shadow-2xl border-0 bg-background  rounded-3xl backdrop-blur-xl animate-in slide-in-from-bottom-8 duration-500">
+          {/* Header */}
+          <div className="flex items-center justify-between p-4 bg-gradient-to-r  rounded-t-3xl  from-blue-500 via-purple-500 to-pink-500 text-white relative overflow-hidden">
+            {/* Animated background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse" />
 
-  // ==================== MAIN CHATBOX ====================
-
-  return (
-    <div className={`fixed bottom-6 right-6 z-[9999] ${className}`}>
-      <Card className="w-[420px] h-[680px] shadow-2xl border-0 overflow-scroll bg-background rounded-3xl backdrop-blur-xl animate-in slide-in-from-bottom-8 duration-500">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white relative overflow-hidden">
-          {/* Animated background */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse" />
-
-          <div className="flex items-center gap-3 relative z-10">
-            <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
-              <Sparkles className="w-5 h-5" />
+            <div className="flex items-center gap-3 relative z-10">
+              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm">
+                  {userRole === "MENTOR"
+                    ? "Business Assistant"
+                    : "Learning Assistant"}
+                </h3>
+                {currentSessionData && (
+                  <p className="text-xs opacity-90 font-medium">
+                    {currentSessionData.title}
+                  </p>
+                )}
+              </div>
             </div>
-            <div>
-              <h3 className="font-bold text-sm">
-                {userRole === "MENTOR"
-                  ? "Business Assistant"
-                  : "Learning Assistant"}
-              </h3>
-              {currentSessionData && (
-                <p className="text-xs opacity-90 font-medium">
-                  {currentSessionData.title}
-                </p>
-              )}
+
+            <div className="flex items-center gap-1 relative z-10">
+              {/* Session Management */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-white hover:bg-white/20 backdrop-blur-sm"
+                  >
+                    <Settings className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={() => handleNewSession("general")}>
+                    <Plus className="w-4 h-4 mr-2" />
+                    New Chat
+                  </DropdownMenuItem>
+                  {userRole === "MENTEE" && (
+                    <DropdownMenuItem
+                      onClick={() => handleNewSession("learning")}
+                    >
+                      <BookOpen className="w-4 h-4 mr-2" />
+                      Learning Session
+                    </DropdownMenuItem>
+                  )}
+                  {userRole === "MENTOR" && (
+                    <>
+                      <DropdownMenuItem
+                        onClick={() => handleNewSession("business")}
+                      >
+                        <TrendingUp className="w-4 h-4 mr-2" />
+                        Business Session
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleNewSession("mentor_shadow")}
+                      >
+                        <Brain className="w-4 h-4 mr-2" />
+                        Mentor Shadow
+                      </DropdownMenuItem>
+                    </>
+                  )}
+                  <DropdownMenuSeparator />
+                  {currentSession && (
+                    <DropdownMenuItem
+                      onClick={() => clearSession(currentSession)}
+                      className="text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
+                      Clear Session
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/* Minimize/Maximize */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleMinimize}
+                className="text-white hover:bg-white/20 backdrop-blur-sm"
+              >
+                {isMinimized ? (
+                  <Maximize2 className="w-4 h-4" />
+                ) : (
+                  <Minimize2 className="w-4 h-4" />
+                )}
+              </Button>
+
+              {/* Close */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={hideAssistant}
+                className="text-white hover:bg-white/20 backdrop-blur-sm"
+              >
+                <X className="w-4 h-4" />
+              </Button>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 relative z-10">
-            {/* Session Management */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white hover:bg-white/20 backdrop-blur-sm"
-                >
-                  <Settings className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => handleNewSession("general")}>
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Chat
-                </DropdownMenuItem>
-                {userRole === "MENTEE" && (
-                  <DropdownMenuItem
-                    onClick={() => handleNewSession("learning")}
-                  >
-                    <BookOpen className="w-4 h-4 mr-2" />
-                    Learning Session
-                  </DropdownMenuItem>
-                )}
-                {userRole === "MENTOR" && (
-                  <>
-                    <DropdownMenuItem
-                      onClick={() => handleNewSession("business")}
-                    >
-                      <TrendingUp className="w-4 h-4 mr-2" />
-                      Business Session
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleNewSession("mentor_shadow")}
-                    >
-                      <Brain className="w-4 h-4 mr-2" />
-                      Mentor Shadow
-                    </DropdownMenuItem>
-                  </>
-                )}
-                <DropdownMenuSeparator />
-                {currentSession && (
-                  <DropdownMenuItem
-                    onClick={() => clearSession(currentSession)}
-                    className="text-destructive"
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    Clear Session
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+          {/* Content */}
+          {!isMinimized && (
+            <CardContent className="p-0 flex flex-col h-[calc(680px-73px)] ">
+              {/* Quick Actions */}
+              {renderQuickActions()}
 
-            {/* Minimize/Maximize */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleMinimize}
-              className="text-white hover:bg-white/20 backdrop-blur-sm"
-            >
-              {isMinimized ? (
-                <Maximize2 className="w-4 h-4" />
-              ) : (
-                <Minimize2 className="w-4 h-4" />
-              )}
-            </Button>
+              {/* Messages */}
+              <ScrollArea className="flex-1 px-4 overflow-scroll ">
+                <div className="py-4">
+                  {currentSessionData?.messages.map((message, index) =>
+                    renderMessage(message, index)
+                  )}
 
-            {/* Close */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={hideAssistant}
-              className="text-white hover:bg-white/20 backdrop-blur-sm"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Content */}
-        {!isMinimized && (
-          <CardContent className="p-0 flex flex-col h-[calc(680px-73px)]">
-            {/* Quick Actions */}
-            {renderQuickActions()}
-
-            {/* Messages */}
-            <ScrollArea className="flex-1 px-4">
-              <div className="py-4">
-                {currentSessionData?.messages.map((message, index) =>
-                  renderMessage(message, index)
-                )}
-
-                {/* Typing Indicator */}
-                {(isLoading || isTyping) && (
-                  <div className="flex justify-start mb-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                    <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
-                        <Sparkles className="w-4 h-4 text-white" />
-                      </div>
-                      <div className="bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
-                        <div className="flex items-center gap-1">
-                          <div
-                            className="w-2 h-2 rounded-full bg-primary animate-bounce"
-                            style={{ animationDelay: "0ms" }}
-                          />
-                          <div
-                            className="w-2 h-2 rounded-full bg-primary animate-bounce"
-                            style={{ animationDelay: "150ms" }}
-                          />
-                          <div
-                            className="w-2 h-2 rounded-full bg-primary animate-bounce"
-                            style={{ animationDelay: "300ms" }}
-                          />
+                  {/* Typing Indicator */}
+                  {(isLoading || isTyping) && (
+                    <div className="flex justify-start mb-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                      <div className="flex items-start gap-3">
+                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-lg">
+                          <Sparkles className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm">
+                          <div className="flex items-center gap-1">
+                            <div
+                              className="w-2 h-2 rounded-full bg-primary animate-bounce"
+                              style={{ animationDelay: "0ms" }}
+                            />
+                            <div
+                              className="w-2 h-2 rounded-full bg-primary animate-bounce"
+                              style={{ animationDelay: "150ms" }}
+                            />
+                            <div
+                              className="w-2 h-2 rounded-full bg-primary animate-bounce"
+                              style={{ animationDelay: "300ms" }}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                )}
-
-                <div ref={messagesEndRef} />
-              </div>
-            </ScrollArea>
-
-            {/* Input */}
-            <div className="p-4 border-t border-border bg-muted/30 backdrop-blur-sm">
-              <form onSubmit={handleSendMessage} className="flex gap-2">
-                <Input
-                  ref={inputRef}
-                  type="text"
-                  placeholder={`Ask your AI ${
-                    userRole === "MENTOR" ? "business" : "learning"
-                  } assistant...`}
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  disabled={isLoading}
-                  className="flex-1 bg-background border-border focus-visible:ring-2 focus-visible:ring-primary"
-                />
-                <Button
-                  type="submit"
-                  disabled={isLoading || !inputValue.trim()}
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-                >
-                  {isLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Send className="w-4 h-4" />
                   )}
-                </Button>
-              </form>
-            </div>
-          </CardContent>
-        )}
-      </Card>
+
+                  <div ref={messagesEndRef} />
+                </div>
+              </ScrollArea>
+
+              {/* Input */}
+              <div className="p-4 border-t border-border bg-muted/30 backdrop-blur-sm">
+                <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <Input
+                    ref={inputRef}
+                    type="text"
+                    placeholder={`Ask your AI ${
+                      userRole === "MENTOR" ? "business" : "learning"
+                    } assistant...`}
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    disabled={isLoading}
+                    className="flex-1 bg-background border-border focus-visible:ring-2 focus-visible:ring-primary"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isLoading || !inputValue.trim()}
+                    className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                  </Button>
+                </form>
+              </div>
+            </CardContent>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };

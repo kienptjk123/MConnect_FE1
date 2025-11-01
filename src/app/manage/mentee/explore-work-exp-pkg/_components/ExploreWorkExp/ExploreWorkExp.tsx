@@ -14,7 +14,8 @@ import { useWorkExpPackages } from "@/queries/useWorkExpPackage";
 import { WorkExperiencePackage } from "@/schemaValidations/work-exp-package.schema";
 import { Search, Filter, Calendar, Package } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useWorkExpBookingsByMentee } from "@/queries/useWorkExpBooking";
 
 export default function ExploreWorkExp() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,6 +26,8 @@ export default function ExploreWorkExp() {
   const itemsPerPage = 12;
 
   const { data, isLoading, error } = useWorkExpPackages();
+  const { data: bookingsResponse, isLoading: bookingsLoading } =
+    useWorkExpBookingsByMentee();
 
   const handleStatusChange = (value: string) => {
     setStatusFilter(value === "all" ? "" : value);
@@ -96,7 +99,20 @@ export default function ExploreWorkExp() {
     }
   };
 
-  const allPackages = data?.payload?.data?.packages || [];
+  const bookedPackageIds = useMemo(() => {
+    if (!bookingsResponse?.payload?.data) return new Set<number>();
+
+    return new Set(
+      bookingsResponse.payload.data.map(
+        (booking) =>
+          booking.workExperiencePackage?.id ?? booking.workExperiencePackageId
+      )
+    );
+  }, [bookingsResponse]);
+
+  const allPackages = useMemo(() => {
+    return data?.payload?.data?.packages || [];
+  }, [data?.payload?.data?.packages]);
 
   const searchedPackages = searchPackages(allPackages, searchQuery);
   const filteredPackages = filterPackages(
@@ -253,6 +269,7 @@ export default function ExploreWorkExp() {
               <WorkExpPackageCard
                 key={workPackage.id}
                 workPackage={workPackage}
+                isBooked={bookedPackageIds.has(workPackage.id)}
               />
             ))}
           </div>

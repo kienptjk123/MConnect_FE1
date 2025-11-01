@@ -16,6 +16,14 @@ export const useCourseByMentor = () => {
   });
 };
 
+export const useByMentorCourseDetail = (id: number) => {
+  return useQuery({
+    queryKey: ["course", id],
+    queryFn: () => courseApiRequest.getAllCourseByMentorDetail(id),
+    select: (data) => data.payload.result,
+  });
+};
+
 export const useCourseById = (id: string) => {
   return useQuery({
     queryKey: ["course", id],

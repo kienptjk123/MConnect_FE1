@@ -8,7 +8,6 @@ import { useProfile } from "@/queries/useProfile";
 import { useCreateWorkExpBooking } from "@/queries/useWorkExpBooking";
 import { WorkBookingCreate } from "@/schemaValidations/work-exp-booking";
 import { WorkExperiencePackage } from "@/schemaValidations/work-exp-package.schema";
-import { useProfileStore } from "@/stores";
 import {
   BookOpen,
   Clock,
@@ -18,19 +17,24 @@ import {
   Users,
 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface WorkExpPackageCardProps {
   workPackage: WorkExperiencePackage;
+  isBooked?: boolean;
 }
 
 export default function WorkExpPackageCard({
   workPackage,
+  isBooked = false,
 }: WorkExpPackageCardProps) {
   const { data: profile } = useProfile();
   console.log(profile);
 
   const { mutateAsync: createBooking, isPending } = useCreateWorkExpBooking();
+
+  const router = useRouter();
 
   const formatPrice = (price: string | number | undefined) => {
     const numPrice =
@@ -106,6 +110,8 @@ export default function WorkExpPackageCard({
           workPackage.title || "this package"
         }" has been created successfully.`,
       });
+
+      router.push("/manage/mentee/my-work-exp-bookings");
     } catch (error: any) {
       toast({
         title: "Booking Failed",
@@ -221,17 +227,23 @@ export default function WorkExpPackageCard({
       </CardContent>
 
       <CardFooter className="p-6 pt-0">
-        <Button
-          onClick={handleBooking}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          disabled={workPackage.status !== "ACTIVE" || isPending}
-        >
-          {isPending
-            ? "Booking..."
-            : workPackage.status === "ACTIVE"
-            ? "Book Package"
-            : "Not Available"}
-        </Button>
+        {isBooked ? (
+          <Button className="w-full" disabled={true}>
+            Booked
+          </Button>
+        ) : (
+          <Button
+            onClick={handleBooking}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            disabled={workPackage.status !== "ACTIVE" || isPending}
+          >
+            {isPending
+              ? "Booking..."
+              : workPackage.status === "ACTIVE"
+              ? "Book Package"
+              : "Not Available"}
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

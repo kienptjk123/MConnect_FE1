@@ -168,19 +168,16 @@ function SortableModule({
                 )}
               </div>
             </div>
+          </div>
 
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteModule(moduleIndex);
-              }}
-              className="text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              onDeleteModule(moduleIndex);
+            }}
+            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <Trash2 className="h-4 w-4" />
           </div>
         </AccordionTrigger>
 
@@ -255,7 +252,6 @@ function SortableModule({
   );
 }
 
-// Sortable Lesson Component
 function SortableLesson({
   lesson,
   lessonIndex,
@@ -280,6 +276,14 @@ function SortableLesson({
     transform: CSS.Transform.toString(transform),
     transition,
   };
+
+  const baseUrl = "https://mconnectv1.s3.ap-southeast-1.amazonaws.com/";
+
+  const currentVideoUrl = lesson?.media?.s3Key
+    ? `${baseUrl}${lesson.media.s3Key}`
+    : undefined;
+
+  console.log("currentVideoUrl", currentVideoUrl);
 
   return (
     <div
@@ -364,19 +368,17 @@ function SortableLesson({
         </div>
       </div>
 
-      {/* Video Upload Section */}
       {typeof lesson.id === "number" && (
         <div className="ml-8 mt-4">
           <VideoUpload
             lessonId={lesson.id}
             currentVideoUrl={
               lesson.media?.s3Key
-                ? `https://your-s3-domain.com/${lesson.media.s3Key}`
+                ? `https://mconnectv1.s3.ap-southeast-1.amazonaws.com/${lesson.media.s3Key}`
                 : undefined
             }
             onUploadSuccess={(videoKey) => {
               console.log(`Video uploaded for lesson ${lesson.id}:`, videoKey);
-              // Refresh course data to show updated video
               toast({
                 title: "Video uploaded successfully",
                 description: "The video has been uploaded and processed.",
@@ -429,12 +431,11 @@ export default function EditForm({ courseId }: EditFormProps) {
   const createModuleMutation = useCreateModuleMutation();
   const createLessonMutation = useCreateLessonMutation();
 
-  // Initialize form with course data
   useEffect(() => {
     if (course) {
       form.reset({
         title: course.title || "",
-        subtitle: "",
+        subtitle: course.subtitle || "",
         description: course.description || "",
         needToLearn: Array.isArray((course as any).needToLearn)
           ? (course as any).needToLearn.join("\n")
@@ -445,10 +446,12 @@ export default function EditForm({ courseId }: EditFormProps) {
           course.categories
             ?.map((cat: any) => cat.courseCategory?.id)
             .filter(Boolean) || [],
-        labels: [],
+        labels:
+          course.labels
+            ?.map((label: any) => label.courseLabel?.id)
+            .filter(Boolean) || [],
       });
 
-      // Initialize modules
       const initialModules =
         course.modules?.map((module: any) => ({
           id: module.id,

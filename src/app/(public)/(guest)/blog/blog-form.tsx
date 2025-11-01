@@ -205,7 +205,7 @@ export default function BlogForm() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col justify-center ">
+    <div className="min-h-screen bg-white flex flex-col justify-center ">
       <div className="container mx-auto px-4 md:px-16 lg:px-48 py-20">
         <div className="grid grid-cols-1 lg:grid-cols-11 gap-8">
           {/* Main Content */}
