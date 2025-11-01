@@ -8,7 +8,6 @@ import {
   UpdateStaffProfileType,
 } from "@/schemaValidations/staff.schema";
 
-// Get all staff
 export const useStaffQuery = () => {
   return useQuery({
     queryKey: ["staff"],
@@ -17,7 +16,6 @@ export const useStaffQuery = () => {
   });
 };
 
-// Get staff by ID
 export const useStaffByIdQuery = (id: number) => {
   return useQuery({
     queryKey: ["staff", id],

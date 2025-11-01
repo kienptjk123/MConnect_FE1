@@ -63,17 +63,10 @@ export default function CourseDetailPage() {
   const lesson = courseResponse?.payload?.result?.modules?.[0].lessons?.[0];
   const course = courseResponse?.payload?.result;
   const video = useCoursePublicStream(lesson?.id as number);
-  if (isLoading && loadingCourses) {
-    return (
-      <div className="flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-red-600 mb-4">
             Error loading course
@@ -89,9 +82,22 @@ export default function CourseDetailPage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-600 mb-4">
+            Loading course...
+          </h1>
+          <p className="text-gray-600">Please wait while we fetch the data.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!course) {
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center ">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-600 mb-4">
             Course not found
@@ -115,7 +121,7 @@ export default function CourseDetailPage() {
   );
 
   return (
-    <div className="bg-white dark:bg-[#080808]">
+    <div className="bg-white dark:bg-[#080808] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">

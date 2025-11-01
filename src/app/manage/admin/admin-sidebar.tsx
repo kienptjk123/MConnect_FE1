@@ -23,16 +23,11 @@ import { useLogoutMutation } from "@/queries/useLogout";
 import { useProfile } from "@/queries/useProfile";
 import {
   ChevronDown,
-  FolderDot,
   LayoutDashboard,
   ListVideo,
   LogOut,
-  MessageCircle,
-  MessageCircleQuestionIcon,
   MonitorPlayIcon,
   NewspaperIcon,
-  Settings,
-  ShoppingBag,
   User,
   User2,
 } from "lucide-react";

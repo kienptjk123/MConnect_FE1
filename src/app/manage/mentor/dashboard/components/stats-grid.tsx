@@ -54,7 +54,7 @@ const stats = [
   },
   {
     title: "USD Total Earning",
-    value: "$7,461,767",
+    value: "7,461,767đ",
     icon: CreditCard,
     color: "text-gray-500",
     bgColor: "bg-gray-50",

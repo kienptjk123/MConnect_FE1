@@ -41,12 +41,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SmoothScrollProvider>
-            <AppProviders>
-              <main>{children}</main>
-              <CallManager />
-            </AppProviders>
-          </SmoothScrollProvider>
+          <AppProviders>
+            <main>{children}</main>
+            <CallManager />
+          </AppProviders>
         </ThemeProvider>
       </body>
     </html>

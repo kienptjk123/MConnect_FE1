@@ -1,9 +1,11 @@
-
-FROM node:20-bullseye-slim AS build
+# ==========================
+# STEP 1: Build Stage
+# ==========================
+FROM node:20-bullseye-slim AS builder
 
 WORKDIR /app
 
-# Env variables cho build
+# Env build-time
 ENV NEXT_PUBLIC_API_ENDPOINT=https://developgenderhealth.io.vn
 ENV NEXT_PUBLIC_URL=https://mconnect.io.vn/
 ENV NEXT_PUBLIC_SOCKET_URL=https://developgenderhealth.io.vn
@@ -13,32 +15,32 @@ ENV NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI=https://developgenderhealth.io.vn
 # Copy package files
 COPY package.json package-lock.json ./
 
-# Install deps
+# Install dependencies
 RUN npm ci
 
 # Fix cho Tailwind v4
 RUN npm install --save-dev @tailwindcss/oxide lightningcss
 
-# Copy toàn bộ source
+# Copy toàn bộ source code
 COPY . .
 
-# Build Next.js
+# Build Next.js (tạo output standalone)
 RUN npm run build
 
-
 # ==========================
-# STEP 2: Run Next.js app
-# ==========================
+# STEP 2: Runtime Stage
 FROM node:20-bullseye-slim AS runner
 
 WORKDIR /app
-
 ENV NODE_ENV=production
 
-# Copy output từ build stage
-COPY --from=build /app ./
+# Copy output standalone
+COPY --from=builder /app/.next/standalone ./ 
+COPY --from=builder /app/.next/static ./.next/static
+COPY --from=builder /app/public ./public
 
-# Expose port
+# Expose port 3000
 EXPOSE 3000
 
-CMD ["npx", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
+# ✅ Chạy đúng server standalone
+CMD ["node", ".next/standalone/server.js"]

@@ -69,6 +69,8 @@ export default function NotificationDropdown({
     updateNotificationStatus,
   } = useNotificationStore();
 
+  const notificationSlice = notifications.slice(0, 4);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -270,7 +272,6 @@ export default function NotificationDropdown({
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
-      {/* Notification Bell Button */}
       <Button
         variant="ghost"
         size="icon"
@@ -288,10 +289,8 @@ export default function NotificationDropdown({
         )}
       </Button>
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-50">
-          {/* Header */}
           <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -315,8 +314,7 @@ export default function NotificationDropdown({
             )}
           </div>
 
-          {/* Notifications List */}
-          <ScrollArea className="max-h-96">
+          <ScrollArea className="max-h-[500px]">
             {isLoading ? (
               <div className="px-4 py-8 text-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
@@ -324,7 +322,7 @@ export default function NotificationDropdown({
                   Loading notifications...
                 </p>
               </div>
-            ) : notifications.length === 0 ? (
+            ) : notificationSlice.length === 0 ? (
               <div className="px-4 py-8 text-center">
                 <Bell className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -333,7 +331,7 @@ export default function NotificationDropdown({
               </div>
             ) : (
               <div className="divide-y divide-gray-100 dark:divide-gray-800">
-                {notifications.map((notification, index) => (
+                {notificationSlice.map((notification, index) => (
                   <div
                     key={index + 1}
                     className={`px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors ${
@@ -390,7 +388,6 @@ export default function NotificationDropdown({
                             </div>
                           </div>
 
-                          {/* Actions */}
                           <div className="flex items-center space-x-1 ml-2">
                             {notification.status === "UNREAD" && (
                               <Button
@@ -439,16 +436,14 @@ export default function NotificationDropdown({
           {notifications.length > 0 && (
             <>
               <Separator />
-              <div className="px-4 py-3">
+              <div className="px-4 py-2">
                 <Link href="/manage/mentee/notifications">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full text-center text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400"
+                  <button
+                    className="w-full text-center text-sm text-blue-600 cursor-pointer font-semibold hover:text-blue-700 dark:text-blue-400"
                     onClick={() => setIsOpen(false)}
                   >
                     View all notifications
-                  </Button>
+                  </button>
                 </Link>
               </div>
             </>

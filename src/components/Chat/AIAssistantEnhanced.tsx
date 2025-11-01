@@ -39,18 +39,355 @@ import {
   TrendingUp,
   User,
   X,
+  Star,
+  ArrowRight,
+  Award,
+  Clock,
+  MapPin,
+  CheckCircle2,
+  AlertCircle,
+  PauseCircle,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useAIAssistant } from "./AIAssistantProvider";
-
+import Image from "next/image";
+import { motion } from "framer-motion";
+import FloatingBee from "@/components/FloatingBee/FloatingBee";
+import Link from "next/link";
 // ==================== TYPES ====================
 
 interface AIAssistantEnhancedProps {
   className?: string;
 }
 
+interface MentorMatch {
+  id: number;
+  name: string;
+  bio: string;
+  major: string;
+  slug: string;
+  avatar: string;
+  matchScore: number;
+  matchReason: string;
+}
+
+interface CourseMatch {
+  id: number;
+  title: string;
+  description: string;
+  slug: string;
+  price: number;
+  avgRating: number;
+  mentorName: string;
+  matchScore: number;
+  matchReason: string;
+}
+
+interface ScheduleItem {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  status: string;
+}
+
+// ==================== HELPER FUNCTIONS ====================
+
+const parseAIResponse = (content: string) => {
+  try {
+    // Try to parse as JSON array (mentor/course recommendations)
+    const parsed = JSON.parse(content);
+    if (Array.isArray(parsed) && parsed.length > 0) {
+      // Check if it's mentors or courses or schedules
+      if (parsed[0].major) {
+        return { type: "mentors", data: parsed as MentorMatch[] };
+      } else if (parsed[0].matchReason) {
+        return { type: "courses", data: parsed as CourseMatch[] };
+      } else if (parsed[0].startTime && parsed[0].endTime) {
+        return { type: "schedules", data: parsed as ScheduleItem[] };
+      }
+    }
+    // Single schedule object
+    if (parsed && parsed.startTime && parsed.endTime) {
+      return { type: "schedules", data: [parsed] as ScheduleItem[] };
+    }
+  } catch (e) {
+    // Not JSON, regular text
+  }
+  return { type: "text", data: content };
+};
+
 // ==================== MARKDOWN RENDERER ====================
+
+const MentorCard: React.FC<{ mentor: MentorMatch }> = ({ mentor }) => {
+  return (
+    <Link href={`/manage/mentee/explore-mentor/${mentor.slug}`}>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        className="bg-card border border-border rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer mb-3"
+      >
+        <div className="flex items-start gap-3">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
+            <Image
+              src={mentor.avatar}
+              alt={mentor.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h4 className="font-semibold text-sm text-foreground truncate">
+                {mentor.name}
+              </h4>
+              <div className="flex items-center gap-1 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 rounded-full">
+                <Award className="w-3 h-3 text-green-600 dark:text-green-400" />
+                <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                  {mentor.matchScore}%
+                </span>
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mb-1">{mentor.bio}</p>
+            <p className="text-xs font-medium text-primary">{mentor.major}</p>
+            <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+              {mentor.matchReason}
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
+
+const CourseCard: React.FC<{ course: CourseMatch }> = ({ course }) => {
+  return (
+    <Link href={`/manage/mentee/explore-courses/${course.slug}`}>
+      <motion.div
+        whileHover={{ scale: 1.02 }}
+        className="bg-card border border-border rounded-xl p-4 hover:shadow-lg transition-all cursor-pointer mb-3"
+      >
+        <div className="flex items-start gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h4 className="font-semibold text-sm text-foreground line-clamp-1">
+                {course.title}
+              </h4>
+              <div className="flex items-center gap-1 px-2 py-0.5 bg-blue-100 dark:bg-blue-900/30 rounded-full flex-shrink-0">
+                <Award className="w-3 h-3 text-blue-600 dark:text-blue-400" />
+                <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                  {course.matchScore}%
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                <span className="text-xs font-medium">{course.avgRating}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {course.mentorName}
+              </span>
+              <span className="text-xs font-semibold text-primary">
+                {Number(course.price).toLocaleString("vi-VN")} đ
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground line-clamp-2">
+              {course.matchReason}
+            </p>
+          </div>
+          <ArrowRight className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+        </div>
+      </motion.div>
+    </Link>
+  );
+};
+
+const ScheduleCard: React.FC<{ schedule: ScheduleItem }> = ({ schedule }) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const getStatusConfig = (status: string) => {
+    switch (status) {
+      case "ACTIVE":
+        return {
+          icon: CheckCircle2,
+          color: "text-green-600 dark:text-green-400",
+          bg: "bg-green-100 dark:bg-green-900/30",
+          label: "Active",
+        };
+      case "COMPLETED":
+        return {
+          icon: CheckCircle2,
+          color: "text-blue-600 dark:text-blue-400",
+          bg: "bg-blue-100 dark:bg-blue-900/30",
+          label: "Completed",
+        };
+      case "CANCELLED":
+        return {
+          icon: AlertCircle,
+          color: "text-red-600 dark:text-red-400",
+          bg: "bg-red-100 dark:bg-red-900/30",
+          label: "Cancelled",
+        };
+      case "PENDING":
+        return {
+          icon: PauseCircle,
+          color: "text-yellow-600 dark:text-yellow-400",
+          bg: "bg-yellow-100 dark:bg-yellow-900/30",
+          label: "Pending",
+        };
+      default:
+        return {
+          icon: Clock,
+          color: "text-gray-600 dark:text-gray-400",
+          bg: "bg-gray-100 dark:bg-gray-900/30",
+          label: status,
+        };
+    }
+  };
+
+  const statusConfig = getStatusConfig(schedule.status);
+  const StatusIcon = statusConfig.icon;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-card border border-border rounded-xl p-4 hover:shadow-lg transition-all mb-3"
+    >
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex-1">
+          <h4 className="font-semibold text-base text-foreground mb-1">
+            {schedule.title}
+          </h4>
+          <p className="text-sm text-muted-foreground">
+            {schedule.description}
+          </p>
+        </div>
+        <div
+          className={`flex items-center gap-1.5 px-3 py-1.5 ${statusConfig.bg} rounded-full ml-3`}
+        >
+          <StatusIcon className={`w-4 h-4 ${statusConfig.color}`} />
+          <span className={`text-xs font-semibold ${statusConfig.color}`}>
+            {statusConfig.label}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {/* Date */}
+        <div className="flex items-center gap-2 bg-muted/50 rounded-lg p-3">
+          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Calendar className="w-5 h-5 text-primary" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground">Date</p>
+            <p className="text-sm font-semibold text-foreground truncate">
+              {formatDate(schedule.date)}
+            </p>
+          </div>
+        </div>
+
+        {/* Time */}
+        <div className="flex items-center gap-2 bg-muted/50 rounded-lg p-3">
+          <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+            <Clock className="w-5 h-5 text-blue-500" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground">Time</p>
+            <p className="text-sm font-semibold text-foreground">
+              {schedule.startTime} - {schedule.endTime}
+            </p>
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="flex items-center gap-2 bg-muted/50 rounded-lg p-3">
+          <div className="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center">
+            <MapPin className="w-5 h-5 text-purple-500" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground">Location</p>
+            <p className="text-sm font-semibold text-foreground truncate">
+              {schedule.location}
+            </p>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const EnhancedMarkdownMessage: React.FC<{ content: string }> = ({
+  content,
+}) => {
+  const parsed = parseAIResponse(content);
+
+  // Render mentor recommendations
+  if (parsed.type === "mentors") {
+    const mentors = parsed.data as MentorMatch[];
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 mb-3">
+          <Brain className="w-4 h-4 text-primary" />
+          <h3 className="font-semibold text-sm">Recommended Mentors for You</h3>
+        </div>
+        {mentors.map((mentor) => (
+          <MentorCard key={mentor.id} mentor={mentor} />
+        ))}
+      </div>
+    );
+  }
+
+  // Render course recommendations
+  if (parsed.type === "courses") {
+    const courses = parsed.data as CourseMatch[];
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 mb-3">
+          <BookOpen className="w-4 h-4 text-primary" />
+          <h3 className="font-semibold text-sm">Recommended Courses for You</h3>
+        </div>
+        {courses.map((course) => (
+          <CourseCard key={course.slug} course={course} />
+        ))}
+      </div>
+    );
+  }
+
+  // Render schedule items
+  if (parsed.type === "schedules") {
+    const schedules = parsed.data as ScheduleItem[];
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 mb-3">
+          <Calendar className="w-4 h-4 text-primary" />
+          <h3 className="font-semibold text-sm">
+            {schedules.length > 1 ? "Your Schedule" : "Schedule Details"}
+          </h3>
+        </div>
+        {schedules.map((schedule) => (
+          <ScheduleCard key={schedule.id} schedule={schedule} />
+        ))}
+      </div>
+    );
+  }
+
+  // For text content, use MarkdownMessage for full markdown support
+  return <MarkdownMessage content={parsed.data as string} />;
+};
 
 const MarkdownMessage: React.FC<{ content: string }> = ({ content }) => {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -61,12 +398,10 @@ const MarkdownMessage: React.FC<{ content: string }> = ({ content }) => {
     setTimeout(() => setCopiedIndex(null), 2000);
   };
 
-  // Simple markdown parser
   const parseMarkdown = (text: string) => {
     const parts: React.ReactNode[] = [];
     let keyCounter = 0;
 
-    // Code blocks
     const codeBlockRegex = /```(\w+)?\n([\s\S]*?)```/g;
     let match;
     let lastIndex = 0;
@@ -164,11 +499,12 @@ const MarkdownMessage: React.FC<{ content: string }> = ({ content }) => {
       return `__PLACEHOLDER_${key}__`;
     });
 
-    // List items
+    // List items and numbered lists
     const lines = remaining.split("\n");
     const result: React.ReactNode[] = [];
 
     lines.forEach((line, idx) => {
+      // Handle bullet list (- item)
       if (line.trim().startsWith("- ")) {
         result.push(
           <div key={`list-${idx}`} className="flex items-start gap-2 my-1">
@@ -176,7 +512,66 @@ const MarkdownMessage: React.FC<{ content: string }> = ({ content }) => {
             <span>{line.trim().slice(2)}</span>
           </div>
         );
-      } else {
+      }
+      // Handle numbered list (1. item, 2. item, etc.)
+      else if (/^\d+\.\s/.test(line.trim())) {
+        const match = line.trim().match(/^(\d+)\.\s(.+)$/);
+        if (match) {
+          const number = match[1];
+          const content = match[2];
+
+          // Process bold text in numbered items
+          const contentParts = content.split("**");
+          const processedContent = contentParts.map((part, pIdx) => {
+            if (pIdx % 2 === 1) {
+              return (
+                <strong key={`bold-${keyCounter++}`} className="font-semibold">
+                  {part}
+                </strong>
+              );
+            }
+            return part;
+          });
+
+          result.push(
+            <div key={`number-${idx}`} className="flex items-start gap-2 my-2">
+              <span className="font-semibold text-primary flex-shrink-0">
+                {number}.
+              </span>
+              <span className="text-sm">{processedContent}</span>
+            </div>
+          );
+        }
+      }
+      // Handle bullet point with * (from AI responses)
+      else if (line.trim().startsWith("*") && !line.trim().startsWith("**")) {
+        const content = line.trim().substring(1).trim();
+
+        // Process bold text in bullet items
+        const contentParts = content.split("**");
+        const processedContent = contentParts.map((part, pIdx) => {
+          if (pIdx % 2 === 1) {
+            return (
+              <strong key={`bold-${keyCounter++}`} className="font-semibold">
+                {part}
+              </strong>
+            );
+          }
+          return part;
+        });
+
+        result.push(
+          <div
+            key={`bullet-${idx}`}
+            className="flex items-start gap-2 my-2 ml-2"
+          >
+            <span className="text-primary mt-1 flex-shrink-0">•</span>
+            <span className="text-sm">{processedContent}</span>
+          </div>
+        );
+      }
+      // Regular text
+      else {
         // Replace placeholders
         let processedLine = line;
         parts.forEach((part) => {
@@ -185,7 +580,11 @@ const MarkdownMessage: React.FC<{ content: string }> = ({ content }) => {
         });
 
         if (processedLine.trim()) {
-          result.push(<span key={`line-${idx}`}>{processedLine}</span>);
+          result.push(
+            <p key={`line-${idx}`} className="my-1">
+              {processedLine}
+            </p>
+          );
         }
       }
     });
@@ -304,79 +703,6 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
     }
   };
 
-  // ==================== QUICK ACTIONS ====================
-
-  const menteeQuickActions = [
-    {
-      label: "Upcoming Tasks",
-      icon: Calendar,
-      action: getUpcomingTasks,
-      description: "Get today's tasks and schedule",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      label: "Learning Plan",
-      icon: BookOpen,
-      action: generateLearningRecommendations,
-      description: "Get personalized learning recommendations",
-      gradient: "from-purple-500 to-pink-500",
-    },
-    {
-      label: "Progress Report",
-      icon: TrendingUp,
-      action: generateProgressReport,
-      description: "View your learning progress",
-      gradient: "from-green-500 to-emerald-500",
-    },
-    {
-      label: "Find Mentors",
-      icon: Brain,
-      action: () =>
-        sendMessage("Help me find suitable mentors based on my learning goals"),
-      description: "Get mentor recommendations",
-      gradient: "from-orange-500 to-red-500",
-    },
-  ];
-
-  const mentorQuickActions = [
-    {
-      label: "Business Analytics",
-      icon: TrendingUp,
-      action: getBusinessAnalytics,
-      description: "View your business performance",
-      gradient: "from-blue-500 to-indigo-500",
-    },
-    {
-      label: "Revenue Forecast",
-      icon: DollarSign,
-      action: getRevenueForecast,
-      description: "Get revenue predictions",
-      gradient: "from-green-500 to-teal-500",
-    },
-    {
-      label: "Progress Report",
-      icon: Target,
-      action: generateProgressReport,
-      description: "View mentoring progress",
-      gradient: "from-purple-500 to-violet-500",
-    },
-    {
-      label: "Student Insights",
-      icon: Brain,
-      action: () =>
-        sendMessage(
-          "Give me insights about my students' learning patterns and engagement"
-        ),
-      description: "Analyze student engagement",
-      gradient: "from-orange-500 to-amber-500",
-    },
-  ];
-
-  const quickActions =
-    userRole === "MENTOR" ? mentorQuickActions : menteeQuickActions;
-
-  // ==================== SESSION MANAGEMENT ====================
-
   const handleNewSession = (
     type: "general" | "mentor_shadow" | "learning" | "business"
   ) => {
@@ -384,11 +710,9 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
     switchSession(newSessionId);
   };
 
-  // ==================== RENDER HELPERS ====================
-
   const renderMessage = (message: ChatMessage, index: number) => {
     const isUser = message.role === "user";
-
+    console.log("cjeck", message.content);
     return (
       <div
         key={index}
@@ -401,7 +725,6 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
             isUser ? "flex-row-reverse" : "flex-row"
           } items-start gap-3 max-w-[85%]`}
         >
-          {/* Avatar */}
           <div
             className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center shadow-lg ${
               isUser
@@ -431,7 +754,7 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
                 </p>
               ) : (
                 <div className="text-sm leading-relaxed text-foreground">
-                  <MarkdownMessage content={message.content} />
+                  <EnhancedMarkdownMessage content={message.content} />
                 </div>
               )}
             </div>
@@ -455,58 +778,11 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
     );
   };
 
-  const renderQuickActions = () => {
-    if (!currentSessionData || currentSessionData.messages.length > 2)
-      return null;
-
-    return (
-      <div className="p-4 border-b border-border bg-muted/20">
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <h4 className="text-sm font-semibold text-foreground">
-            Quick Actions
-          </h4>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {quickActions.map((action, index) => (
-            <TooltipProvider key={index}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={action.action}
-                    disabled={isLoading}
-                    className="flex items-center gap-2 h-auto p-3 hover:scale-105 transition-all duration-200 hover:shadow-md group bg-transparent"
-                  >
-                    <div
-                      className={`w-8 h-8 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow`}
-                    >
-                      <action.icon className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-xs font-medium text-left flex-1">
-                      {action.label}
-                    </span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="top">
-                  <p className="text-xs">{action.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  // ==================== FLOATING TRIGGER ====================
-
   return (
-    <div className={`fixed bottom-6 right-6 z-[9999] ${className}`}>
+    <div className={`absolute bottom-0 right-0 z-50 ${className}`}>
       <div
         onClick={showAssistant}
-        className={`absolute bottom-0 right-0 transition-all duration-500  ${
+        className={`fixed bottom-0 right-0 transition-all duration-500   ${
           isVisible
             ? "opacity-0 scale-75 pointer-events-none"
             : "opacity-100 scale-100 cursor-pointer"
@@ -515,19 +791,8 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div onClick={showAssistant} className="w-64 h-64">
-                <iframe
-                  ref={iframeRef}
-                  title="Noodle Bar - Interactive 3D Learning Experience"
-                  src="https://sketchfab.com/models/92bcda53d5eb4eef8cd842a1b65ff205/embed?autospin=0.5&autostart=1&preload=1&transparent=1&ui_hint=0&scrollwheel=0"
-                  className="w-full h-full border-0 rounded-3xl"
-                  allow="autoplay; fullscreen; xr-spatial-tracking"
-                  style={{
-                    filter: "brightness(1) contrast(1.05)",
-                    transform: "perspective(1000px)",
-                    pointerEvents: "none",
-                  }}
-                />
+              <div onClick={showAssistant}>
+                <FloatingBee />
               </div>
             </TooltipTrigger>
             <TooltipContent side="left">
@@ -535,17 +800,19 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-        <div className="absolute bottom-2 left-0 w-full h-9 bg-white dark:bg-black z-20"></div>
       </div>
       <div
-        className={`transition-all relative duration-500 rounded-2xl ${
-          isVisible
-            ? "opacity-100 scale-100"
-            : "opacity-0 scale-90 pointer-events-none"
+        className={`fixed bottom-4 right-4 z-50 transition-all duration-500 ${
+          isVisible ? "h-[580px] w-[420px]" : "h-[64px] w-[64px] opacity-0"
         }`}
       >
-        <Card className="w-[420px] h-[680px] shadow-2xl border-0 bg-background  rounded-3xl backdrop-blur-xl animate-in slide-in-from-bottom-8 duration-500">
-          {/* Header */}
+        <Card
+          className={`shadow-2xl border-0 bg-background rounded-3xl backdrop-blur-xl transition-all duration-500 overflow-hidden ${
+            isVisible
+              ? "h-[580px] w-[420px] opacity-100 scale-100"
+              : "h-[64px] w-[64px] opacity-90 scale-95 cursor-pointer"
+          }`}
+        >
           <div className="flex items-center justify-between p-4 bg-gradient-to-r  rounded-t-3xl  from-blue-500 via-purple-500 to-pink-500 text-white relative overflow-hidden">
             {/* Animated background */}
             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 animate-pulse" />
@@ -647,21 +914,14 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
               </Button>
             </div>
           </div>
-
-          {/* Content */}
           {!isMinimized && (
-            <CardContent className="p-0 flex flex-col h-[calc(680px-73px)] ">
-              {/* Quick Actions */}
-              {renderQuickActions()}
-
-              {/* Messages */}
+            <CardContent className="p-0 flex flex-col h-[calc(580px-73px)] ">
               <ScrollArea className="flex-1 px-4 overflow-scroll ">
                 <div className="py-4">
                   {currentSessionData?.messages.map((message, index) =>
                     renderMessage(message, index)
                   )}
 
-                  {/* Typing Indicator */}
                   {(isLoading || isTyping) && (
                     <div className="flex justify-start mb-6 animate-in fade-in slide-in-from-bottom-2 duration-300">
                       <div className="flex items-start gap-3">
@@ -691,8 +951,6 @@ export const AIAssistantEnhanced: React.FC<AIAssistantEnhancedProps> = ({
                   <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
-
-              {/* Input */}
               <div className="p-4 border-t border-border bg-muted/30 backdrop-blur-sm">
                 <form onSubmit={handleSendMessage} className="flex gap-2">
                   <Input

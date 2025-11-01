@@ -12,9 +12,11 @@ import AIAssistantEnhanced from "@/components/Chat/AIAssistantEnhanced";
 export function MainLayoutWithAI({ children }: { children: React.ReactNode }) {
   return (
     <AIAssistantProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 relative">
         {children}
-        <AIAssistantEnhanced />
+        <div className="relative">
+          <AIAssistantEnhanced />
+        </div>
       </div>
     </AIAssistantProvider>
   );

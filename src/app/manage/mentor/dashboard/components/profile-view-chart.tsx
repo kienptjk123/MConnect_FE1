@@ -36,7 +36,7 @@ export function ProfileViewChart() {
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <p className="text-2xl font-bold text-foreground">$7,443</p>
+          <p className="text-2xl font-bold text-foreground">7,000,443đ</p>
           <p className="text-sm text-muted-foreground">
             USD Dollar you earned.
           </p>

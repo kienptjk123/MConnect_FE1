@@ -11,8 +11,8 @@ import { WorkExperiencePackage } from "@/schemaValidations/work-exp-package.sche
 import {
   BookOpen,
   Clock,
-  DollarSign,
   Package,
+  ReceiptCent,
   User,
   Users,
 } from "lucide-react";
@@ -179,7 +179,7 @@ export default function WorkExpPackageCard({
           </div>
 
           <div className="flex items-center text-gray-600 text-sm">
-            <DollarSign className="h-4 w-4 mr-2" />
+            <ReceiptCent className="h-4 w-4 mr-2" />
             <span className="font-semibold text-green-600">
               {formatPrice(workPackage.price)}
             </span>
@@ -226,15 +226,25 @@ export default function WorkExpPackageCard({
         </div>
       </CardContent>
 
-      <CardFooter className="p-6 pt-0">
+      <CardFooter className="p-6 pt-0 flex gap-2">
+        <Button
+          variant="outline"
+          className="w-1/2"
+          onClick={() =>
+            router.push(`/manage/mentee/explore-work-exp-pkg/${workPackage.id}`)
+          }
+        >
+          View More
+        </Button>
+
         {isBooked ? (
-          <Button className="w-full" disabled={true}>
+          <Button className="w-1/2" disabled>
             Booked
           </Button>
         ) : (
           <Button
             onClick={handleBooking}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            className="w-1/2 bg-blue-600 hover:bg-blue-700 text-white"
             disabled={workPackage.status !== "ACTIVE" || isPending}
           >
             {isPending
