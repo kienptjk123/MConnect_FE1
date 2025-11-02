@@ -1,6 +1,6 @@
 export interface CreatePaymentRequest {
   bookingId: number;
-  bookingType: "WORK_EXPERIENCE";
+  bookingType: "WORKEXPERIENCE";
   paymentType: "BOOKING";
   amount: number;
   orderInfo: string;

@@ -52,7 +52,6 @@ export const useCreatePayment = () => {
   });
 };
 
-// Create booking with payment (combined mutation)
 export const useCreateBookingWithPayment = () => {
   return useMutation({
     mutationFn: bookingApiRequest.createBookingWithPayment,
