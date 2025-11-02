@@ -23,7 +23,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSocket } from "@/components/SocketProvider";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 export default function MyWorkExpBookingsPage() {
   const {
@@ -54,11 +54,7 @@ export default function MyWorkExpBookingsPage() {
         if (prev <= 1) {
           clearInterval(timer);
           setPaymentData(null);
-          toast({
-            title: "Payment Timeout",
-            description: "Payment session expired. Please try again.",
-            variant: "destructive",
-          });
+          toast.error("Payment session expired. Please try again.");
           return 0;
         }
         return prev - 1;
@@ -68,32 +64,20 @@ export default function MyWorkExpBookingsPage() {
     return () => clearInterval(timer);
   }, [paymentData]);
 
-  // Listen for payment events from Socket.IO
   useEffect(() => {
     if (!paymentData) return;
-
     const handlePaymentSuccess = (data: any) => {
-      console.log("💰 Payment Success:", data);
       setPaymentData(null);
-      toast({
-        title: "Thanh toán thành công! 🎉",
-        description: "Bạn đã thanh toán booking thành công.",
-      });
+      toast.success("Thanh toán thành công! 🎉");
       router.push("/payment/vnpay/success");
     };
 
     const handlePaymentFailed = (data: any) => {
-      console.log("❌ Payment Failed:", data);
       setPaymentData(null);
-      toast({
-        title: "Thanh toán thất bại",
-        description: data?.message || "Vui lòng thử lại sau.",
-        variant: "destructive",
-      });
+      toast.error(data?.message || "Thanh toán thất bại. Vui lòng thử lại.");
       router.push("/payment/vnpay/fail");
     };
 
-    // Subscribe to socket events
     const unsubscribeSuccess = onPaymentSuccess(handlePaymentSuccess);
     const unsubscribeFailed = onPaymentFailed(handlePaymentFailed);
 
@@ -186,19 +170,11 @@ export default function MyWorkExpBookingsPage() {
         });
         setCountdown(900); // Reset countdown to 15 minutes
       } else {
-        toast({
-          title: "Error",
-          description: "Failed to get payment URL",
-          variant: "destructive",
-        });
+        toast.error("Failed to get payment URL");
       }
     } catch (err: any) {
       console.error("Payment error", err);
-      toast({
-        title: "Error",
-        description: err?.message || "Failed to initiate payment",
-        variant: "destructive",
-      });
+      toast.error(err?.message || "Failed to initiate payment");
     } finally {
       setLoadingPaymentId(null);
     }

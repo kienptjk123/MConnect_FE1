@@ -283,7 +283,7 @@ export default function CourseDetailPage() {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 z-10">
             <CourseInfoPanel course={course} />
           </div>
         </div>
