@@ -139,7 +139,10 @@ export function SingleSessionForm({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4 overflow-auto"
+        >
           <div className="space-y-2">
             <Label htmlFor="title" className="">
               Title
@@ -161,8 +164,9 @@ export function SingleSessionForm({
             </Label>
             <Textarea
               id="description"
+              rows={5}
               placeholder="Enter description"
-              className="min-h-24 focus:border-blue-500 focus:ring-blue-500"
+              className="min-h-24 max-h-32 focus:border-blue-500 focus:ring-blue-500 resize-none overflow-y-auto"
               {...register("description")}
             />
             {errors.description && (

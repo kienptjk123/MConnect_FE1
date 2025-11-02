@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { formatDateToLocaleString } from "@/lib/utils";
 import type { SingleSessionType } from "@/schemaValidations/singleSession.schema";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Edit, Eye, Trash2, DollarSign } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 
 export function getSingleSessionColumns(
   onEdit: (row: SingleSessionType) => void,
@@ -55,7 +55,6 @@ export function getSingleSessionColumns(
       header: "Price",
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
-          <DollarSign className="h-3 w-3 text-green-600" />
           <span className="text-green-600 font-medium">
             {new Intl.NumberFormat("vi-VN", {
               style: "currency",

@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -18,19 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { CourseType } from "@/schemaValidations/course.schema";
-import { useUpdateCourseStatusMutation } from "@/queries/useCourseAdmin";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { formatDateToLocaleString } from "@/lib/utils";
-import {
-  BookOpen,
-  User,
-  Calendar,
-  Star,
-  Users,
-  DollarSign,
-} from "lucide-react";
+import { useUpdateCourseStatusMutation } from "@/queries/useCourseAdmin";
+import { CourseType } from "@/schemaValidations/course.schema";
+import { BookOpen } from "lucide-react";
+import { useState } from "react";
 
 interface CourseEditDialogProps {
   course: CourseType | null;

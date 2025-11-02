@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -13,29 +12,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
-import { useCreateWorkExpPackage } from "@/queries/useWorkExpPackage";
 import { useCourseByMentor } from "@/queries/useCourse";
+import { useCreateWorkExpPackage } from "@/queries/useWorkExpPackage";
 import {
   WorkExperiencePackageCreateSchema,
   type WorkExperiencePackageCreateInput,
 } from "@/schemaValidations/work-exp-package.schema";
+import { useProfile } from "@/stores";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowLeft,
-  Save,
-  Package,
-  X,
-  Plus,
-  DollarSign,
-  Clock,
   BookOpen,
+  Clock,
+  Package,
+  Plus,
+  Save,
   Users,
+  X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { useProfile } from "@/stores";
 
 export default function CreateWorkExpPackageFormPage() {
   const router = useRouter();
@@ -295,7 +294,6 @@ export default function CreateWorkExpPackageFormPage() {
                     htmlFor="price"
                     className="text-sm font-medium text-gray-700 flex items-center gap-2"
                   >
-                    <DollarSign className="h-4 w-4" />
                     Price (VND) *
                   </Label>
                   <Input

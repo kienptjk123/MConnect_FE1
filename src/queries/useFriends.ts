@@ -149,3 +149,11 @@ export const useFriendRequests = () => {
     queryFn: friendsApiRequest.getFriendRequests,
   });
 };
+
+export const useFriends = () => {
+  return useQuery({
+    queryKey: ["friends"],
+    queryFn: friendsApiRequest.getFriends,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};

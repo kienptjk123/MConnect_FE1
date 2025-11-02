@@ -15,12 +15,14 @@ import {
   Users,
   X,
   Smartphone,
+  CheckCircle,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useSocket } from "@/components/SocketProvider";
+import { useLearningCourses } from "@/queries/useMyCourses";
 
 interface CourseCardProps {
   course: CourseType;
@@ -30,12 +32,18 @@ export default function CourseCard({ course }: CourseCardProps) {
   const enrollMutation = useCourseEnrollment();
   const router = useRouter();
   const { onPaymentSuccess, onPaymentFailed } = useSocket();
+  const { data: learningCoursesData } = useLearningCourses();
   const [paymentData, setPaymentData] = useState<{
     qrUrl: string;
     amount: number;
     orderInfo: string;
   } | null>(null);
   const [countdown, setCountdown] = useState(900);
+
+  // Check if user already enrolled in this course
+  const isEnrolled = learningCoursesData?.payload?.result?.enrollments?.some(
+    (enrollment) => enrollment.courseId === course.id
+  );
 
   useEffect(() => {
     if (!paymentData) return;
@@ -267,13 +275,20 @@ export default function CourseCard({ course }: CourseCardProps) {
                 </div>
               </div>
 
-              <div
-                onClick={handleEnrollNow}
-                className="flex items-center justify-center gap-2 text-gray-700 dark:text-white font-semibold hover:text-blue-500 transition-colors duration-300"
-              >
-                <span className="text-base">Enroll Now</span>
-                <MoveRight className="w-5 h-5 text-gray-700 hover:text-blue-500" />
-              </div>
+              {isEnrolled ? (
+                <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400 font-semibold">
+                  <CheckCircle className="w-5 h-5" />
+                  <span className="text-base">Enrolled</span>
+                </div>
+              ) : (
+                <div
+                  onClick={handleEnrollNow}
+                  className="flex items-center justify-center gap-2 text-gray-700 dark:text-white font-semibold hover:text-blue-500 transition-colors duration-300 cursor-pointer"
+                >
+                  <span className="text-base">Enroll Now</span>
+                  <MoveRight className="w-5 h-5 text-gray-700 hover:text-blue-500" />
+                </div>
+              )}
             </div>
           </CardContent>
         </div>

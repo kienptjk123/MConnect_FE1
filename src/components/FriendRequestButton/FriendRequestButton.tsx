@@ -2,14 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useFriendActions } from "@/queries/useFriends";
-import {
-  UserPlus,
-  UserCheck,
-  Clock,
-  Loader2,
-  MessageCircle,
-} from "lucide-react";
+import { useFriendActions, useFriends } from "@/queries/useFriends";
+import { UserPlus, UserCheck, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -22,7 +16,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useProfileStore } from "@/stores";
-import profile from "@/apiRequests/profile";
 
 interface FriendRequestButtonProps {
   targetUserId: number;
@@ -45,6 +38,7 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
   size = "default",
   variant = "default",
 }) => {
+  // ✅ Hooks luôn nằm ở đầu, không bị return sớm
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [message, setMessage] = useState(
     `Hi ${targetUserName}, I'd like to connect with you!`
@@ -52,12 +46,15 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
 
   const { profile } = useProfileStore();
   const { sendRequest, isSending } = useFriendActions();
-  if (profile?.id === targetUserId) {
-    return null;
-  }
+  const { data: friendsData } = useFriends();
 
-  console.log("isSending", isSending);
+  // ✅ Luôn gọi hooks trước khi xử lý logic
+  const isSelf = profile?.id === targetUserId;
+  const isFriend = friendsData?.payload?.result?.friends?.some(
+    (friend: any) => friend.id === targetUserId
+  );
 
+  // Effect giữ nguyên
   useEffect(() => {
     isSending;
   }, [isSending]);
@@ -79,6 +76,20 @@ export const FriendRequestButton: React.FC<FriendRequestButtonProps> = ({
       console.error("Failed to send friend request:", error);
     }
   };
+
+  // ✅ Không return sớm — xử lý logic hiển thị trong JSX
+  if (isSelf) {
+    return null;
+  }
+
+  if (isFriend) {
+    return (
+      <Button className={className} size={size} variant="outline" disabled>
+        <UserCheck className="h-4 w-4 mr-2 text-green-600" />
+        <span className="text-green-600">Friends</span>
+      </Button>
+    );
+  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

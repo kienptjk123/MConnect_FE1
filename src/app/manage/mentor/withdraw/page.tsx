@@ -1,27 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import {
-  useMentorEarningsQuery,
-  useMentorWithdrawRequestsQuery,
-  useCreateWithdrawRequestMutation,
-} from "@/queries/useWithdraw";
-import {
-  useMentorCardsQuery,
-  useDefaultCardQuery,
-  useCreateMentorCardMutation,
-  useSetDefaultCardMutation,
-} from "@/queries/useMentorCard";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -30,8 +11,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -40,27 +21,38 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { toast } from "sonner";
 import { formatCurrency } from "@/lib/utils";
+import {
+  useCreateMentorCardMutation,
+  useDefaultCardQuery,
+  useMentorCardsQuery,
+  useSetDefaultCardMutation,
+} from "@/queries/useMentorCard";
+import {
+  useCreateWithdrawRequestMutation,
+  useMentorEarningsQuery,
+  useMentorWithdrawRequestsQuery,
+} from "@/queries/useWithdraw";
 import { useProfile } from "@/stores/profileStore";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
+  Copy,
+  CreditCard,
+  MoreHorizontal,
+  Plus,
+  TrendingUp,
+  Wallet,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import {
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import {
-  Wallet,
-  CreditCard,
-  TrendingUp,
-  DollarSign,
-  MoreHorizontal,
-  Copy,
-  Plus,
-} from "lucide-react";
+import { toast } from "sonner";
 
 export default function MentorWithdrawPage() {
   const [withdrawAmount, setWithdrawAmount] = useState("");
@@ -330,11 +322,8 @@ export default function MentorWithdrawPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-2xl font-bold">162,000</p>
+                <p className="text-2xl font-bold">162,000 đ</p>
                 <p className="text-sm text-gray-600">Today Revenue</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-6 h-6 text-green-600" />
               </div>
             </div>
           </CardContent>

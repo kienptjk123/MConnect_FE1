@@ -12,7 +12,6 @@ export default function MenteeHeader() {
       </div>
       <div className="ml-auto flex items-center gap-3 px-6">
         <NotificationDropdown />
-        <CartDropdown />
         <ModeToggle />
       </div>
     </header>

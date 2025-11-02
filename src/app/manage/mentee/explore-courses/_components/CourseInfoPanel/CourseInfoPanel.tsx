@@ -17,11 +17,15 @@ import {
   Users,
   X,
   Smartphone,
+  CheckCircle,
+  PlayCircle,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSocket } from "@/components/SocketProvider";
+import { useLearningCourses } from "@/queries/useMyCourses";
+import Link from "next/link";
 
 interface CourseInfoPanelProps {
   course: CourseDetailType;
@@ -31,12 +35,20 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
   const enrollMutation = useCourseEnrollment();
   const router = useRouter();
   const { onPaymentSuccess, onPaymentFailed } = useSocket();
+  const { data: learningCoursesData } = useLearningCourses();
   const [paymentData, setPaymentData] = useState<{
     qrUrl: string;
     amount: number;
     orderInfo: string;
   } | null>(null);
   const [countdown, setCountdown] = useState(900); // 15 minutes in seconds
+
+  // Check if user already enrolled in this course
+  const enrolledCourse =
+    learningCoursesData?.payload?.result?.enrollments?.find(
+      (enrollment) => enrollment.courseId === course.id
+    );
+  const isEnrolled = !!enrolledCourse;
 
   const totalDuration = course.modules.reduce((total, moduleData) => {
     return (
@@ -252,27 +264,63 @@ export default function CourseInfoPanel({ course }: CourseInfoPanelProps) {
         </div>
       </div>
 
-      <div className="pt-4 mt-4">
-        <Button
-          className="w-full bg-blue-500 hover:bg-blue-400 dark:text-white"
-          size="lg"
-        >
-          <ShoppingCart className="h-5 w-5 mr-2" />
-          Add To Cart
-        </Button>
-      </div>
+      {isEnrolled ? (
+        <>
+          {/* Enrolled Status */}
+          <div className="pt-4 mt-4 bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800">
+            <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400 mb-3">
+              <CheckCircle className="h-6 w-6" />
+              <span className="font-semibold text-lg">Already Enrolled</span>
+            </div>
+            {enrolledCourse && (
+              <div className="text-center text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <p>Progress: {enrolledCourse.progressPercentage}%</p>
+                <p className="text-xs mt-1">
+                  {enrolledCourse.completedLessons} of{" "}
+                  {enrolledCourse.totalLessons} lessons completed
+                </p>
+              </div>
+            )}
+          </div>
 
-      <div className="pt-4">
-        <Button
-          className="w-full bg-white border text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
-          size="lg"
-          onClick={handleEnrollNow}
-          disabled={enrollMutation.isPending}
-        >
-          <Heart className="h-5 w-5 mr-2" />
-          {enrollMutation.isPending ? "Processing..." : "Buy Now"}
-        </Button>
-      </div>
+          {/* Go to Course Button */}
+          <div className="pt-4">
+            <Link href={`/manage/mentee/my-courses/${course.slug}`}>
+              <Button
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg"
+                size="lg"
+              >
+                <PlayCircle className="h-5 w-5 mr-2" />
+                Continue Learning
+              </Button>
+            </Link>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="pt-4 mt-4">
+            <Button
+              className="w-full bg-blue-500 hover:bg-blue-400 dark:text-white"
+              size="lg"
+            >
+              <ShoppingCart className="h-5 w-5 mr-2" />
+              Add To Cart
+            </Button>
+          </div>
+
+          <div className="pt-4">
+            <Button
+              className="w-full bg-white border text-blue-500 border-blue-500 hover:bg-blue-500 hover:text-white"
+              size="lg"
+              onClick={handleEnrollNow}
+              disabled={enrollMutation.isPending}
+            >
+              <Heart className="h-5 w-5 mr-2" />
+              {enrollMutation.isPending ? "Processing..." : "Buy Now"}
+            </Button>
+          </div>
+        </>
+      )}
 
       {/* Payment QR Modal */}
       {paymentData && (

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -13,12 +12,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
+import { useCourseByMentor } from "@/queries/useCourse";
 import {
   useUpdateWorkExpPackage,
   useWorkExpPackageById,
 } from "@/queries/useWorkExpPackage";
-import { useCourseByMentor } from "@/queries/useCourse";
 import {
   WorkExperiencePackageUpdateSchema,
   type WorkExperiencePackageUpdateInput,
@@ -26,14 +26,13 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowLeft,
-  Save,
-  Package,
-  X,
-  Plus,
-  DollarSign,
-  Clock,
   BookOpen,
+  Clock,
+  Package,
+  Plus,
+  Save,
   Users,
+  X,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -369,7 +368,6 @@ export default function EditWorkExpPackageFormPage() {
                     htmlFor="price"
                     className="text-sm font-medium text-gray-700 flex items-center gap-2"
                   >
-                    <DollarSign className="h-4 w-4" />
                     Price (VND) *
                   </Label>
                   <Input

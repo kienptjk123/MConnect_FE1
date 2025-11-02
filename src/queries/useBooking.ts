@@ -58,10 +58,6 @@ export const useCreateBookingWithPayment = () => {
     mutationFn: bookingApiRequest.createBookingWithPayment,
     onSuccess: (data) => {
       toast.success("Booking created! Redirecting to payment...");
-      // Redirect to payment URL
-      if (data.payment.paymentUrl) {
-        window.location.href = data.payment.paymentUrl;
-      }
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to create booking and payment");
