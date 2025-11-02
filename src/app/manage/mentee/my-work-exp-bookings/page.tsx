@@ -171,7 +171,7 @@ export default function MyWorkExpBookingsPage() {
       setLoadingPaymentId(booking.id);
       const res = await paymentApiRequest.createPayment({
         bookingId: booking.id,
-        bookingType: "WORK_EXPERIENCE",
+        bookingType: "WORKEXPERIENCE",
         paymentType: "BOOKING",
         amount: parseFloat(booking.price),
         orderInfo: `Payment for Work Experience Booking #${booking.id}`,
