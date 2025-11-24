@@ -49,7 +49,13 @@ export default function PaymentManagementPage() {
           {!isLoading && !isError && (
             <>
               {data?.payload?.data?.payments ? (
-                <PaymentTable data={data.payload.data.payments} />
+                <PaymentTable
+                  data={data.payload.data.payments.map((payment) => ({
+                    ...payment,
+                    status:
+                      payment.status === "COMPLETED" ? "PAID" : payment.status,
+                  }))}
+                />
               ) : (
                 <div className="py-16 text-center">
                   <p>No payments found or data structure issue</p>

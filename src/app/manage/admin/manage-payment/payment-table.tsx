@@ -135,11 +135,10 @@ export default function PaymentTable({ data }: PaymentTableProps) {
       ...rows.map((r) =>
         [
           r.id,
-          JSON.stringify(r.txnRef ?? ""),
           JSON.stringify(r.paymentType ?? ""),
           r.amount,
           JSON.stringify(r.status ?? ""),
-          JSON.stringify(r.orderInfo ?? ""),
+          JSON.stringify(r.providerRef ?? ""),
           JSON.stringify(r.createdAt ?? ""),
         ].join(",")
       ),

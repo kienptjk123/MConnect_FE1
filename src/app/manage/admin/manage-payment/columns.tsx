@@ -172,13 +172,6 @@ export const getPaymentColumns = (
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.txnRef)}
-            >
-              Copy transaction ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onView(payment)}>
               <Eye className="mr-2 h-4 w-4" />
               View Details
