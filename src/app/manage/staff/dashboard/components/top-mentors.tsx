@@ -138,9 +138,6 @@ export function TopMentors() {
           </div>
 
           <div className="pt-4 border-t border-border">
-            <div className="bg-primary text-primary-foreground text-xs font-medium px-2 py-1 rounded w-fit mb-2">
-              $508.00
-            </div>
             <Select defaultValue="this-month">
               <SelectTrigger className="w-full">
                 <SelectValue />

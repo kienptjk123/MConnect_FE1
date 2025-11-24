@@ -24,33 +24,80 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-
-const courseData = [
-  { name: "Sun", value1: 30, value2: 20 },
-  { name: "Mon", value1: 25, value2: 35 },
-  { name: "Tue", value1: 40, value2: 30 },
-  { name: "Wed", value1: 35, value2: 25 },
-  { name: "Thu", value1: 20, value2: 40 },
-  { name: "Fri", value1: 30, value2: 35 },
-  { name: "Sat", value1: 25, value2: 30 },
-];
-
-const salesData = [
-  { name: "Jan", value: 65 },
-  { name: "Feb", value: 85 },
-  { name: "Mar", value: 75 },
-  { name: "Apr", value: 90 },
-  { name: "May", value: 70 },
-  { name: "Jun", value: 95 },
-  { name: "Jul", value: 80 },
-  { name: "Aug", value: 85 },
-  { name: "Sep", value: 75 },
-  { name: "Oct", value: 90 },
-  { name: "Nov", value: 85 },
-  { name: "Dec", value: 100 },
-];
+import { useEffect, useState } from "react";
+import dashboardApiRequest, {
+  CourseOverviewData,
+  CourseSalesData,
+} from "@/apiRequests/dashboard";
 
 export function AnalyticsCharts() {
+  const [courseData, setCourseData] = useState<CourseOverviewData[]>([]);
+  const [salesData, setSalesData] = useState<CourseSalesData[]>([]);
+  const [totalEarnings, setTotalEarnings] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [period, setPeriod] = useState<"week" | "month">("week");
+
+  useEffect(() => {
+    const fetchAnalyticsData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await dashboardApiRequest.getAnalyticsCharts(period);
+        const { courseOverview, courseSales } = response.payload.result;
+
+        setCourseData(courseOverview);
+        setSalesData(courseSales.data);
+        setTotalEarnings(courseSales.totalEarnings);
+      } catch (error) {
+        console.error("Failed to fetch analytics charts data:", error);
+        // Fallback to sample data
+        const fallbackCourseData = [
+          { name: "Sun", value1: 30, value2: 20 },
+          { name: "Mon", value1: 25, value2: 35 },
+          { name: "Tue", value1: 40, value2: 30 },
+          { name: "Wed", value1: 35, value2: 25 },
+          { name: "Thu", value1: 20, value2: 40 },
+          { name: "Fri", value1: 30, value2: 35 },
+          { name: "Sat", value1: 25, value2: 30 },
+        ];
+
+        const fallbackSalesData = [
+          { name: "Jan", value: 65 },
+          { name: "Feb", value: 85 },
+          { name: "Mar", value: 75 },
+          { name: "Apr", value: 90 },
+          { name: "May", value: 70 },
+          { name: "Jun", value: 95 },
+          { name: "Jul", value: 80 },
+          { name: "Aug", value: 85 },
+          { name: "Sep", value: 75 },
+          { name: "Oct", value: 90 },
+          { name: "Nov", value: 85 },
+          { name: "Dec", value: 100 },
+        ];
+
+        setCourseData(fallbackCourseData);
+        setSalesData(fallbackSalesData);
+        setTotalEarnings(7443);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAnalyticsData();
+  }, [period]);
+
+  const handlePeriodChange = (newPeriod: string) => {
+    setPeriod(newPeriod as "week" | "month");
+  };
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="h-[400px] bg-gray-200 rounded animate-pulse" />
+        <div className="h-[400px] bg-gray-200 rounded animate-pulse" />
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Course Overview */}
@@ -61,14 +108,13 @@ export function AnalyticsCharts() {
               Course Overview
             </CardTitle>
           </div>
-          <Select defaultValue="this-week">
+          <Select value={period} onValueChange={handlePeriodChange}>
             <SelectTrigger className="w-32">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="this-week">This week</SelectItem>
-              <SelectItem value="last-week">Last week</SelectItem>
-              <SelectItem value="this-month">This month</SelectItem>
+              <SelectItem value="week">This week</SelectItem>
+              <SelectItem value="month">This month</SelectItem>
             </SelectContent>
           </Select>
         </CardHeader>
@@ -170,13 +216,15 @@ export function AnalyticsCharts() {
               Course Sales
             </CardTitle>
             <CardDescription className="text-sm text-muted-foreground mt-1">
-              Today
+              {period === "week" ? "This Week" : "This Month"}
             </CardDescription>
           </div>
         </CardHeader>
         <CardContent>
           <div className="mb-4">
-            <div className="text-2xl font-bold text-foreground">7,443</div>
+            <div className="text-2xl font-bold text-foreground">
+              {totalEarnings.toLocaleString()}
+            </div>
             <div className="text-xs text-muted-foreground">VND you earned</div>
           </div>
           <div className="h-48">

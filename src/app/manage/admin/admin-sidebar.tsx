@@ -73,6 +73,11 @@ const navigationItems = [
     icon: MonitorPlayIcon,
   },
   {
+    title: "Payment Management",
+    url: "/manage/admin/manage-payment",
+    icon: BadgeCent,
+  },
+  {
     title: "Withdraw Request Management",
     url: "/manage/admin/withdraw-requests",
     icon: BadgeCent,
