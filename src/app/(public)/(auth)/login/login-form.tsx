@@ -20,8 +20,8 @@ import { useForm } from "react-hook-form";
 const getOauthGoogleUrl = () => {
   const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
   const options = {
-    redirect_uri: envConfig.NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI,
-    client_id: envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+    redirect_uri: envConfig.NEXT_PUBLIC_GOOGLE_AUTHORIZED_REDIRECT_URI || "",
+    client_id: envConfig.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "",
     access_type: "offline",
     response_type: "code",
     prompt: "consent",
