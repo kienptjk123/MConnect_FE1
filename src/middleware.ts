@@ -2,13 +2,12 @@ import { Role } from "@/constants/type";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Định nghĩa các đường dẫn cho từng role
 const ROLE_PATHS = {
   [Role.ADMIN]: ["/manage/admin"],
   [Role.STAFF]: ["/manage/staff"],
   [Role.MENTOR]: ["/manage/mentor"],
   [Role.MENTEE]: ["/manage/mentee"],
-  [Role.Guest]: [], // Guest không có quyền truy cập private paths
+  [Role.Guest]: [],
 } as const;
 
 // Các đường dẫn public (không cần xác thực)
